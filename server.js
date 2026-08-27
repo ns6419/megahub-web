@@ -7,7 +7,7 @@ const NTFY_TOPIC = 'megahub_alerts_9988';
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Main Route
+// Main Route - V3 Build Update
 app.get('/', (req, res) => {
     res.send(HTML_PAGE);
 });
@@ -37,7 +37,6 @@ app.post('/submit-ticket', (req, res) => {
     ntfyReq.end();
 });
 
-// The local development port listener required by Vercel
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
@@ -46,7 +45,7 @@ app.listen(PORT, () => {
 module.exports = app;
 
 // ==========================================
-// PREMIUM FRONTEND WITH INTERACTIVE WAVE & FORMS
+// PREMIUM FRONTEND V3 (CACHE FORCE)
 // ==========================================
 const HTML_PAGE = `
 <!DOCTYPE html>
@@ -54,7 +53,7 @@ const HTML_PAGE = `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEGAHUB BY HADI</title>
+    <title>MEGAHUB OVERHAUL V3</title>
     <style>
         * {
             margin: 0;
@@ -62,7 +61,7 @@ const HTML_PAGE = `
             box-sizing: border-box;
         }
         body {
-            background: #000;
+            background: #000 !important;
             color: #fff;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             min-height: 100vh;
@@ -71,14 +70,14 @@ const HTML_PAGE = `
             padding: 40px 20px;
         }
         
-        /* Interactive Mobile Swipe Wave Styling */
+        /* Force Wave Canvas layer over pure black background */
         .wave-container {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1;
+            z-index: 2;
             pointer-events: none;
         }
         canvas {
@@ -87,7 +86,6 @@ const HTML_PAGE = `
             height: 100%;
         }
 
-        /* Interface Wrapper */
         .app-container {
             position: relative;
             z-index: 10;
@@ -139,24 +137,22 @@ const HTML_PAGE = `
             font-weight: bold;
         }
 
-        /* Dashboard Menu Cards */
+        /* Menu Cards */
         .route-card {
-            background: rgba(15, 15, 15, 0.85);
-            border: 2px solid #222;
+            background: rgba(15, 15, 15, 0.9) !important;
+            border: 2px solid #222 !important;
             border-radius: 20px;
             padding: 25px;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
             text-align: left;
-            text-decoration: none;
-            color: #fff;
-            cursor: pointer;
-            transition: border-color 0.2s, background 0.2s;
+            color: #fff !important;
+            cursor: pointer !important;
+            transition: border-color 0.2s;
         }
         .route-card:active {
-            border-color: #555;
-            background: rgba(25, 25, 25, 0.9);
+            border-color: #fff !important;
         }
 
         .card-icon {
@@ -164,9 +160,6 @@ const HTML_PAGE = `
             margin-right: 20px;
             width: 40px;
             text-align: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
         .card-body {
@@ -195,26 +188,22 @@ const HTML_PAGE = `
             margin-left: 10px;
         }
 
-        /* Interactive Modal Form Popups */
+        /* Modal Overlays */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 100;
-            display: flex;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 99999 !important;
+            display: none;
             align-items: center;
             justify-content: center;
             padding: 20px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
         }
         .modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
+            display: flex !important;
         }
         .modal-box {
             background: #111;
@@ -223,10 +212,7 @@ const HTML_PAGE = `
             width: 100%;
             max-width: 420px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             text-align: left;
-            position: relative;
-            z-index: 101;
         }
         .modal-header {
             font-size: 1.2rem;
@@ -291,12 +277,10 @@ const HTML_PAGE = `
 </head>
 <body>
 
-    <!-- Liquid Wave Canvas Element Layer -->
     <div class="wave-container">
         <canvas id="waveCanvas"></canvas>
     </div>
 
-    <!-- Main Container Layout -->
     <div class="app-container">
         <h1 class="main-title">Megahub</h1>
         <div class="subtitle">// Premium Social Architecture System Module</div>
@@ -305,11 +289,9 @@ const HTML_PAGE = `
 
         <div class="section-label">| Choose Operational Route</div>
 
-        <!-- Route Card 1 -->
+        <!-- Card 1 -->
         <div class="route-card" onclick="openForm('RECOVERY DESK')">
-            <div class="card-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            </div>
+            <div class="card-icon">🛡️</div>
             <div class="card-body">
                 <div class="card-title">Recovery Desk</div>
                 <div class="card-desc">Appeal System Bans /<br>Restore Blocked Accounts</div>
@@ -317,12 +299,33 @@ const HTML_PAGE = `
             <div class="card-arrow">➔</div>
         </div>
 
-        <!-- Route Card 2 -->
+        <!-- Card 2 -->
         <div class="route-card" onclick="openForm('ACC ENGAGEMENT INCREASER')">
-            <div class="card-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-            </div>
+            <div class="card-icon">📈</div>
             <div class="card-body">
                 <div class="card-title">Acc Engagement Increaser</div>
                 <div class="card-desc">Follower and Views<br>Increase Engine Boost</div>
             </div>
+            <div class="card-arrow">➔</div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="route-card" onclick="openForm('BUY OLD INSTAGRAM ACCOUNTS')">
+            <div class="card-icon">🛍️</div>
+            <div class="card-body">
+                <div class="card-title">Buy Old Instagram Accounts</div>
+                <div class="card-desc">Old Insta Accounts /<br>Old Insta Unc's Available</div>
+            </div>
+            <div class="card-arrow">➔</div>
+        </div>
+    </div>
+
+    <!-- Popup Window Form Entry -->
+    <div class="modal-overlay" id="ticketModal">
+        <div class="modal-box">
+            <div class="modal-header" id="modalTitle">Request Option Form</div>
+            <form id="pipelineForm" method="POST" action="/submit-ticket">
+                <input type="hidden" id="formServiceType" name="serviceType" value="">
+                <input type="hidden" name="platform" value="INSTAGRAM">
+
+    
