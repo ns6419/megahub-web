@@ -26,18 +26,23 @@ app.get('/', function (req, res) {
             .section-title { font-size: 0.9rem; border-left: 4px solid #ffffff; padding-left: 10px; margin-bottom: 20px; margin-top: 40px; }
             .services-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
             .option-card { background: #050505; border: 2px solid #111; padding: 24px; border-radius: 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-            .option-card p { color: #555; font-size: 0.75rem; margin-top: 6px; }
+            .option-card p { color: #555; font-size: 0.75rem; margin-top: 6px; line-height: 1.4; }
             .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(12px); opacity: 0; pointer-events: none; transition: opacity 0.4s; z-index: 999; }
             .drawer-overlay.active { opacity: 1; pointer-events: auto; }
-            .slide-drawer { position: fixed; bottom: 0; left: 0; width: 100%; background: #050505; border-top: 2px solid #1c1c1c; border-top-left-radius: 30px; border-top-right-radius: 30px; padding: 40px 24px; transform: translateY(100%); transition: transform 0.4s; z-index: 1000; }
+            .slide-drawer { position: fixed; bottom: 0; left: 0; width: 100%; background: #050505; border-top: 2px solid #1c1c1c; border-top-left-radius: 30px; border-top-right-radius: 30px; padding: 40px 24px; transform: translateY(100%); transition: transform 0.4s; z-index: 1000; max-height: 90vh; overflow-y: auto; }
             .slide-drawer.active { transform: translateY(0); }
             .drawer-handle { width: 50px; height: 6px; background: #222; border-radius: 10px; margin: -20px auto 30px auto; }
             label { display: block; font-size: 0.75rem; margin-bottom: 12px; margin-top: 25px; }
-            input { width: 100%; padding: 16px; background: #0c0c0c; border: 2px solid #1a1a1a; color: #ffffff; border-radius: 14px; }
-            .logo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-            .logo-item { background: #0c0c0c; border: 2px solid #1a1a1a; border-radius: 14px; padding: 22px 10px; text-align: center; cursor: pointer; }
+            input, textarea { width: 100%; padding: 16px; background: #0c0c0c; border: 2px solid #1a1a1a; color: #ffffff; border-radius: 14px; font-size: 1rem; }
+            input:focus, textarea:focus { border-color: #ffffff; outline: none; }
+            textarea { resize: none; font-family: sans-serif; text-transform: uppercase; }
+            
+            .logo-grid { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+            .logo-grid::-webkit-scrollbar { display: none; }
+            .logo-item { background: #0c0c0c; border: 2px solid #1a1a1a; border-radius: 14px; padding: 22px 28px; text-align: center; cursor: pointer; flex-shrink: 0; }
             .logo-item.selected { border-color: #ffffff; background: #111; }
-            .btn-submit { background: #ffffff; color: #000000; padding: 18px; border-radius: 40px; border: none; width: 100%; margin-top: 35px; cursor: pointer; }
+            
+            .btn-submit { background: #ffffff; color: #000000; padding: 18px; border-radius: 40px; border: none; width: 100%; margin-top: 35px; cursor: pointer; font-weight: 950; letter-spacing: 2px; }
         </style>
     </head>
     <body>
@@ -50,15 +55,24 @@ app.get('/', function (req, res) {
         <div class="section-title">CHOOSE OPERATIONAL ROUTE</div>
         <div class="services-grid">
             <div class="option-card" onclick="openDrawer('ACCOUNT RECOVERY')">
-                <div><h3>🛡️ RECOVERY DESK</h3><p>APPEAL SYSTEM BANS</p></div>
+                <div>
+                    <h3>🛡️ RECOVERY DESK</h3>
+                    <p>APPEAL SYSTEM BANS / RESTORE BLOCKED ACCOUNTS</p>
+                </div>
                 <div>→</div>
             </div>
             <div class="option-card" onclick="openDrawer('FOLLOWER PACKAGES')">
-                <div><h3>📈 METRIC INJECTION</h3><p>DEPLOY ENGINE BOOSTS</p></div>
+                <div>
+                    <h3>📈 METRIC INJECTION</h3>
+                    <p>FOLLOWER AND VIEWS INCREASE ENGINE BOOST</p>
+                </div>
                 <div>→</div>
             </div>
             <div class="option-card" onclick="openDrawer('BUY AGED PROFILE')">
-                <div><h3>🛍️ SECURED ASSET REPOSITORY</h3><p>BROWSE HANDLES</p></div>
+                <div>
+                    <h3>🛍️ SECURED ASSET REPOSITORY</h3>
+                    <p>OLD INSTA ACCOUNTS / OLD INSTA UNC'S AVAILABLE</p>
+                </div>
                 <div>→</div>
             </div>
         </div>
@@ -77,6 +91,9 @@ app.get('/', function (req, res) {
                 <div class="logo-item selected" onclick="selectPlatform(this, 'INSTAGRAM')">INSTAGRAM</div>
                 <div class="logo-item" onclick="selectPlatform(this, 'FACEBOOK')">FACEBOOK</div>
                 <div class="logo-item" onclick="selectPlatform(this, 'TIKTOK')">TIKTOK</div>
+                <div class="logo-item" onclick="selectPlatform(this, 'SNAPCHAT')">SNAPCHAT</div>
+                <div class="logo-item" onclick="selectPlatform(this, 'YOUTUBE')">YOUTUBE</div>
+                <div class="logo-item" onclick="selectPlatform(this, 'WHATSAPP')">WHATSAPP</div>
             </div>
             
             <label>TARGET ACCOUNT USERNAME</label>
@@ -84,6 +101,9 @@ app.get('/', function (req, res) {
             
             <label>YOUR CONTACT WHATSAPP NUMBER</label>
             <input type="tel" name="contactPhone" placeholder="+1234567890" required>
+
+            <label>SPECIFY WHAT HELP YOU NEED</label>
+            <textarea name="customerNotes" rows="3" placeholder="UNBAN MY ACCOUNT / NEED 10K FOLLOWERS..." required></textarea>
             
             <button type="submit" class="btn-submit">INITIALIZE ROUTE REQUEST</button>
         </form>
@@ -112,11 +132,16 @@ app.get('/', function (req, res) {
 });
 
 app.post('/submit-ticket', async (req, res) => {
-    const { serviceType, platform, targetUser, contactPhone } = req.body;
-    const textMessage = `NEW REQUEST: ${serviceType} | Platform: ${platform} | User: ${targetUser} | Phone: ${contactPhone}`;
+    const { serviceType, platform, targetUser, contactPhone, customerNotes } = req.body;
+    
+    const textMessage = `🚨 NEW MEGAHUB REQUEST\n\n` +
+                        `• ROUTE: ${serviceType}\n` +
+                        `• PLATFORM: ${platform}\n` +
+                        `• TARGET USER: ${targetUser}\n` +
+                        `• PHONE: ${contactPhone}\n` +
+                        `• SERVICE HELP DESK: ${customerNotes}`;
 
     try {
-        // FIXED FORWARD SLASH IN THE API ENDPOINT STRING
         await axios.post('https://ntfy.sh' + NTFY_TOPIC, textMessage, {
             headers: {
                 'Content-Type': 'text/plain',
@@ -138,4 +163,4 @@ app.post('/submit-ticket', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Running on port ${PORT}`));
-    
+             
