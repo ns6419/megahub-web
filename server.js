@@ -7,7 +7,7 @@ const NTFY_TOPIC = 'megahub_alerts_9988';
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Serves the operational screen with the dynamic black and white wave background
+// Serves the full premium dashboard with the interactive swipe/scroll white wave background
 app.get('/', (req, res) => {
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.send(`
@@ -26,15 +26,14 @@ app.get('/', (req, res) => {
             body {
                 background: #000;
                 color: #fff;
-                text-align: center;
-                font-family: sans-serif;
-                text-transform: uppercase;
-                letter-spacing: 2px;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
                 min-height: 100vh;
                 position: relative;
                 overflow-x: hidden;
+                padding: 40px 20px;
             }
-            /* Wave Canvas Container */
+            
+            /* Fluid Liquid Wave Background */
             .wave-container {
                 position: fixed;
                 bottom: 0;
@@ -49,55 +48,171 @@ app.get('/', (req, res) => {
                 width: 100%;
                 height: 100%;
             }
-            /* Main Content Container */
-            .content {
+
+            /* Main Premium App Interface Layout */
+            .app-container {
                 position: relative;
                 z-index: 10;
-                padding: 50px 20px;
-                min-height: 150vh; /* Allows scrolling to trigger swipe/scroll mechanics */
+                max-width: 500px;
+                margin: 0 auto;
+                text-align: center;
+                min-height: 120vh; /* Ensures scrolling capability for swipe animations */
             }
-            h1 {
-                margin-top: 100px;
-                font-size: 2rem;
-                text-shadow: 0 0 10px rgba(0,0,0,0.8);
-            }
-            p {
-                color: #aaa;
+
+            .main-title {
+                font-size: 2.8rem;
+                font-weight: 900;
+                letter-spacing: 4px;
                 margin-top: 20px;
-                text-shadow: 0 0 5px rgba(0,0,0,0.8);
+                text-transform: uppercase;
             }
-            a {
-                display: inline-block;
-                margin-top: 40px;
-                color: #000;
-                background: #fff;
-                padding: 15px 30px;
-                text-decoration: none;
-                border-radius: 40px;
+
+            .subtitle {
+                font-size: 0.75rem;
+                color: #666;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                margin-top: 5px;
+                margin-bottom: 40px;
                 font-weight: bold;
-                box-shadow: 0 4px 15px rgba(255,255,255,0.2);
-                transition: transform 0.2s;
             }
-            a:active {
-                transform: scale(0.95);
+
+            .security-btn {
+                display: block;
+                width: 100%;
+                border: 2px solid #fff;
+                background: transparent;
+                color: #fff;
+                padding: 18px;
+                border-radius: 50px;
+                font-weight: bold;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                text-decoration: none;
+                font-size: 0.85rem;
+                margin-bottom: 50px;
+            }
+
+            .section-label {
+                text-align: left;
+                font-size: 0.9rem;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                margin-bottom: 20px;
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+            }
+            .section-label::before {
+                content: "|";
+                color: #fff;
+                margin-right: 8px;
+                font-weight: 900;
+            }
+
+            /* Interactive Dashboard Action Cards */
+            .route-card {
+                background: rgba(10, 10, 10, 0.85);
+                border: 2px solid #222;
+                border-radius: 20px;
+                padding: 25px;
+                margin-bottom: 20px;
+                display: flex;
+                align-items: center;
+                text-align: left;
+                text-decoration: none;
+                color: #fff;
+                transition: transform 0.2s, border-color 0.2s;
+                cursor: pointer;
+            }
+            .route-card:active {
+                transform: scale(0.98);
+                border-color: #555;
+            }
+
+            .card-icon {
+                font-size: 1.8rem;
+                margin-right: 20px;
+                width: 40px;
+                text-align: center;
+            }
+
+            .card-body {
+                flex-grow: 1;
+            }
+
+            .card-title {
+                font-size: 1.1rem;
+                font-weight: bold;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+                margin-bottom: 4px;
+            }
+
+            .card-desc {
+                font-size: 0.7rem;
+                color: #666;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+                line-height: 1.3;
+            }
+
+            .card-arrow {
+                font-size: 1.2rem;
+                color: #444;
+                margin-left: 10px;
             }
         </style>
     </head>
     <body>
 
-        <!-- Wave Canvas Layer -->
+        <!-- Animated Wave Canvas Background -->
         <div class="wave-container">
             <canvas id="waveCanvas"></canvas>
         </div>
 
-        <!-- Foreground Content Layer -->
-        <div class="content">
-            <h1>⚡ MEGAHUB OPERATIONAL MODULE ⚡</h1>
-            <p>OWNED AND OPERATED BY HADI.</p>
-            <a href="https://wa.me">CONTACT VIA WHATSAPP</a>
+        <!-- Dashboard User Interface Elements -->
+        <div class="app-container">
+            <h1 class="main-title">Megahub</h1>
+            <div class="subtitle">// Premium Social Architecture System Module</div>
+
+            <a href="#" class="security-btn">Access Security App Module</a>
+
+            <div class="section-label">Choose Operational Route</div>
+
+            <!-- Route 1: Recovery Desk -->
+            <div class="route-card" onclick="submitPipeline('RECOVERY DESK', 'INSTAGRAM')">
+                <div class="card-icon">🛡️</div>
+                <div class="card-body">
+                    <div class="card-title">Recovery Desk</div>
+                    <div class="card-desc">Appeal System Bans /<br>Restore Blocked Accounts</div>
+                </div>
+                <div class="card-arrow">➔</div>
+            </div>
+
+            <!-- Route 2: Account Engagement Increaser -->
+            <div class="route-card" onclick="submitPipeline('ACC ENGAGEMENT INCREASER', 'INSTAGRAM')">
+                <div class="card-icon">📈</div>
+                <div class="card-body">
+                    <div class="card-title">Acc Engagement Increaser</div>
+                    <div class="card-desc">Follower and Views<br>Increase Engine Boost</div>
+                </div>
+                <div class="card-arrow">➔</div>
+            </div>
+
+            <!-- Route 3: Buy Accounts -->
+            <div class="route-card" onclick="submitPipeline('BUY OLD INSTAGRAM ACCOUNTS', 'MARKETPLACE')">
+                <div class="card-icon">🛍️</div>
+                <div class="card-body">
+                    <div class="card-title">Buy Old Instagram Accounts</div>
+                    <div class="card-desc">Old Insta Accounts /<br>Old Insta Unc's Available</div>
+                </div>
+                <div class="card-arrow">➔</div>
+            </div>
         </div>
 
         <script>
+            // 🌊 Dynamic Interactive Swipe Wave Logic
             const canvas = document.getElementById('waveCanvas');
             const ctx = canvas.getContext('2d');
 
@@ -108,50 +223,48 @@ app.get('/', (req, res) => {
             window.addEventListener('resize', resizeCanvas);
             resizeCanvas();
 
-            let targetHeightFactor = 0.2; // Base height of the white wave (20% of screen)
-            let currentHeightFactor = 0.2;
+            let targetHeightFactor = 0.15; 
+            let currentHeightFactor = 0.15;
             let lastScrollY = window.scrollY;
 
-            // Track scrolling and swipe-driven viewport changes
+            // Track swipe up/down motion via page scrolling events
             window.addEventListener('scroll', () => {
                 const currentScrollY = window.scrollY;
                 
                 if (currentScrollY > lastScrollY) {
-                    // Swiping Up / Scrolling Down -> Wave moves down
-                    targetHeightFactor = 0.1;
+                    // Swiping Up -> Wave retreats down out of view
+                    targetHeightFactor = 0.05;
                 } else if (currentScrollY < lastScrollY) {
-                    // Swiping Down / Scrolling Up -> White water wave comes up
-                    targetHeightFactor = 0.45;
+                    // Swiping Down -> White wave fluid builds up on viewport
+                    targetHeightFactor = 0.40;
                 }
                 
-                // Return smoothly to default resting height after a small delay
                 clearTimeout(window.scrollTimeout);
                 window.scrollTimeout = setTimeout(() => {
-                    targetHeightFactor = 0.2;
-                }, 400);
+                    targetHeightFactor = 0.15; // Returns to resting baseline height smoothly
+                }, 500);
 
                 lastScrollY = currentScrollY;
             });
 
-            let aliasTime = 0;
+            let animationTick = 0;
             function animate() {
-                aliasTime += 0.03;
+                animationTick += 0.025;
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                // Smoothly ease the wave position changes
-                currentHeightFactor += (targetHeightFactor - currentHeightFactor) * 0.1;
+                currentHeightFactor += (targetHeightFactor - currentHeightFactor) * 0.08;
                 const waveBaseY = canvas.height * (1 - currentHeightFactor);
 
-                ctx.fillStyle = '#ffffff';
+                // Drawing fluid solid wave layout overlay
+                ctx.fillStyle = 'rgba(255, 255, 255, 1)';
                 ctx.beginPath();
                 ctx.moveTo(0, canvas.height);
                 ctx.lineTo(0, waveBaseY);
 
-                // Create fluid organic wave structures across the layout
                 for (let x = 0; x <= canvas.width; x++) {
                     const y = waveBaseY + 
-                              Math.sin(x * 0.005 + aliasTime) * 20 + 
-                              Math.cos(x * 0.01 + aliasTime * 0.5) * 10;
+                              Math.sin(x * 0.006 + animationTick) * 18 + 
+                              Math.cos(x * 0.012 + animationTick * 0.6) * 8;
                     ctx.lineTo(x, y);
                 }
 
@@ -162,39 +275,13 @@ app.get('/', (req, res) => {
                 requestAnimationFrame(animate);
             }
             animate();
-        </script>
-    </body>
-    </html>
-    `);
-});
 
-// Ticket Submission Handler Pipeline
-app.post('/submit-ticket', (req, res) => {
-    const { serviceType, platform, targetUser, contactPhone, customerNotes } = req.body;
-    const textMsg = "NEW REQUEST - ROUTE: " + (serviceType || "NONE") + " - PLATFORM: " + (platform || "NONE") + " - USER: " + (targetUser || "NONE") + " - PHONE: " + (contactPhone || "NONE") + " - NOTES: " + (customerNotes || "NONE");
-    const dataBuffer = Buffer.from(textMsg, 'utf-8');
-
-    const options = {
-        hostname: 'ntfy.sh',
-        path: '/' + NTFY_TOPIC,
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Content-Length': dataBuffer.length }
-    };
-
-    const ntfyReq = https.request(options, () => {
-        res.send('<body style="background:#000;color:#fff;text-align:center;padding:50px;font-family:sans-serif;text-transform:uppercase;letter-spacing:2px;"><meta http-equiv="refresh" content="3;url=/"><h1 style="font-size:2rem;color:#fff;margin-top:100px;">⚡ REQUEST RECEIVED ⚡</h1></body>');
-    });
-
-    ntfyReq.on('error', (e) => { res.status(500).send('ERROR: ' + e.message); });
-    ntfyReq.write(dataBuffer);
-    ntfyReq.end();
-});
-
-// Port listener for local environments, handles Vercel requirements
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
-
-module.exports = app;
-        
+            // Pipeline handler engine to process card clicks seamlessly
+            function submitPipeline(serviceType, platform) {
+                fetch('/submit-ticket', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        serviceType: serviceType,
+                        platform: platform,
+                        
