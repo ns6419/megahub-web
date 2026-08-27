@@ -46,7 +46,7 @@ app.listen(PORT, () => {
 module.exports = app;
 
 // ==========================================
-// PREMIUM FRONTEND WITH INTERACTIVE WAVE
+// PREMIUM FRONTEND WITH INTERACTIVE WAVE & FORMS
 // ==========================================
 const HTML_PAGE = `
 <!DOCTYPE html>
@@ -67,11 +67,11 @@ const HTML_PAGE = `
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             min-height: 100vh;
             position: relative;
-            overflow-x: hidden;
+            overflow: hidden;
             padding: 40px 20px;
         }
         
-        /* Interactive Swipe Wave Styling */
+        /* Interactive Mobile Swipe Wave Styling */
         .wave-container {
             position: fixed;
             bottom: 0;
@@ -94,7 +94,6 @@ const HTML_PAGE = `
             max-width: 500px;
             margin: 0 auto;
             text-align: center;
-            min-height: 110vh; /* Keeps space scrollable for wave swipes */
         }
 
         .main-title {
@@ -142,7 +141,7 @@ const HTML_PAGE = `
 
         /* Dashboard Menu Cards */
         .route-card {
-            background: rgba(10, 10, 10, 0.85);
+            background: rgba(15, 15, 15, 0.85);
             border: 2px solid #222;
             border-radius: 20px;
             padding: 25px;
@@ -153,10 +152,11 @@ const HTML_PAGE = `
             text-decoration: none;
             color: #fff;
             cursor: pointer;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, background 0.2s;
         }
         .route-card:active {
             border-color: #555;
+            background: rgba(25, 25, 25, 0.9);
         }
 
         .card-icon {
@@ -194,6 +194,99 @@ const HTML_PAGE = `
             color: #444;
             margin-left: 10px;
         }
+
+        /* Interactive Modal Form Popups */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-box {
+            background: #111;
+            border: 2px solid #333;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 420px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: left;
+            position: relative;
+            z-index: 101;
+        }
+        .modal-header {
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            color: #888;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 12px;
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #fff;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-cancel {
+            background: #222;
+            color: #aaa;
+        }
+        .btn-submit {
+            background: #fff;
+            color: #000;
+        }
     </style>
 </head>
 <body>
@@ -203,6 +296,7 @@ const HTML_PAGE = `
         <canvas id="waveCanvas"></canvas>
     </div>
 
+    <!-- Main Container Layout -->
     <div class="app-container">
         <h1 class="main-title">Megahub</h1>
         <div class="subtitle">// Premium Social Architecture System Module</div>
@@ -212,7 +306,7 @@ const HTML_PAGE = `
         <div class="section-label">| Choose Operational Route</div>
 
         <!-- Route Card 1 -->
-        <div class="route-card" onclick="sendTicket('RECOVERY DESK')">
+        <div class="route-card" onclick="openForm('RECOVERY DESK')">
             <div class="card-icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             </div>
@@ -224,7 +318,7 @@ const HTML_PAGE = `
         </div>
 
         <!-- Route Card 2 -->
-        <div class="route-card" onclick="sendTicket('ACC ENGAGEMENT INCREASER')">
+        <div class="route-card" onclick="openForm('ACC ENGAGEMENT INCREASER')">
             <div class="card-icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
             </div>
@@ -232,71 +326,3 @@ const HTML_PAGE = `
                 <div class="card-title">Acc Engagement Increaser</div>
                 <div class="card-desc">Follower and Views<br>Increase Engine Boost</div>
             </div>
-            <div class="card-arrow">➔</div>
-        </div>
-
-        <!-- Route Card 3 -->
-        <div class="route-card" onclick="sendTicket('BUY OLD INSTAGRAM ACCOUNTS')">
-            <div class="card-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-            </div>
-            <div class="card-body">
-                <div class="card-title">Buy Old Instagram Accounts</div>
-                <div class="card-desc">Old Insta Accounts /<br>Old Insta Unc's Available</div>
-            </div>
-            <div class="card-arrow">➔</div>
-        </div>
-    </div>
-
-    <script>
-        // 🌊 Fluid Wave Mechanics
-        const canvas = document.getElementById('waveCanvas');
-        const ctx = canvas.getContext('2d');
-
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        let targetHeight = 0.15; 
-        let currentHeight = 0.15;
-        let lastY = window.scrollY;
-
-        // Dynamic reactive response during swipe
-        window.addEventListener('scroll', () => {
-            const currentY = window.scrollY;
-            if (currentY > lastY) {
-                targetHeight = 0.05; // Swipe up moves wave down
-            } else if (currentY < lastY) {
-                targetHeight = 0.38; // Swipe down draws white water up
-            }
-            clearTimeout(window.wt);
-            window.wt = setTimeout(() => { targetHeight = 0.15; }, 450);
-            lastY = currentY;
-        });
-
-        let tick = 0;
-        function loop() {
-            tick += 0.025;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            currentHeight += (targetHeight - currentHeight) * 0.08;
-            
-            const baseY = canvas.height * (1 - currentHeight);
-            ctx.fillStyle = '#ffffff';
-            ctx.beginPath();
-            ctx.moveTo(0, canvas.height);
-            ctx.lineTo(0, baseY);
-
-            for (let x = 0; x <= canvas.width; x++) {
-                const y = baseY + Math.sin(x * 0.006 + tick) * 16 + Math.cos(x * 0.012 + tick * 0.5) * 6;
-                ctx.lineTo(x, y);
-            }
-            ctx.lineTo(canvas.width, canvas.height);
-            ctx.closePath();
-            ctx.fill();
-            requestAnimationFrame(loop);
-        }
-        loop();
-
