@@ -67,7 +67,7 @@ app.get('/', function (req, res) {
     <div class="drawer-overlay" id="overlay" onclick="closeDrawer()"></div>
     <div class="slide-drawer" id="drawer">
         <div class="drawer-handle" onclick="closeDrawer()"></div>
-        <h2>ROUTE CONFIGURATION</h2>
+        <h2 id="drawer-title">ROUTE CONFIGURATION</h2>
         <form action="/submit-ticket" method="POST">
             <input type="hidden" name="serviceType" id="serviceTypeInput">
             <input type="hidden" name="platform" id="platformInput" value="INSTAGRAM">
