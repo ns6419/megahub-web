@@ -52,5 +52,6 @@ app.post('/submit-ticket', (req, res) => {
     ntfyReq.end();
 });
 
-// Total UI layout structure completely written without backticks to eliminate compilation faults
+// Export the application instance for Vercel Serverless
+module.exports = app;
         
