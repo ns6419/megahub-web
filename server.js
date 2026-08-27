@@ -1,9 +1,7 @@
 const express = require('express');
-const path = require('path');
 const axios = require('axios');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 const NTFY_TOPIC = 'megahub_alerts_9988'; 
 const ADMIN_USER = 'ADMIN';
@@ -118,4 +116,6 @@ app.get('/', function (req, res) {
                 <div class="logo-item" onclick="selectPlatform(this, 'TIKTOK')">
                     <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.01 1.6 4.17 1.22 1.43 2.97 2.34 4.83 2.61v3.6c-1.63-.03-3.23-.49-4.62-1.36-.23-.15-.45-.3-.67-.47-.04 2.89-.04 5.79-.05 8.68-.07 2.29-.75 4.59-2.09 6.47a9.42 9.42 0 01-8.23 4.26 9.5 9.5 0 01-6.19-2.5 9.77 9.77 0 01-3.04-6.49 9.68 9.68 0 013.25-8.28A9.39 9.39 0 0110.1 5.31c.01 1.43.01 2.86.01 4.28a5.27 5.27 0 00-3.32 1.7 5.16 5.16 0 00-1.37 3.52c.03 1.25.56 2.47 1.47 3.33a5.35 5.35 0 005.19 1.42 5.24 5.24 0 003.74-4.52c.07-2.53.04-5.06.05-7.58-.01-2.5-.01-5-.02-7.49z"/></svg>
                     <span>TIKTOK</span>
+                </div>
+            </div>
     
