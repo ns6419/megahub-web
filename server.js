@@ -113,16 +113,31 @@ app.get('/', function (req, res) {
 
 app.post('/submit-ticket', async (req, res) => {
     const { serviceType, platform, targetUser, contactPhone } = req.body;
-    const alertMessage = `🚨 NEW REQUEST\n• Route: ${serviceType}\n• Network: ${platform}\n• Target: ${targetUser}\n• Contact: ${contactPhone}`;
+    
+    // Clean formatted notification message text
+    const textMessage = `NEW REQUEST: ${serviceType} | Platform: ${platform} | User: ${targetUser} | Phone: ${contactPhone}`;
 
     try {
-        await axios.post(`https://ntfy.sh{NTFY_TOPIC}`, alertMessage);
-        res.send(`<body style="background:#000;color:#fff;text-align:center;padding:50px;font-family:sans-serif;"><h1>⚡ REQUEST RECEIVED </h1></body>`);
+        // Send request body as clean plain text string layout
+        await axios.post(`https://ntfy.sh{NTFY_TOPIC}`, textMessage, {
+            headers: {
+                'Content-Type': 'text/plain',
+                'Title': '🚨 MEGAHUB ALERT'
+            }
+        });
+        
+        res.send(`
+            <body style="background:#000;color:#fff;text-align:center;padding:50px;font-family:sans-serif;text-transform:uppercase;letter-spacing:2px;">
+                <h1 style="font-size:2rem;color:#fff;margin-top:100px;">⚡ REQUEST RECEIVED ⚡</h1>
+                <p style="color:#666;margin-top:20px;">OPERATIONAL ENGINE DEPLOYED. YOU CAN CLOSE THIS TAB.</p>
+            </body>
+        `);
     } catch (error) {
-        res.status(500).send('ERROR.');
+        console.error('Ntfy transmission failed:', error.message);
+        res.status(500).send(`ERROR: ${error.message}`);
     }
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Running on port ${PORT}`));
-             
+        
