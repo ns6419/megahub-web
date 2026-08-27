@@ -23,14 +23,13 @@ module.exports = {
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background: #000; /* Pure black baseline backdrop */
+            background: #000;
         }
         body {
             display: flex;
             flex-direction: column;
             position: relative;
         }
-        /* Fluid canvas sits directly over the black backdrop */
         canvas {
             position: absolute;
             top: 0;
@@ -43,7 +42,7 @@ module.exports = {
         }
         .container {
             position: absolute;
-            top: 15%;
+            top: 18%;
             left: 50%;
             transform: translate(-50%, -50%);
             width: 100%;
@@ -57,6 +56,17 @@ module.exports = {
             letter-spacing: 8px;
             color: #fff;
             text-shadow: 0 4px 15px rgba(0,0,0,0.6);
+        }
+        .owner-badge {
+            margin-top: 12px;
+            font-size: 0.75rem;
+            color: #666;
+            letter-spacing: 4px;
+            font-weight: 700;
+        }
+        .owner-badge span {
+            color: #fff;
+            font-weight: 950;
         }
         .whatsapp-float {
             position: fixed;
@@ -91,9 +101,11 @@ module.exports = {
     <div class="container">
         <header>
             <h1>MEGAHUB</h1>
+            <div class="owner-badge">DESIGNED & OWNED BY: <span>HADI</span></div>
         </header>
     </div>
 
+    <!-- The floating icon is now connected to your active phone number -->
     <a href="https://wa.me" class="whatsapp-float" target="_blank">
         <svg class="whatsapp-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.3 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.3 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
@@ -150,8 +162,8 @@ module.exports = {
         window.addEventListener('mousemove', (e) => handleMove(e.clientY));
         window.addEventListener('mouseup', handleEnd);
 
-        window.addEventListener('touchstart', (e) => handleStart(e.touches[0].clientY));
-        window.addEventListener('touchmove', (e) => handleMove(e.touches[0].clientY));
+        window.addEventListener('touchstart', (e) => handleStart(e.touches.clientY));
+        window.addEventListener('touchmove', (e) => handleMove(e.touches.clientY));
         window.addEventListener('touchend', handleEnd);
 
         function animate() {
@@ -179,11 +191,9 @@ module.exports = {
             ctx.lineTo(width, height);
             ctx.closePath();
 
-            // Fills the interactive lower portion fluid with pure white
             ctx.fillStyle = '#ffffff';
             ctx.fill();
 
-            // Draws the crisp black wave outline edge seamlessly on top
             ctx.lineWidth = 4;
             ctx.strokeStyle = '#000000';
             ctx.stroke();
