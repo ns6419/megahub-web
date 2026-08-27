@@ -23,34 +23,14 @@ module.exports = {
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background: #000;
+            background: #000; /* Pure black baseline backdrop */
         }
         body {
             display: flex;
             flex-direction: column;
             position: relative;
         }
-        /* Visual split screen backdrop configuration */
-        .split-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            z-index: 1;
-            pointer-events: none;
-        }
-        .bg-top {
-            flex: 1;
-            background: #000;
-        }
-        .bg-bottom {
-            flex: 1;
-            background: #fff;
-        }
-        /* Canvas layer sits on top of background but behind text panels */
+        /* Fluid canvas sits directly over the black backdrop */
         canvas {
             position: absolute;
             top: 0;
@@ -106,11 +86,6 @@ module.exports = {
 </head>
 <body>
 
-    <div class="split-bg">
-        <div class="bg-top"></div>
-        <div class="bg-bottom"></div>
-    </div>
-
     <canvas id="waveCanvas"></canvas>
 
     <div class="container">
@@ -131,7 +106,6 @@ module.exports = {
 
         let width, height, midY;
         
-        // Fluid simulator core tracking parameters
         let waves = [
             { length: 0.01, amplitude: 25, speed: 0.03, phase: 0 },
             { length: 0.02, amplitude: 15, speed: 0.04, phase: 1 },
@@ -154,28 +128,24 @@ module.exports = {
         window.addEventListener('resize', resize);
         resize();
 
-        // High performance touch/drag mechanics for swipe gestures
         function handleStart(yPos) {
             startY = yPos;
             isSwiping = true;
-            targetAmplitudeModifier = 2.5; // Amplifies waves during active swiping
+            targetAmplitudeModifier = 2.5;
         }
 
         function handleMove(yPos) {
             if (!isSwiping) return;
             let deltaY = yPos - startY;
-            
-            // Adjusts current baseline level offset based on swipe translation velocity
             targetYShift = Math.max(-150, Math.min(150, deltaY * 0.8));
         }
 
         function handleEnd() {
             isSwiping = false;
-            targetAmplitudeModifier = 1.0; // Gradually settles back to stable liquid physics
+            targetAmplitudeModifier = 1.0;
             targetYShift = 0; 
         }
 
-        // Screen interactions
         window.addEventListener('mousedown', (e) => handleStart(e.clientY));
         window.addEventListener('mousemove', (e) => handleMove(e.clientY));
         window.addEventListener('mouseup', handleEnd);
@@ -184,17 +154,14 @@ module.exports = {
         window.addEventListener('touchmove', (e) => handleMove(e.touches[0].clientY));
         window.addEventListener('touchend', handleEnd);
 
-        // Core animation matrix loop running inside browser repaint routine
         function animate() {
             ctx.clearRect(0, 0, width, height);
 
-            // Smooth linear interpolation dampening framework
             currentAmplitudeModifier += (targetAmplitudeModifier - currentAmplitudeModifier) * 0.1;
             currentYShift += (targetYShift - currentYShift) * 0.1;
 
             let baselineY = midY + currentYShift;
 
-            // Generate fluid composite wave geometric shape arrays
             ctx.beginPath();
             ctx.moveTo(0, height);
             ctx.lineTo(0, baselineY);
@@ -202,7 +169,6 @@ module.exports = {
             for (let x = 0; x <= width; x += 2) {
                 let y = baselineY;
                 
-                // Add overlapping sound waves mathematically for realistic organic movement
                 waves.forEach(wave => {
                     y += Math.sin(x * wave.length + wave.phase) * wave.amplitude * currentAmplitudeModifier;
                 });
@@ -213,16 +179,15 @@ module.exports = {
             ctx.lineTo(width, height);
             ctx.closePath();
 
-            // Render bottom inverse color fill logic
+            // Fills the interactive lower portion fluid with pure white
             ctx.fillStyle = '#ffffff';
             ctx.fill();
 
-            // Render matching counter-color boundary stroke outline
+            // Draws the crisp black wave outline edge seamlessly on top
             ctx.lineWidth = 4;
             ctx.strokeStyle = '#000000';
             ctx.stroke();
 
-            // Loop updating velocity phasing metrics independently
             waves.forEach(wave => {
                 wave.phase += wave.speed;
             });
