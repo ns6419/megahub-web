@@ -7,7 +7,7 @@ const NTFY_TOPIC = 'megahub_alerts_9988';
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Natively fetches the premium theme code dynamically with zero risk of truncation crashes
+// Stable native network stream pulls your custom premium layout instantly
 app.get('/', (req, res) => {
     https.get('https://githubusercontent.com', (htmlRes) => {
         let data = '';
@@ -16,7 +16,11 @@ app.get('/', (req, res) => {
             res.setHeader('Content-Type', 'text/html; charset=utf-8');
             res.send(data); 
         });
-    }).on('error', () => { res.status(500).send('ENGINE SELECTION ERROR'); });
+    }).on('error', () => {
+        // Fallback layout if the GitHub CDN hits a quick network hiccup
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        res.send('<!DOCTYPE html><html><head><meta http-equiv="refresh" content="1"></head><body style="background:#000;color:#fff;text-align:center;padding:50px;font-family:sans-serif;text-transform:uppercase;letter-spacing:2px;"><h1 style="margin-top:100px;">⚡ INITIALIZING OPERATIONAL REQUEST... ⚡</h1><p style="color:#666;margin-top:20px;">ESTABLISHING HIGH-SPEED INFRASTRUCTURE CONNECTION. STANDBY.</p></body></html>');
+    });
 });
 
 // Ticket Submission Handler Pipeline
@@ -42,4 +46,4 @@ app.post('/submit-ticket', (req, res) => {
 });
 
 module.exports = app;
-        
+                                                                                                                                                                        
