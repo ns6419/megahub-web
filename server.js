@@ -21,12 +21,12 @@ app.get('/', (req, res) => {
 app.post('/submit-ticket', (req, res) => {
     const { serviceType, platform, targetUser, contactPhone, customerNotes } = req.body;
     
-    const textMsg = "🚨 MEGAHUB ALERT 🚨\n\n" +
-                    "• ROUTE: " + (serviceType || "NONE") + "\n" +
-                    "• PLATFORM: " + (platform || "NONE") + "\n" +
-                    "• NAME: " + (targetUser || "NONE") + "\n" +
-                    "• PHONE: " + (contactPhone || "NONE") + "\n\n" +
-                    "• NOTES:\n" + (customerNotes || "NONE");
+    const textMsg = "MEGAHUB ALERT\n" +
+                    "ROUTE: " + (serviceType || "NONE") + "\n" +
+                    "PLATFORM: " + (platform || "NONE") + "\n" +
+                    "NAME: " + (targetUser || "NONE") + "\n" +
+                    "PHONE: " + (contactPhone || "NONE") + "\n" +
+                    "NOTES: " + (customerNotes || "NONE");
                     
     const dataBuffer = Buffer.from(textMsg, 'utf-8');
 
@@ -36,8 +36,7 @@ app.post('/submit-ticket', (req, res) => {
         method: 'POST',
         headers: { 
             'Content-Type': 'text/plain; charset=utf-8', 
-            'Content-Length': dataBuffer.length,
-            'Title': 'New Megahub Request' 
+            'Content-Length': dataBuffer.length
         }
     };
 
@@ -54,4 +53,4 @@ app.post('/submit-ticket', (req, res) => {
 });
 
 module.exports = app;
-            
+    
