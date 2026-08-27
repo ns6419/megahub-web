@@ -2,8 +2,6 @@ const express = require('express');
 const axios = require('axios');
 const app = express();
 
-const NTFY_TOPIC = 'megahub_alerts_9988'; 
-
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -61,16 +59,16 @@ app.get('/', function (req, res) {
                 </div>
                 <div>→</div>
             </div>
-            <div class="option-card" onclick="openDrawer('FOLLOWER PACKAGES')">
+            <div class="option-card" onclick="openDrawer('ACCOUNT ENGAGEMENT INCREASER')">
                 <div>
-                    <h3>📈 METRIC INJECTION</h3>
+                    <h3>📈 ACC ENGAGEMENT INCREASER</h3>
                     <p>FOLLOWER AND VIEWS INCREASE ENGINE BOOST</p>
                 </div>
                 <div>→</div>
             </div>
-            <div class="option-card" onclick="openDrawer('BUY AGED PROFILE')">
+            <div class="option-card" onclick="openDrawer('BUY OLD INSTAGRAM ACCOUNTS')">
                 <div>
-                    <h3>🛍️ SECURED ASSET REPOSITORY</h3>
+                    <h3>🛍️ BUY OLD INSTAGRAM ACCOUNTS</h3>
                     <p>OLD INSTA ACCOUNTS / OLD INSTA UNC'S AVAILABLE</p>
                 </div>
                 <div>→</div>
@@ -133,16 +131,11 @@ app.get('/', function (req, res) {
 
 app.post('/submit-ticket', async (req, res) => {
     const { serviceType, platform, targetUser, contactPhone, customerNotes } = req.body;
-    
-    const textMessage = `🚨 NEW MEGAHUB REQUEST\n\n` +
-                        `• ROUTE: ${serviceType}\n` +
-                        `• PLATFORM: ${platform}\n` +
-                        `• TARGET USER: ${targetUser}\n` +
-                        `• PHONE: ${contactPhone}\n` +
-                        `• SERVICE HELP DESK: ${customerNotes}`;
+    const textMessage = `🚨 NEW MEGAHUB REQUEST\n\n• ROUTE: ${serviceType}\n• PLATFORM: ${platform}\n• TARGET USER: ${targetUser}\n• PHONE: ${contactPhone}\n• SERVICE HELP DESK: ${customerNotes}`;
 
     try {
-        await axios.post('https://ntfy.sh' + NTFY_TOPIC, textMessage, {
+        // DIRECT HARDCODED TARGET ADDRESS URL PATH STRIP
+        await axios.post('https://ntfy.sh', textMessage, {
             headers: {
                 'Content-Type': 'text/plain',
                 'Title': '🚨 MEGAHUB ALERT'
