@@ -2,8 +2,6 @@ const express = require('express');
 const https = require('https');
 const app = express();
 
-const NTFY_TOPIC = 'megahub_alerts_9988'; 
-
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -111,7 +109,6 @@ app.get('/', function (req, res) {
                 <div class="logo-item" onclick="selectPlatform(this, 'WHATSAPP')">WHATSAPP</div>
             </div>
             
-            <!-- FIXED AND UTTERLY CLEANED RESTORED FORM CONTROL WRAPPERS -->
             <label>TARGET ACCOUNT USERNAME</label>
             <input type="text" name="targetUser" placeholder="ENTER @USERNAME" required>
             
@@ -132,4 +129,6 @@ app.get('/', function (req, res) {
         window.addEventListener('resize', resizeCanvas); resizeCanvas();
         window.addEventListener('scroll', () => {
             const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            scrollPercent = docHeight > 0 ? (scrollTop / docHeight) : 0;
             
