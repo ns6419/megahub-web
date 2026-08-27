@@ -32,7 +32,7 @@ module.exports = {
         .logo-item{background:#000;border:2px solid #333;border-radius:14px;padding:22px 28px;cursor:pointer;flex-shrink:0;color:#555;}
         .logo-item.selected{border-color:#fff;background:#fff;color:#000;}
         .btn-submit{background:#fff;color:#000;padding:18px;border-radius:40px;border:none;width:100%;margin-top:35px;cursor:pointer;font-weight:950;letter-spacing:2px;}
-        body.light-theme{color:#000;}body.light-theme header p{color:#666;}body.light-theme .section-title{border-left-color:#000;}body.light-theme .option-card{background:rgba(255,255,255,0.8);border-color:#ddd;}body.light-theme .option-card h3{color:#000;}body.light-theme .option-card p{color:#666;}body.light-theme .premium-icon{stroke:#000;}body.light-theme .arrow-icon{stroke:#666;}body.light-theme .option-card:hover{border-color:#000;background:rgba(245,245,245,0.9);}.option-card:hover .arrow-icon{stroke:#000;}
+        body.light-theme{color:#000;}body.light-theme header p{color:#666;}body.light-theme .section-title{border-left-color:#000;}body.light-theme .option-card{background:rgba(255,255,255,0.8);border-color:#ddd;}body.light-theme .option-card h3{color:#000;}body.light-theme .option-card p{color:#666;}body.light-theme .premium-icon{stroke:#000;}body.light-theme .arrow-icon{stroke:#666;}body.light-theme .option-card:hover {border-color:#000;background:rgba(245,245,245,0.9);}.option-card:hover .arrow-icon{stroke:#000;}
         
         .whatsapp-float{position:fixed;bottom:30px;right:30px;width:60px;height:60px;background-color:#000;border:2px solid #fff;border-radius:50px;display:flex;justify-content:center;align-items:center;z-index:998;box-shadow:0 4px 20px rgba(255,255,255,0.15);transition:all .3s ease;}
         .whatsapp-float:hover{background-color:#fff;border-color:#000;transform:scale(1.1);}
@@ -62,3 +62,75 @@ module.exports = {
             <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.3 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.3 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
         </svg>
     </a>
+
+    <div class="container">
+        <header>
+            <h1>MEGAHUB</h1>
+            <p>// PREMIUM SOCIAL ARCHITECTURE SYSTEM MODULE</p>
+            <a href="#" class="btn-download">ACCESS SECURITY APP MODULE</a>
+        </header>
+        <div class="section-title">CHOOSE OPERATIONAL ROUTE</div>
+        <div class="services-grid">
+            <div class="option-card" onclick="openDrawer('ACCOUNT RECOVERY')">
+                <div class="option-card-left">
+                    <svg class="premium-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <div><h3>RECOVERY DESK</h3><p>APPEAL SYSTEM BANS / RESTORE BLOCKED ACCOUNTS</p></div>
+                </div>
+                <div><svg class="arrow-icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            </div>
+            <div class="option-card" onclick="openDrawer('ACCOUNT ENGAGEMENT INCREASER')">
+                <div class="option-card-left">
+                    <svg class="premium-icon" viewBox="0 0 24 24"><path d="M23 6l-9.5 9.5-5-5L1 18M17 6h6v6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <div><h3>ACC ENGAGEMENT INCREASER</h3><p>FOLLOWER AND VIEWS INCREASE ENGINE BOOST</p></div>
+                </div>
+                <div><svg class="arrow-icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            </div>
+            <div class="option-card" onclick="openDrawer('BUY OLD INSTAGRAM ACCOUNTS')">
+                <div class="option-card-left">
+                    <svg class="premium-icon" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <div><h3>BUY OLD INSTAGRAM ACCOUNTS</h3><p>OLD INSTA ACCOUNTS / OLD INSTA UNC'S AVAILABLE</p></div>
+                </div>
+                <div><svg class="arrow-icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            </div>
+        </div>
+        <footer>// PLATFORM ARCHITECTURE DESIGNED AND OWNED BY HADI</footer>
+    </div>
+
+    <div class="drawer-overlay" id="overlay" onclick="closeDrawer()"></div>
+    <div class="slide-drawer" id="drawer">
+        <div class="drawer-handle" onclick="closeDrawer()"></div>
+        <h2 id="drawer-title">ROUTE CONFIGURATION</h2>
+        <form action="/submit-ticket" method="POST">
+            <input type="hidden" name="serviceType" id="serviceTypeInput">
+            <input type="hidden" name="platform" id="platformInput" value="INSTAGRAM">
+            
+            <label>CHOOSE PLATFORM NETWORK</label>
+            <div class="logo-grid">
+                <div class="logo-item selected" onclick="selectPlatform(this, 'INSTAGRAM')">INSTAGRAM</div>
+                <div class="logo-item" onclick="selectPlatform(this, 'FACEBOOK')">FACEBOOK</div>
+                <div class="logo-item" onclick="selectPlatform(this, 'TIKTOK')">TIKTOK</div>
+                <div class="logo-item" onclick="selectPlatform(this, 'SNAPCHAT')">SNAPCHAT</div>
+                <div class="logo-item" onclick="selectPlatform(this, 'YOUTUBE')">YOUTUBE</div>
+                <div class="logo-item" onclick="selectPlatform(this, 'WHATSAPP')">WHATSAPP</div>
+            </div>
+            
+            <label>TARGET ACCOUNT USERNAME</label>
+            <input type="text" name="targetUser" placeholder="ENTER @USERNAME" required>
+            
+            <label>YOUR CONTACT WHATSAPP NUMBER</label>
+            <input type="tel" name="contactPhone" placeholder="ENTER PHONE NUMBER" required>
+            
+            <label>SPECIFY WHAT HELP YOU NEED</label>
+            <textarea name="customerNotes" rows="3" placeholder="DESCRIBE YOUR REQUEST..." required></textarea>
+            
+            <button type="submit" class="btn-submit">INITIALIZE ROUTE REQUEST</button>
+        </form>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('waveCanvas');
+        const ctx = canvas.getContext('2d');
+        let scrollPercent = 0;
+
+        function resizeCanvas() { 
+        
