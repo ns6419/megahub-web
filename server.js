@@ -11,11 +11,13 @@ app.use(express.json());
 // Stable native route loads the layout module locally with zero external network risk
 app.get('/', (req, res) => {
     try {
-        const template = require('./template.js');
+        // Explicitly using path.join to avoid Vercel bundling path issues
+        const template = require(path.join(__dirname, 'template.js'));
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
         res.send(template.HTML_CODE);
     } catch (e) {
-        res.status(500).send('UI ENGINE MODULAR CONNECTIVITY ERROR');
+        // This will print the actual error on your screen if it still breaks
+        res.status(500).send('SERVER ERROR: ' + e.message);
     }
 });
 
