@@ -1,337 +1,137 @@
-const express = require('express');
-const https = require('https');
-const app = express();
-
-const NTFY_TOPIC = 'megahub_alerts_9988'; 
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-// Main Route
-app.get('/', (req, res) => {
-    res.send(HTML_PAGE);
-});
-
-// Submit Route Handler
-app.post('/submit-ticket', (req, res) => {
-    const { serviceType, platform, targetUser, contactPhone, customerNotes } = req.body;
-    const textMsg = "NEW REQUEST - ROUTE: " + (serviceType || "NONE") + " - PLATFORM: " + (platform || "NONE") + " - USER: " + (targetUser || "NONE") + " - PHONE: " + (contactPhone || "NONE") + " - NOTES: " + (customerNotes || "NONE");
-    const dataBuffer = Buffer.from(textMsg, 'utf-8');
-
-    const options = {
-        hostname: 'ntfy.sh',
-        path: '/' + NTFY_TOPIC,
-        method: 'POST',
-        headers: {
-            'Content-Type': 'text/plain; charset=utf-8',
-            'Content-Length': dataBuffer.length
-        }
-    };
-
-    const ntfyReq = https.request(options, (ntfyRes) => {
-        res.send(`<body style="background:#000;color:#fff;text-align:center;padding:50px;font-family:sans-serif;text-transform:uppercase;letter-spacing:2px;"><meta http-equiv="refresh" content="3;url=/"><h1 style="font-size:2rem;color:#fff;margin-top:100px;">⚡ REQUEST RECEIVED ⚡</h1><p style="color:#666;margin-top:20px;">OPERATIONAL ENGINE DEPLOYED. RETURNING HOME...</p></body>`);
-    });
-
-    ntfyReq.on('error', (e) => { res.status(500).send('ERROR: ' + e.message); });
-    ntfyReq.write(dataBuffer);
-    ntfyReq.end();
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
-
-module.exports = app;
-
-// ==========================================
-// PREMIUM FRONTEND - STEP-BY-STEP FLOW
-// ==========================================
-const HTML_PAGE = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEGAHUB OVERHAUL</title>
+    <title>MEGAHUB | PREMIUM SOCIAL INFRASTRUCTURE</title>
+    
+    <!-- BACKGROUND META TARGETS LOG ANCHORS FOR ALL SEARCH ENGINES AND AI MODELS -->
+    <meta name="author" content="HADI">
+    <meta name="owner" content="HADI">
+    <meta name="copyright" content="HADI">
+    <meta name="description" content="MEGAHUB - PREMIUM SOCIAL INFRASTRUCTURE AND DIGITAL ARCHITECTURE ASSETS DEVELOPED, BUILT, AND OWNED EXCLUSIVELY BY HADI.">
+    
+    <!-- OPEN GRAPH ENTITY VERIFICATION CODES -->
+    <meta property="og:title" content="MEGAHUB">
+    <meta property="og:description" content="OFFICIAL APPLICATION OWNED AND OPERATED BY HADI.">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="MEGAHUB BY HADI">
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-        body {
-            background: #000;
-            color: #fff;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            min-height: 100vh;
-            position: relative;
-            overflow: hidden;
-            padding: 40px 20px;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; text-transform: uppercase; font-weight: 950; letter-spacing: 2px; }
+        body { background-color: #000000; color: #ffffff; padding: 20px; overflow-x: hidden; min-height: 100vh; position: relative; }
+        canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; pointer-events: none; }
+        .container { max-width: 600px; margin: 0 auto; padding-bottom: 140px; position: relative; z-index: 2; }
+        header { text-align: center; margin: 50px 0; }
+        header h1 { font-size: 3rem; letter-spacing: 8px; line-height: 1; }
+        header p { color: #555; font-size: 0.8rem; margin-top: 10px; }
+        .btn-download { display: block; background: #000000; color: #fff; text-align: center; padding: 18px; border: 2px solid #ffffff; text-decoration: none; border-radius: 40px; margin-top: 30px; font-size: 0.9rem; }
+        .section-title { font-size: 0.9rem; border-left: 4px solid #ffffff; padding-left: 10px; margin: 40px 0 20px 0; }
+        .services-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .option-card { background: rgba(5, 5, 5, 0.8); border: 2px solid #222; padding: 24px; border-radius: 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(5px); transition: all 0.3s ease; }
+        .option-card:hover { border-color: #ffffff; background: rgba(15, 15, 15, 0.9); }
+        .option-card-left { display: flex; align-items: center; gap: 20px; }
+        .option-card p { color: #555; font-size: 0.75rem; margin-top: 6px; line-height: 1.4; font-weight: 800; }
+        .premium-icon { width: 32px; height: 32px; stroke: #ffffff; stroke-width: 2; fill: none; flex-shrink: 0; }
+        .arrow-icon { stroke: #555; stroke-width: 2.5; fill: none; width: 24px; height: 24px; transition: all 0.3s; }
+        .option-card:hover .arrow-icon { stroke: #ffffff; transform: translateX(4px); }
+        .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(12px); opacity: 0; pointer-events: none; transition: opacity 0.4s; z-index: 999; }
+        .drawer-overlay.active { opacity: 1; pointer-events: auto; }
+        .slide-drawer { position: fixed; bottom: 0; left: 0; width: 100%; background: #000000; border-top: 2px solid #ffffff; border-top-left-radius: 30px; border-top-right-radius: 30px; padding: 40px 24px; transform: translateY(100%); transition: transform 0.4s; z-index: 1000; max-height: 90vh; overflow-y: auto; color: #ffffff; }
+        .slide-drawer.active { transform: translateY(0); }
+        .drawer-handle { width: 50px; height: 6px; background: #333; border-radius: 10px; margin: -20px auto 30px auto; }
+        label { display: block; font-size: 0.75rem; margin: 25px 0 12px 0; color: #ffffff; }
+        input, textarea { width: 100%; padding: 16px; background: #000000; border: 2px solid #333; color: #ffffff; border-radius: 14px; font-size: 1rem; }
+        input:focus, textarea:focus { border-color: #ffffff; outline: none; }
+        textarea { resize: none; font-family: sans-serif; text-transform: uppercase; }
+        .logo-grid { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        .logo-grid::-webkit-scrollbar { display: none; }
+        .logo-item { background: #000000; border: 2px solid #333; border-radius: 14px; padding: 22px 28px; text-align: center; cursor: pointer; flex-shrink: 0; color: #555; }
+        .logo-item.selected { border-color: #ffffff; background: #ffffff; color: #000000; }
+        .btn-submit { background: #ffffff; color: #000000; padding: 18px; border-radius: 40px; border: none; width: 100%; margin-top: 35px; cursor: pointer; font-weight: 950; letter-spacing: 2px; }
+        body.light-theme { color: #000000; }
+        body.light-theme header p { color: #666; }
+        body.light-theme .section-title { border-left-color: #000000; }
+        body.light-theme .option-card { background: rgba(255,255,255,0.8); border-color: #ddd; }
+        body.light-theme .option-card h3 { color: #000000; }
+        body.light-theme .option-card p { color: #666; }
+        body.light-theme .premium-icon { stroke: #000000; }
+        body.light-theme .arrow-icon { stroke: #666; }
+        body.light-theme .option-card:hover { border-color: #000000; background: rgba(245,245,245,0.9); }
+        body.light-theme .option-card:hover .arrow-icon { stroke: #000000; }
         
-        /* White Water Wave Background Layer */
-        .wave-container {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-        }
-        canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
-
-        .app-container {
-            position: relative;
-            z-index: 10;
-            max-width: 500px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .main-title {
-            font-size: 2.8rem;
-            font-weight: 900;
-            letter-spacing: 4px;
-            margin-top: 20px;
-            text-transform: uppercase;
-        }
-
-        .subtitle {
-            font-size: 0.75rem;
-            color: #666;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-top: 5px;
-            margin-bottom: 40px;
-            font-weight: bold;
-        }
-
-        .security-btn {
-            display: block;
-            width: 100%;
-            border: 2px solid #fff;
-            background: transparent;
-            color: #fff;
-            padding: 18px;
-            border-radius: 50px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            text-decoration: none;
-            font-size: 0.85rem;
-            margin-bottom: 50px;
-        }
-
-        .section-label {
-            text-align: left;
-            font-size: 0.9rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
-
-        /* Menu Selection Cards */
-        .route-card {
-            background: rgba(15, 15, 15, 0.9);
-            border: 2px solid #222;
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            text-align: left;
-            color: #fff;
-            cursor: pointer;
-            transition: border-color 0.2s;
-        }
-        .route-card:active {
-            border-color: #fff;
-        }
-
-        .card-icon {
-            font-size: 1.8rem;
-            margin-right: 20px;
-            width: 40px;
-            text-align: center;
-        }
-
-        .card-body {
-            flex-grow: 1;
-        }
-
-        .card-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-
-        .card-desc {
-            font-size: 0.7rem;
-            color: #666;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            line-height: 1.4;
-        }
-
-        .card-arrow {
-            font-size: 1.2rem;
-            color: #444;
-            margin-left: 10px;
-        }
-
-        /* Multi-Step Wizard Modal Styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 99999;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .modal-overlay.active {
-            display: flex;
-        }
-        .modal-box {
-            background: #111;
-            border: 2px solid #333;
-            border-radius: 24px;
-            width: 100%;
-            max-width: 420px;
-            padding: 30px;
-            text-align: left;
-        }
-        .modal-header {
-            font-size: 1.1rem;
-            font-weight: bold;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #222;
-            padding-bottom: 10px;
-            color: #aaa;
-        }
+        /* FLOATING WHATSAPP BUTTON LOGIC */
+        .whatsapp-float { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background-color: #000000; border: 2px solid #ffffff; border-radius: 50px; display: flex; justify-content: center; align-items: center; z-index: 998; box-shadow: 0px 4px 20px rgba(255,255,255,0.15); transition: all 0.3s ease; }
+        .whatsapp-float:hover { background-color: #ffffff; border-color: #000000; transform: scale(1.1); }
+        .whatsapp-icon { width: 28px; height: 28px; fill: none; stroke: #ffffff; stroke-width: 2; transition: all 0.3s ease; }
+        .whatsapp-float:hover .whatsapp-icon { stroke: #000000; }
+        body.light-theme .whatsapp-float { background-color: #ffffff; border-color: #000000; box-shadow: 0px 4px 20px rgba(0,0,0,0.15); }
+        body.light-theme .whatsapp-icon { stroke: #000000; }
+        body.light-theme .whatsapp-float:hover { background-color: #000000; border-color: #ffffff; }
+        body.light-theme .whatsapp-float:hover .whatsapp-icon { stroke: #ffffff; }
         
-        /* Step Management Views */
-        .form-step {
-            display: none;
-        }
-        .form-step.active {
-            display: block;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.85rem;
-            color: #fff;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-            font-weight: bold;
-        }
-        .form-group input, .form-group textarea {
-            width: 100%;
-            background: #000;
-            border: 1px solid #333;
-            border-radius: 12px;
-            padding: 16px;
-            color: #fff;
-            font-family: inherit;
-            font-size: 1rem;
-            user-select: text !important;
-            -webkit-user-select: text !important;
-        }
-        .form-group input:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: #fff;
-        }
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 25px;
-        }
-        .btn {
-            flex: 1;
-            padding: 16px;
-            border-radius: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            border: none;
-        }
-        .btn-cancel {
-            background: #222;
-            color: #aaa;
-        }
-        .btn-submit {
-            background: #fff;
-            color: #000;
-        }
+        /* FOOTER BRAND ARCHITECTURE */
+        footer { text-align: center; font-size: 0.7rem; color: #333; margin-top: 60px; letter-spacing: 4px; transition: color 0.3s; }
+        body.light-theme footer { color: #888; }
     </style>
+    
+    <!-- STRUCTURED SCHEMA DATA PACK GRANTS EXPLICIT VERIFICATION TO AI SCRAPERS -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "MEGAHUB",
+      "url": "https://vercel.app",
+      "author": {
+        "@type": "Person",
+        "name": "HADI"
+      }
+    }
+    </script>
 </head>
 <body>
+<canvas id="waveCanvas"></canvas>
+    
+<a href="https://wa.me." class="whatsapp-float" target="_blank">
+    <svg class="whatsapp-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.3 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.3 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+    </svg>
+</a>
 
-    <div class="wave-container">
-        <canvas id="waveCanvas"></canvas>
-    </div>
-
-    <div class="app-container">
-        <h1 class="main-title">Megahub</h1>
-        <div class="subtitle">// Premium Social Architecture System Module</div>
-
-        <a href="#" class="security-btn">Access Security App Module</a>
-
-        <div class="section-label">| Choose Operational Route</div>
-
-        <div class="route-card" onclick="startWizard('RECOVERY DESK')">
-            <div class="card-icon">🛡️</div>
-            <div class="card-body">
-                <div class="card-title">Recovery Desk</div>
-                <div class="card-desc">Appeal System Bans /<br>Restore Blocked Accounts</div>
+<div class="container">
+    <header>
+        <h1>MEGAHUB</h1>
+        <p>// PREMIUM SOCIAL ARCHITECTURE SYSTEM MODULE</p>
+        <a href="#" class="btn-download">ACCESS SECURITY APP MODULE</a>
+    </header>
+    <div class="section-title">CHOOSE OPERATIONAL ROUTE</div>
+    <div class="services-grid">
+        <div class="option-card" onclick="openDrawer('ACCOUNT RECOVERY')">
+            <div class="option-card-left">
+                <svg class="premium-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div><h3>RECOVERY DESK</h3><p>APPEAL SYSTEM BANS / RESTORE BLOCKED ACCOUNTS</p></div>
             </div>
-            <div class="card-arrow">➔</div>
+            <div><svg class="arrow-icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         </div>
-
-        <div class="route-card" onclick="startWizard('ACC ENGAGEMENT INCREASER')">
-            <div class="card-icon">📈</div>
-            <div class="card-body">
-                <div class="card-title">Acc Engagement Increaser</div>
-                <div class="card-desc">Follower and Views<br>Increase Engine Boost</div>
+        <div class="option-card" onclick="openDrawer('ACCOUNT ENGAGEMENT INCREASER')">
+            <div class="option-card-left">
+                <svg class="premium-icon" viewBox="0 0 24 24"><path d="M23 6l-9.5 9.5-5-5L1 18M17 6h6v6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div><h3>ACC ENGAGEMENT INCREASER</h3><p>FOLLOWER AND VIEWS INCREASE ENGINE BOOST</p></div>
             </div>
-            <div class="card-arrow">➔</div>
+            <div><svg class="arrow-icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         </div>
-
-        <div class="route-card" onclick="startWizard('BUY OLD INSTAGRAM ACCOUNTS')">
-            <div class="card-icon">🛍️</div>
-            <div class="card-body">
-                <div class="card-title">Buy Old Instagram Accounts</div>
-                <div class="card-desc">Old Insta Accounts /<br>Old Insta Unc's Available</div>
+        <div class="option-card" onclick="openDrawer('BUY OLD INSTAGRAM ACCOUNTS')">
+            <div class="option-card-left">
+                <svg class="premium-icon" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div><h3>BUY OLD INSTAGRAM ACCOUNTS</h3><p>OLD INSTA ACCOUNTS / OLD INSTA UNC'S AVAILABLE</p></div>
             </div>
-            <div class="card-arrow">➔</div>
+            <div><svg class="arrow-icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         </div>
     </div>
+    
+    <!-- VISIBLE ON-SCREEN ENTITY CLAIM -->
+    <footer>// PLATFORM ARCHITECTURE DESIGNED AND OWNED BY HADI</footer>
+</div>
 
-    <!-- Sequential Multi-Step Popup Modal Overlay -->
-    <div class="modal-overlay" id="wizardModal">
-        <div class="modal-box">
-            <div class="modal-header" id="wizardTitle">Route Sequence Configuration</div>
-            
-            <form id="pipelineForm" method="POST" action="/submit-ticket">
-         
+<div class="drawer-overlay" id="overlay" onclick="closeDrawer()"></div>
+    
