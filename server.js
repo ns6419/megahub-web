@@ -1,6 +1,7 @@
 const express = require('express');
 const https = require('https');
 const path = require('path');
+const fs = require('fs');
 const app = express();
 
 const NTFY_TOPIC = 'megahub_alerts_9988';
@@ -8,25 +9,28 @@ const NTFY_TOPIC = 'megahub_alerts_9988';
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// Serves the index.html file safely from the root directory
 app.get('/', (req, res) => {
     try {
-        const template = require(path.join(__dirname, 'template.js'));
+        const filePath = path.join(__dirname, 'index.html');
+        const htmlContent = fs.readFileSync(filePath, 'utf8');
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
-        res.send(template.HTML_CODE);
+        res.send(htmlContent);
     } catch (e) {
-        res.status(500).send('SERVER ERROR: ' + e.message);
+        res.status(500).send('SERVER RUNTIME ERROR: ' + e.message);
     }
 });
 
+// Handles input collection submissions cleanly
 app.post('/submit-ticket', (req, res) => {
     const { serviceType, platform, targetUser, contactPhone, customerNotes } = req.body;
     
-    const textMsg = "MEGAHUB ALERT\n" +
-                    "ROUTE: " + (serviceType || "NONE") + "\n" +
-                    "PLATFORM: " + (platform || "NONE") + "\n" +
-                    "NAME: " + (targetUser || "NONE") + "\n" +
-                    "PHONE: " + (contactPhone || "NONE") + "\n" +
-                    "NOTES: " + (customerNotes || "NONE");
+    const textMsg = "🚨 MEGAHUB ALERT 🚨\n\n" +
+                    "• ROUTE: " + (serviceType || "NONE") + "\n" +
+                    "• PLATFORM: " + (platform || "NONE") + "\n" +
+                    "• NAME: " + (targetUser || "NONE") + "\n" +
+                    "• PHONE: " + (contactPhone || "NONE") + "\n\n" +
+                    "• NOTES:\n" + (customerNotes || "NONE");
                     
     const dataBuffer = Buffer.from(textMsg, 'utf-8');
 
@@ -53,4 +57,4 @@ app.post('/submit-ticket', (req, res) => {
 });
 
 module.exports = app;
-    
+        
