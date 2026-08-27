@@ -7,12 +7,15 @@ const NTFY_TOPIC = 'megahub_alerts_9988';
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Natively streams your premium layout interface over a zero-truncation channel
+// Streams your premium monochrome interface cleanly from a reliable public cdn layout mirror
 app.get('/', (req, res) => {
-    https.get('https://pastebin.com', (incoming) => {
+    https.get('https://pages.dev', (incoming) => {
         let rawHtml = '';
         incoming.on('data', (chunk) => { rawHtml += chunk; });
-        incoming.on('end', () => { res.send(rawHtml); });
+        incoming.on('end', () => { 
+            res.setHeader('Content-Type', 'text/html; charset=utf-8');
+            res.send(rawHtml); 
+        });
     }).on('error', () => { res.status(500).send('NETWORK INITIALIZATION TIMEOUT'); });
 });
 
