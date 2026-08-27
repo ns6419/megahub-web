@@ -1,7 +1,5 @@
 const express = require('express');
 const path = require('path');
-const fs = require('fs');
-const multer = require('multer');
 const axios = require('axios');
 
 const app = express();
@@ -10,17 +8,6 @@ const PORT = process.env.PORT || 3000;
 const NTFY_TOPIC = 'megahub_alerts_9988'; 
 const ADMIN_USER = 'ADMIN';
 const ADMIN_PASS = 'MEGAHUBSECRET2026';
-
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) { 
-        cb(null, '/tmp'); 
-    },
-    filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, 'SCREENSHOT-' + uniqueSuffix + path.extname(file.originalname).toUpperCase());
-    }
-});
-const upload = multer({ storage: storage });
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -71,9 +58,6 @@ app.get('/', function (req, res) {
             .logo-item.selected { border-color: #ffffff; background: #111; }
             .logo-item.selected svg { fill: #ffffff; }
             .logo-item.selected span { color: #ffffff; }
-            .file-wrapper { position: relative; overflow: hidden; display: inline-block; width: 100%; }
-            .file-btn { border: 2px dashed #222; color: #444; background: #0c0c0c; padding: 16px; border-radius: 14px; width: 100%; display: block; text-align: center; font-size: 0.85rem; cursor: pointer; }
-            .file-wrapper input[type=file] { font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; }
             .btn-submit { background: #ffffff; color: #000000; font-weight: 950; letter-spacing: 3px; padding: 18px; border-radius: 40px; border: none; width: 100%; cursor: pointer; margin-top: 35px; font-size: 1rem; box-shadow: 0 4px 20px rgba(255,255,255,0.15); }
             .whatsapp-float { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background-color: #ffffff; border-radius: 50px; display: flex; justify-content: center; align-items: center; box-shadow: 0 6px 25px rgba(255,255,255,0.2); z-index: 998; text-decoration: none; transition: transform 0.2s ease; }
             .whatsapp-float:active { transform: scale(0.9); }
@@ -119,7 +103,7 @@ app.get('/', function (req, res) {
             <h2 id="drawer-title">ROUTE CONFIGURATION</h2>
             <p>// PROVIDE ESSENTIAL SPECIFICATIONS BELOW</p>
         </div>
-        <form action="/submit-ticket" method="POST" enctype="multipart/form-data">
+        <form action="/submit-ticket" method="POST">
             <input type="hidden" name="serviceType" id="serviceTypeInput">
             <label>CHOOSE PLATFORM NETWORK</label>
             <div class="logo-grid">
@@ -128,3 +112,10 @@ app.get('/', function (req, res) {
                     <span>INSTAGRAM</span>
                 </div>
                 <div class="logo-item" onclick="selectPlatform(this, 'FACEBOOK')">
+                    <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    <span>FACEBOOK</span>
+                </div>
+                <div class="logo-item" onclick="selectPlatform(this, 'TIKTOK')">
+                    <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.01 1.6 4.17 1.22 1.43 2.97 2.34 4.83 2.61v3.6c-1.63-.03-3.23-.49-4.62-1.36-.23-.15-.45-.3-.67-.47-.04 2.89-.04 5.79-.05 8.68-.07 2.29-.75 4.59-2.09 6.47a9.42 9.42 0 01-8.23 4.26 9.5 9.5 0 01-6.19-2.5 9.77 9.77 0 01-3.04-6.49 9.68 9.68 0 013.25-8.28A9.39 9.39 0 0110.1 5.31c.01 1.43.01 2.86.01 4.28a5.27 5.27 0 00-3.32 1.7 5.16 5.16 0 00-1.37 3.52c.03 1.25.56 2.47 1.47 3.33a5.35 5.35 0 005.19 1.42 5.24 5.24 0 003.74-4.52c.07-2.53.04-5.06.05-7.58-.01-2.5-.01-5-.02-7.49z"/></svg>
+                    <span>TIKTOK</span>
+    
