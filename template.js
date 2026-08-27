@@ -16,57 +16,266 @@ module.exports = {
             text-transform: uppercase;
             font-weight: 950;
             letter-spacing: 2px;
-            user-select: none;
-            -webkit-user-select: none;
         }
         html, body {
             width: 100%;
-            height: 100%;
-            overflow: hidden;
+            min-height: 100vh;
             background: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
         }
         body {
-            display: flex;
-            flex-direction: column;
             position: relative;
+            padding: 30px 20px 120px 20px;
         }
+        /* Background Liquid Physics Canvas Container */
         canvas {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
             pointer-events: auto;
             touch-action: none;
         }
         .container {
-            position: absolute;
-            top: 18%;
-            left: 50%;
-            transform: translate(-50%, -50%);
             width: 100%;
             max-width: 600px;
-            text-align: center;
-            z-index: 3;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
             pointer-events: none;
         }
-        header h1 {
-            font-size: 3.2rem;
-            letter-spacing: 8px;
-            color: #fff;
-            text-shadow: 0 4px 15px rgba(0,0,0,0.6);
+        .interactive-layer {
+            pointer-events: auto;
         }
-        .owner-badge {
-            margin-top: 12px;
-            font-size: 0.75rem;
-            color: #666;
-            letter-spacing: 4px;
+        header {
+            text-align: center;
+            margin: 40px 0 30px 0;
+        }
+        header h1 {
+            font-size: 3rem;
+            letter-spacing: 8px;
+        }
+        .subtitle {
+            font-size: 0.65rem;
+            color: #555;
+            margin-top: 10px;
+            letter-spacing: 3px;
             font-weight: 700;
         }
-        .owner-badge span {
+        .btn-main-action {
+            display: block;
+            background: transparent;
             color: #fff;
-            font-weight: 950;
+            text-align: center;
+            padding: 16px;
+            border: 2px solid #fff;
+            text-decoration: none;
+            border-radius: 40px;
+            margin: 30px 0 40px 0;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+        .btn-main-action:active {
+            background: #fff;
+            color: #000;
+        }
+        .section-title {
+            font-size: 0.85rem;
+            border-left: 4px solid #fff;
+            padding-left: 12px;
+            margin: 40px 0 20px 0;
+            letter-spacing: 3px;
+        }
+        /* Premium Card Grid Layout Architecture */
+        .services-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .option-card {
+            background: rgba(5, 5, 5, 0.75);
+            border: 2px solid #222;
+            padding: 24px;
+            border-radius: 18px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .option-card:active {
+            border-color: #fff;
+            transform: scale(0.97);
+            background: rgba(20, 20, 20, 0.9);
+        }
+        .card-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .card-icon-frame {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card-icon-frame svg {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: #fff;
+            stroke-width: 2;
+        }
+        .card-text h3 {
+            font-size: 1.1rem;
+            letter-spacing: 1.5px;
+            color: #fff;
+        }
+        .card-text p {
+            color: #555;
+            font-size: 0.65rem;
+            margin-top: 6px;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+        .arrow-frame {
+            width: 24px;
+            height: 24px;
+        }
+        .arrow-frame svg {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: #444;
+            stroke-width: 2.5;
+            transition: stroke 0.3s;
+        }
+        .option-card:active .arrow-frame svg {
+            stroke: #fff;
+        }
+        /* Premium Animated Slide Drawer Matrix Layout */
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+        }
+        .drawer-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .slide-drawer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #050505;
+            border-top: 2px solid #ffffff;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            padding: 35px 24px;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1001;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .slide-drawer.active {
+            transform: translateY(0);
+        }
+        .drawer-header {
+            font-size: 1.3rem;
+            text-align: center;
+            margin-bottom: 25px;
+            letter-spacing: 3px;
+        }
+        /* Swipeable Slider Horizon Engine Rows */
+        .logo-grid {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 10px 4px 20px 4px;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .logo-grid::-webkit-scrollbar {
+            display: none;
+        }
+        .logo-item {
+            background: #000;
+            border: 2px solid #222;
+            border-radius: 14px;
+            padding: 18px 24px;
+            cursor: pointer;
+            flex-shrink: 0;
+            color: #555;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+        .logo-item.selected {
+            border-color: #fff;
+            background: #fff;
+            color: #000;
+            transform: scale(1.05);
+        }
+        label {
+            display: block;
+            font-size: 0.7rem;
+            margin: 20px 0 10px 0;
+            color: #888;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 16px;
+            background: #000;
+            border: 2px solid #222;
+            color: #fff;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s;
+        }
+        input:focus, textarea:focus {
+            border-color: #fff;
+            outline: none;
+        }
+        textarea {
+            resize: none;
+            height: 100px;
+            text-transform: none;
+            font-weight: 500;
+        }
+        input {
+            text-transform: none;
+            font-weight: 500;
+        }
+        .btn-submit {
+            background: #fff;
+            color: #000;
+            padding: 18px;
+            border-radius: 40px;
+            border: none;
+            width: 100%;
+            margin-top: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.2s;
+        }
+        .btn-submit:active {
+            transform: scale(0.97);
         }
         .whatsapp-float {
             position: fixed;
@@ -81,8 +290,7 @@ module.exports = {
             justify-content: center;
             align-items: center;
             z-index: 998;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            transition: all .3s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
             pointer-events: auto;
         }
         .whatsapp-icon {
@@ -101,143 +309,30 @@ module.exports = {
     <div class="container">
         <header>
             <h1>MEGAHUB</h1>
-            <div class="owner-badge">DESIGNED & OWNED BY: <span>HADI</span></div>
+            <div class="subtitle">// PREMIUM SOCIAL ARCHITECTURE SYSTEM MODULE</div>
         </header>
-    </div>
 
-    <a href="https://whatsapp.com" class="whatsapp-float" target="_blank">
-        <svg class="whatsapp-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.3 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.3 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-        </svg>
-    </a>
+        <div class="interactive-layer">
+            <a href="#" class="btn-main-action">ACCESS SECURITY APP MODULE</a>
 
-    <script>
-        const canvas = document.getElementById('liquidCanvas');
-        const ctx = canvas.getContext('2d');
+            <div class="section-title">| CHOOSE OPERATIONAL ROUTE</div>
 
-        let width, height, points = [];
-        const numPoints = 8; 
-        let time = 0;
-        
-        let mouse = { x: 0, y: 0, targetX: 0, targetY: 0, active: false };
+            <div class="services-grid">
+                <!-- Card 1 -->
+                <div class="option-card" onclick="openModule('RECOVERY DESK', 'APPEAL SYSTEM BANS / RESTORE BLOCKED ACCOUNTS')">
+                    <div class="card-left">
+                        <div class="card-icon-frame">
+                            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </div>
+                        <div class="card-text">
+                            <h3>RECOVERY DESK</h3>
+                            <p>APPEAL SYSTEM BANS / RESTORE BLOCKED ACCOUNTS</p>
+                        </div>
+                    </div>
+                    <div class="arrow-frame">
+                        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </div>
+                </div>
 
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-            initPoints();
-        }
-
-        function initPoints() {
-            points = [];
-            let spacing = width / (numPoints - 1);
-            let baseHeight = height * 0.55; 
-            
-            for (let i = 0; i < numPoints; i++) {
-                points.push({
-                    x: i * spacing,
-                    y: baseHeight,
-                    baselineY: baseHeight,
-                    vy: 0,
-                    force: 0
-                });
-            }
-        }
-
-        window.addEventListener('resize', resize);
-        resize();
-
-        // Premium organic gesture dynamics handlers
-        function touchStart(x, y) {
-            mouse.active = true;
-            mouse.targetX = x;
-            mouse.targetY = y;
-        }
-
-        function touchMove(x, y) {
-            mouse.targetX = x;
-            mouse.targetY = y;
-        }
-
-        function touchEnd() {
-            mouse.active = false;
-        }
-
-        window.addEventListener('mousedown', (e) => touchStart(e.clientX, e.clientY));
-        window.addEventListener('mousemove', (e) => touchMove(e.clientX, e.clientY));
-        window.addEventListener('mouseup', touchEnd);
-
-        window.addEventListener('touchstart', (e) => {
-            if(e.touches.length > 0) touchStart(e.touches[0].clientX, e.touches[0].clientY);
-        });
-        window.addEventListener('touchmove', (e) => {
-            if(e.touches.length > 0) touchMove(e.touches[0].clientX, e.touches[0].clientY);
-        });
-        window.addEventListener('touchend', touchEnd);
-
-        function animate() {
-            time += 0.015;
-            
-            // Clear screen correctly without color artifacting
-            ctx.fillStyle = '#000000';
-            ctx.fillRect(0, 0, width, height);
-
-            // Interpolated responsive input smooth follow tracker
-            mouse.x += (mouse.targetX - mouse.x) * 0.1;
-            mouse.y += (mouse.targetY - mouse.y) * 0.1;
-
-            // Physics calculation engine loop
-            points.forEach((p, idx) => {
-                // Multi-layered smooth wave oscillation
-                let waveNoise = Math.sin(time + idx * 0.8) * 15 + Math.cos(time * 1.5 + idx * 0.4) * 8;
+                <!-- Card 2 -->
                 
-                // Interactive dynamic cursor proximity distortion
-                if (mouse.active) {
-                    let dx = mouse.x - p.x;
-                    let dy = mouse.y - p.y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < 180) {
-                        // Creates organic fluid displacement force logic push
-                        let push = (180 - distance) * 0.35;
-                        p.force = (mouse.y > p.baselineY) ? push : -push;
-                    } else {
-                        p.force *= 0.85;
-                    }
-                } else {
-                    p.force *= 0.85;
-                }
-
-                // Spring hooks relaxation arithmetic calculation
-                let targetY = p.baselineY + waveNoise + p.force;
-                let diffY = targetY - p.y;
-                p.vy += diffY * 0.04; // Tension spring elasticity coefficient
-                p.vy *= 0.82;         // Organic drag friction damping parameter
-                p.y += p.vy;
-            });
-
-            // Smooth cubic vector draw sequence pipeline 
-            ctx.beginPath();
-            ctx.moveTo(0, height);
-            ctx.lineTo(0, points[0].y);
-
-            for (let i = 0; i < points.length - 1; i++) {
-                let xc = (points[i].x + points[i + 1].x) / 2;
-                let yc = (points[i].y + points[i + 1].y) / 2;
-                ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
-            }
-
-            ctx.lineTo(width, points[points.length - 1].y);
-            ctx.lineTo(width, height);
-            ctx.closePath();
-
-            // Liquid color fill execution
-            ctx.fillStyle = '#ffffff';
-            ctx.fill();
-
-            requestAnimationFrame(animate);
-        }
-
-        animate();
-    </script>
-</body>
-</html>`
-};
