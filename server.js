@@ -7,20 +7,15 @@ const NTFY_TOPIC = 'megahub_alerts_9988';
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Stable high-speed stream pulls your custom premium layout instantly from a rock-solid CDN mirror
+// Stable native route pulls the interface module from your local template file
 app.get('/', (req, res) => {
-    https.get('https://pages.dev', (htmlRes) => {
-        let data = '';
-        htmlRes.on('data', (chunk) => { data += chunk; });
-        htmlRes.on('end', () => { 
-            res.setHeader('Content-Type', 'text/html; charset=utf-8');
-            res.send(data); 
-        });
-    }).on('error', () => {
-        // High-speed instant fallback template so your page NEVER goes blank or error-loops
+    try {
+        const template = require('./template.js');
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
-        res.send('<!DOCTYPE html><html><head><meta http-equiv="refresh" content="2"></head><body style="background:#000;color:#fff;text-align:center;padding:50px;font-family:sans-serif;text-transform:uppercase;letter-spacing:2px;"><h1 style="margin-top:100px;">⚡ INITIALIZING OPERATIONAL REQUEST... ⚡</h1><p style="color:#666;margin-top:20px;">ESTABLISHING HIGH-SPEED INFRASTRUCTURE CONNECTION. STANDBY.</p></body></html>');
-    });
+        res.send(template.HTML_CODE);
+    } catch (e) {
+        res.status(500).send('UI ENGINE MODULAR CONNECTIVITY ERROR');
+    }
 });
 
 // Ticket Submission Handler Pipeline
@@ -46,4 +41,3 @@ app.post('/submit-ticket', (req, res) => {
 });
 
 module.exports = app;
-                          
