@@ -45,7 +45,7 @@ app.listen(PORT, () => {
 module.exports = app;
 
 // ==========================================
-// PREMIUM FRONTEND WITH POPUP FORMS & TOUCH WAVES
+// PREMIUM FRONTEND - STEP-BY-STEP FLOW
 // ==========================================
 const HTML_PAGE = `
 <!DOCTYPE html>
@@ -59,7 +59,7 @@ const HTML_PAGE = `
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none; /* Prevents text selection popups on mobile */
+            user-select: none;
             -webkit-user-select: none;
         }
         body {
@@ -72,7 +72,7 @@ const HTML_PAGE = `
             padding: 40px 20px;
         }
         
-        /* White Water Wave Background */
+        /* White Water Wave Background Layer */
         .wave-container {
             position: fixed;
             bottom: 0;
@@ -139,7 +139,7 @@ const HTML_PAGE = `
             font-weight: bold;
         }
 
-        /* Menu Cards */
+        /* Menu Selection Cards */
         .route-card {
             background: rgba(15, 15, 15, 0.9);
             border: 2px solid #222;
@@ -190,7 +190,7 @@ const HTML_PAGE = `
             margin-left: 10px;
         }
 
-        /* Form Modal Popup */
+        /* Multi-Step Wizard Modal Styles */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -217,35 +217,44 @@ const HTML_PAGE = `
             text-align: left;
         }
         .modal-header {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: bold;
             letter-spacing: 1px;
             text-transform: uppercase;
             margin-bottom: 20px;
             border-bottom: 1px solid #222;
             padding-bottom: 10px;
+            color: #aaa;
         }
-        .form-group {
-            margin-bottom: 20px;
+        
+        /* Step Management Views */
+        .form-step {
+            display: none;
         }
+        .form-step.active {
+            display: block;
+        }
+
         .form-group label {
             display: block;
-            font-size: 0.75rem;
-            color: #888;
+            font-size: 0.85rem;
+            color: #fff;
             letter-spacing: 1px;
             text-transform: uppercase;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             font-weight: bold;
         }
         .form-group input, .form-group textarea {
             width: 100%;
             background: #000;
             border: 1px solid #333;
-            border-radius: 10px;
-            padding: 12px;
+            border-radius: 12px;
+            padding: 16px;
             color: #fff;
             font-family: inherit;
-            font-size: 0.9rem;
+            font-size: 1rem;
+            user-select: text !important;
+            -webkit-user-select: text !important;
         }
         .form-group input:focus, .form-group textarea:focus {
             outline: none;
@@ -254,12 +263,12 @@ const HTML_PAGE = `
         .modal-actions {
             display: flex;
             gap: 10px;
-            margin-top: 10px;
+            margin-top: 25px;
         }
         .btn {
             flex: 1;
-            padding: 14px;
-            border-radius: 10px;
+            padding: 16px;
+            border-radius: 12px;
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -291,7 +300,7 @@ const HTML_PAGE = `
 
         <div class="section-label">| Choose Operational Route</div>
 
-        <div class="route-card" onclick="openForm('RECOVERY DESK')">
+        <div class="route-card" onclick="startWizard('RECOVERY DESK')">
             <div class="card-icon">🛡️</div>
             <div class="card-body">
                 <div class="card-title">Recovery Desk</div>
@@ -300,7 +309,7 @@ const HTML_PAGE = `
             <div class="card-arrow">➔</div>
         </div>
 
-        <div class="route-card" onclick="openForm('ACC ENGAGEMENT INCREASER')">
+        <div class="route-card" onclick="startWizard('ACC ENGAGEMENT INCREASER')">
             <div class="card-icon">📈</div>
             <div class="card-body">
                 <div class="card-title">Acc Engagement Increaser</div>
@@ -309,7 +318,7 @@ const HTML_PAGE = `
             <div class="card-arrow">➔</div>
         </div>
 
-        <div class="route-card" onclick="openForm('BUY OLD INSTAGRAM ACCOUNTS')">
+        <div class="route-card" onclick="startWizard('BUY OLD INSTAGRAM ACCOUNTS')">
             <div class="card-icon">🛍️</div>
             <div class="card-body">
                 <div class="card-title">Buy Old Instagram Accounts</div>
@@ -319,13 +328,10 @@ const HTML_PAGE = `
         </div>
     </div>
 
-    <!-- Form Overlay -->
-    <div class="modal-overlay" id="ticketModal">
+    <!-- Sequential Multi-Step Popup Modal Overlay -->
+    <div class="modal-overlay" id="wizardModal">
         <div class="modal-box">
-            <div class="modal-header" id="modalTitle">Request Option Form</div>
+            <div class="modal-header" id="wizardTitle">Route Sequence Configuration</div>
+            
             <form id="pipelineForm" method="POST" action="/submit-ticket">
-                <input type="hidden" id="formServiceType" name="serviceType" value="">
-                <input type="hidden" name="platform" value="INSTAGRAM">
-
-                <div class="form-group">
-                    <label for="targetUser">1. Target Username</label>
+         
