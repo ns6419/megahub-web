@@ -1,4 +1,3 @@
-```javascript
 const express = require('express');
 const https = require('https');
 const path = require('path');
@@ -9,12 +8,12 @@ const NTFY_TOPIC = 'megahub_alerts_9988';
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Stable local lookup serves your index.html cleanly with zero truncation crashes
+// Stable native server method reads index.html locally with zero truncation crashes
 app.get('/', (req, res) => {
     res.sendFile(path.join(process.cwd(), 'index.html'));
 });
 
-// Ticket Submission Route Pipeline Handler
+// Ticket Form Post Submission Endpoint Pipeline
 app.post('/submit-ticket', (req, res) => {
     const { serviceType, platform, targetUser, contactPhone, customerNotes } = req.body;
     const textMsg = "NEW REQUEST - ROUTE: " + (serviceType || "NONE") + " - PLATFORM: " + (platform || "NONE") + " - USER: " + (targetUser || "NONE") + " - PHONE: " + (contactPhone || "NONE") + " - NOTES: " + (customerNotes || "NONE");
