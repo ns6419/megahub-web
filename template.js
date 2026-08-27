@@ -28,7 +28,6 @@ module.exports = {
             position: relative;
             padding: 30px 20px 120px 20px;
         }
-        /* Background Liquid Physics Canvas Container */
         canvas {
             position: fixed;
             top: 0;
@@ -89,7 +88,6 @@ module.exports = {
             margin: 40px 0 20px 0;
             letter-spacing: 3px;
         }
-        /* Premium Card Grid Layout Architecture */
         .services-grid {
             display: flex;
             flex-direction: column;
@@ -159,7 +157,6 @@ module.exports = {
         .option-card:active .arrow-frame svg {
             stroke: #fff;
         }
-        /* Premium Animated Slide Drawer Matrix Layout */
         .drawer-overlay {
             position: fixed;
             top: 0;
@@ -203,7 +200,6 @@ module.exports = {
             margin-bottom: 25px;
             letter-spacing: 3px;
         }
-        /* Swipeable Slider Horizon Engine Rows */
         .logo-grid {
             display: flex;
             gap: 12px;
@@ -318,8 +314,7 @@ module.exports = {
             <div class="section-title">| CHOOSE OPERATIONAL ROUTE</div>
 
             <div class="services-grid">
-                <!-- Card 1 -->
-                <div class="option-card" onclick="openModule('RECOVERY DESK', 'APPEAL SYSTEM BANS / RESTORE BLOCKED ACCOUNTS')">
+                <div class="option-card" onclick="openModule('RECOVERY DESK')">
                     <div class="card-left">
                         <div class="card-icon-frame">
                             <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -334,5 +329,11 @@ module.exports = {
                     </div>
                 </div>
 
-                <!-- Card 2 -->
-                
+                <div class="option-card" onclick="openModule('ACC ENGAGEMENT INCREASER')">
+                    <div class="card-left">
+                        <div class="card-icon-frame">
+                            <svg viewBox="0 0 24 24"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg>
+                        </div>
+                        <div class="card-text">
+                            <h3>ACC ENGAGEMENT INCREASER</h3>
+                            
