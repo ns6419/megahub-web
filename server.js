@@ -7,7 +7,7 @@ const NTFY_TOPIC = 'megahub_alerts_9988';
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Main Route - V3 Build Update
+// Main Route
 app.get('/', (req, res) => {
     res.send(HTML_PAGE);
 });
@@ -45,7 +45,7 @@ app.listen(PORT, () => {
 module.exports = app;
 
 // ==========================================
-// PREMIUM FRONTEND V3 (CACHE FORCE)
+// PREMIUM FRONTEND WITH POPUP FORMS & TOUCH WAVES
 // ==========================================
 const HTML_PAGE = `
 <!DOCTYPE html>
@@ -53,15 +53,17 @@ const HTML_PAGE = `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEGAHUB OVERHAUL V3</title>
+    <title>MEGAHUB OVERHAUL</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            user-select: none; /* Prevents text selection popups on mobile */
+            -webkit-user-select: none;
         }
         body {
-            background: #000 !important;
+            background: #000;
             color: #fff;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             min-height: 100vh;
@@ -70,14 +72,14 @@ const HTML_PAGE = `
             padding: 40px 20px;
         }
         
-        /* Force Wave Canvas layer over pure black background */
+        /* White Water Wave Background */
         .wave-container {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 2;
+            z-index: 1;
             pointer-events: none;
         }
         canvas {
@@ -139,20 +141,20 @@ const HTML_PAGE = `
 
         /* Menu Cards */
         .route-card {
-            background: rgba(15, 15, 15, 0.9) !important;
-            border: 2px solid #222 !important;
+            background: rgba(15, 15, 15, 0.9);
+            border: 2px solid #222;
             border-radius: 20px;
             padding: 25px;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
             text-align: left;
-            color: #fff !important;
-            cursor: pointer !important;
+            color: #fff;
+            cursor: pointer;
             transition: border-color 0.2s;
         }
         .route-card:active {
-            border-color: #fff !important;
+            border-color: #fff;
         }
 
         .card-icon {
@@ -188,7 +190,7 @@ const HTML_PAGE = `
             margin-left: 10px;
         }
 
-        /* Modal Overlays */
+        /* Form Modal Popup */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -196,14 +198,14 @@ const HTML_PAGE = `
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.9);
-            z-index: 99999 !important;
+            z-index: 99999;
             display: none;
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
         .modal-overlay.active {
-            display: flex !important;
+            display: flex;
         }
         .modal-box {
             background: #111;
@@ -289,7 +291,6 @@ const HTML_PAGE = `
 
         <div class="section-label">| Choose Operational Route</div>
 
-        <!-- Card 1 -->
         <div class="route-card" onclick="openForm('RECOVERY DESK')">
             <div class="card-icon">🛡️</div>
             <div class="card-body">
@@ -299,7 +300,6 @@ const HTML_PAGE = `
             <div class="card-arrow">➔</div>
         </div>
 
-        <!-- Card 2 -->
         <div class="route-card" onclick="openForm('ACC ENGAGEMENT INCREASER')">
             <div class="card-icon">📈</div>
             <div class="card-body">
@@ -309,7 +309,6 @@ const HTML_PAGE = `
             <div class="card-arrow">➔</div>
         </div>
 
-        <!-- Card 3 -->
         <div class="route-card" onclick="openForm('BUY OLD INSTAGRAM ACCOUNTS')">
             <div class="card-icon">🛍️</div>
             <div class="card-body">
@@ -320,7 +319,7 @@ const HTML_PAGE = `
         </div>
     </div>
 
-    <!-- Popup Window Form Entry -->
+    <!-- Form Overlay -->
     <div class="modal-overlay" id="ticketModal">
         <div class="modal-box">
             <div class="modal-header" id="modalTitle">Request Option Form</div>
@@ -328,4 +327,5 @@ const HTML_PAGE = `
                 <input type="hidden" id="formServiceType" name="serviceType" value="">
                 <input type="hidden" name="platform" value="INSTAGRAM">
 
-    
+                <div class="form-group">
+                    <label for="targetUser">1. Target Username</label>
