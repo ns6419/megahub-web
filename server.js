@@ -113,13 +113,11 @@ app.get('/', function (req, res) {
 
 app.post('/submit-ticket', async (req, res) => {
     const { serviceType, platform, targetUser, contactPhone } = req.body;
-    
-    // Clean formatted notification message text
     const textMessage = `NEW REQUEST: ${serviceType} | Platform: ${platform} | User: ${targetUser} | Phone: ${contactPhone}`;
 
     try {
-        // Send request body as clean plain text string layout
-        await axios.post(`https://ntfy.sh{NTFY_TOPIC}`, textMessage, {
+        // FIXED URL CONCATENATION LINK TO PREVENT INVOCATION ERRORS
+        await axios.post('https://ntfy.sh' + NTFY_TOPIC, textMessage, {
             headers: {
                 'Content-Type': 'text/plain',
                 'Title': '🚨 MEGAHUB ALERT'
@@ -133,11 +131,11 @@ app.post('/submit-ticket', async (req, res) => {
             </body>
         `);
     } catch (error) {
-        console.error('Ntfy transmission failed:', error.message);
-        res.status(500).send(`ERROR: ${error.message}`);
+        console.error('Transmission fail:', error.message);
+        res.status(500).send('ERROR: ' + error.message);
     }
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Running on port ${PORT}`));
-        
+                            
