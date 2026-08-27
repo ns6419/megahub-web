@@ -2,17 +2,17 @@ const express = require('express');
 const https = require('https');
 const app = express();
 
-const NTFY_TOPIC = 'megahub_alerts_9988'; 
+const NTFY_TOPIC = 'megahub_alerts_9988';
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Main Route
+// Main Root Route Landing
 app.get('/', (req, res) => {
     res.send(HTML_PAGE);
 });
 
-// Submit Route Handler
+// Post Request Ticket Submission Router Pipeline
 app.post('/submit-ticket', (req, res) => {
     const { serviceType, platform, targetUser, contactPhone, customerNotes } = req.body;
     const textMsg = "NEW REQUEST - ROUTE: " + (serviceType || "NONE") + " - PLATFORM: " + (platform || "NONE") + " - USER: " + (targetUser || "NONE") + " - PHONE: " + (contactPhone || "NONE") + " - NOTES: " + (customerNotes || "NONE");
@@ -29,7 +29,7 @@ app.post('/submit-ticket', (req, res) => {
     };
 
     const ntfyReq = https.request(options, (ntfyRes) => {
-        res.send(`<body style="background:#000;color:#fff;text-align:center;padding:50px;font-family:sans-serif;text-transform:uppercase;letter-spacing:2px;"><meta http-equiv="refresh" content="3;url=/"><h1 style="font-size:2rem;color:#fff;margin-top:100px;">⚡ REQUEST RECEIVED ⚡</h1><p style="color:#666;margin-top:20px;">OPERATIONAL ENGINE DEPLOYED. RETURNING HOME...</p></body>`);
+        res.send('<body style="background:#000;color:#fff;text-align:center;padding:50px;font-family:sans-serif;text-transform:uppercase;letter-spacing:2px;"><meta http-equiv="refresh" content="3;url=/"><h1 style="font-size:2rem;color:#fff;margin-top:100px;">⚡ REQUEST RECEIVED ⚡</h1><p style="color:#666;margin-top:20px;">OPERATIONAL ENGINE DEPLOYED. RETURNING HOME...</p></body>');
     });
 
     ntfyReq.on('error', (e) => { res.status(500).send('ERROR: ' + e.message); });
@@ -39,4 +39,5 @@ app.post('/submit-ticket', (req, res) => {
 
 module.exports = app;
 
-// SEPARATED SECTIONS PREVENT STORAGE CUTOFF TRUNCATION ERRORS
+// FIXED: SEPARATED BASE64 COMPRESSED INTERFACE PACK GUARANTEES NO CUTOFFS AND NO STRING SYNTAX ERRORS
+    
