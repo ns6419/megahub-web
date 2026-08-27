@@ -12,8 +12,10 @@ const ADMIN_USER = 'ADMIN';
 const ADMIN_PASS = 'MEGAHUBSECRET2026';
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => { cb(null, '/tmp'); },
-    filename: (req, file, cb) => {
+    destination: function (req, file, cb) { 
+        cb(null, '/tmp'); 
+    },
+    filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         cb(null, 'SCREENSHOT-' + uniqueSuffix + path.extname(file.originalname).toUpperCase());
     }
@@ -25,7 +27,7 @@ app.use(express.json());
 
 let localTicketsMemory = [];
 
-app.get('/', (req, res) => {
+app.get('/', function (req, res) {
     res.send(`
     <!DOCTYPE html>
     <html lang="en">
