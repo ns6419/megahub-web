@@ -96,7 +96,7 @@ module.exports = {
 </head>
 <body>
 
-    <canvas id="waveCanvas"></canvas>
+    <canvas id="liquidCanvas"></canvas>
 
     <div class="container">
         <header>
@@ -112,98 +112,126 @@ module.exports = {
     </a>
 
     <script>
-        const canvas = document.getElementById('waveCanvas');
+        const canvas = document.getElementById('liquidCanvas');
         const ctx = canvas.getContext('2d');
 
-        let width, height, midY;
+        let width, height, points = [];
+        const numPoints = 8; 
+        let time = 0;
         
-        let waves = [
-            { length: 0.01, amplitude: 25, speed: 0.03, phase: 0 },
-            { length: 0.02, amplitude: 15, speed: 0.04, phase: 1 },
-            { length: 0.007, amplitude: 10, speed: 0.02, phase: 2 }
-        ];
-
-        let targetAmplitudeModifier = 1.0;
-        let currentAmplitudeModifier = 1.0;
-        let targetYShift = 0;
-        let currentYShift = 0;
-
-        let startY = 0;
-        let isSwiping = false;
+        let mouse = { x: 0, y: 0, targetX: 0, targetY: 0, active: false };
 
         function resize() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
-            midY = height / 2;
+            initPoints();
         }
+
+        function initPoints() {
+            points = [];
+            let spacing = width / (numPoints - 1);
+            let baseHeight = height * 0.55; 
+            
+            for (let i = 0; i < numPoints; i++) {
+                points.push({
+                    x: i * spacing,
+                    y: baseHeight,
+                    baselineY: baseHeight,
+                    vy: 0,
+                    force: 0
+                });
+            }
+        }
+
         window.addEventListener('resize', resize);
         resize();
 
-        function handleStart(yPos) {
-            startY = yPos;
-            isSwiping = true;
-            targetAmplitudeModifier = 2.5;
+        // Premium organic gesture dynamics handlers
+        function touchStart(x, y) {
+            mouse.active = true;
+            mouse.targetX = x;
+            mouse.targetY = y;
         }
 
-        function handleMove(yPos) {
-            if (!isSwiping) return;
-            let deltaY = yPos - startY;
-            targetYShift = Math.max(-150, Math.min(150, deltaY * 0.8));
+        function touchMove(x, y) {
+            mouse.targetX = x;
+            mouse.targetY = y;
         }
 
-        function handleEnd() {
-            isSwiping = false;
-            targetAmplitudeModifier = 1.0;
-            targetYShift = 0; 
+        function touchEnd() {
+            mouse.active = false;
         }
 
-        window.addEventListener('mousedown', (e) => handleStart(e.clientY));
-        window.addEventListener('mousemove', (e) => handleMove(e.clientY));
-        window.addEventListener('mouseup', handleEnd);
+        window.addEventListener('mousedown', (e) => touchStart(e.clientX, e.clientY));
+        window.addEventListener('mousemove', (e) => touchMove(e.clientX, e.clientY));
+        window.addEventListener('mouseup', touchEnd);
 
-        window.addEventListener('touchstart', (e) => handleStart(e.touches.clientY));
-        window.addEventListener('touchmove', (e) => handleMove(e.touches.clientY));
-        window.addEventListener('touchend', handleEnd);
+        window.addEventListener('touchstart', (e) => {
+            if(e.touches.length > 0) touchStart(e.touches[0].clientX, e.touches[0].clientY);
+        });
+        window.addEventListener('touchmove', (e) => {
+            if(e.touches.length > 0) touchMove(e.touches[0].clientX, e.touches[0].clientY);
+        });
+        window.addEventListener('touchend', touchEnd);
 
         function animate() {
-            // FIX: Explicitly paint the top half backdrop pure black each frame
+            time += 0.015;
+            
+            // Clear screen correctly without color artifacting
             ctx.fillStyle = '#000000';
             ctx.fillRect(0, 0, width, height);
 
-            currentAmplitudeModifier += (targetAmplitudeModifier - currentAmplitudeModifier) * 0.1;
-            currentYShift += (targetYShift - currentYShift) * 0.1;
+            // Interpolated responsive input smooth follow tracker
+            mouse.x += (mouse.targetX - mouse.x) * 0.1;
+            mouse.y += (mouse.targetY - mouse.y) * 0.1;
 
-            let baselineY = midY + currentYShift;
+            // Physics calculation engine loop
+            points.forEach((p, idx) => {
+                // Multi-layered smooth wave oscillation
+                let waveNoise = Math.sin(time + idx * 0.8) * 15 + Math.cos(time * 1.5 + idx * 0.4) * 8;
+                
+                // Interactive dynamic cursor proximity distortion
+                if (mouse.active) {
+                    let dx = mouse.x - p.x;
+                    let dy = mouse.y - p.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 180) {
+                        // Creates organic fluid displacement force logic push
+                        let push = (180 - distance) * 0.35;
+                        p.force = (mouse.y > p.baselineY) ? push : -push;
+                    } else {
+                        p.force *= 0.85;
+                    }
+                } else {
+                    p.force *= 0.85;
+                }
 
+                // Spring hooks relaxation arithmetic calculation
+                let targetY = p.baselineY + waveNoise + p.force;
+                let diffY = targetY - p.y;
+                p.vy += diffY * 0.04; // Tension spring elasticity coefficient
+                p.vy *= 0.82;         // Organic drag friction damping parameter
+                p.y += p.vy;
+            });
+
+            // Smooth cubic vector draw sequence pipeline 
             ctx.beginPath();
             ctx.moveTo(0, height);
-            ctx.lineTo(0, baselineY);
+            ctx.lineTo(0, points[0].y);
 
-            for (let x = 0; x <= width; x += 2) {
-                let y = baselineY;
-                
-                waves.forEach(wave => {
-                    y += Math.sin(x * wave.length + wave.phase) * wave.amplitude * currentAmplitudeModifier;
-                });
-
-                ctx.lineTo(x, y);
+            for (let i = 0; i < points.length - 1; i++) {
+                let xc = (points[i].x + points[i + 1].x) / 2;
+                let yc = (points[i].y + points[i + 1].y) / 2;
+                ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
             }
 
+            ctx.lineTo(width, points[points.length - 1].y);
             ctx.lineTo(width, height);
             ctx.closePath();
 
-            // Render lower water portion fluid layout 
+            // Liquid color fill execution
             ctx.fillStyle = '#ffffff';
             ctx.fill();
-
-            // Crisp wave border stroke separation line
-            ctx.lineWidth = 5;
-            ctx.strokeStyle = '#000000';
-            ctx.stroke();
-
-            waves.forEach(wave => {
-                wave.phase += wave.speed;
-            });
 
             requestAnimationFrame(animate);
         }
