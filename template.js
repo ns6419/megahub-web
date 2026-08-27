@@ -23,7 +23,7 @@ module.exports = {
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background: #000;
+            background: #000000;
         }
         body {
             display: flex;
@@ -105,7 +105,6 @@ module.exports = {
         </header>
     </div>
 
-    <!-- Updated to official api deep link to fix the android routing protocol error -->
     <a href="https://whatsapp.com" class="whatsapp-float" target="_blank">
         <svg class="whatsapp-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.3 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.3 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
@@ -167,7 +166,9 @@ module.exports = {
         window.addEventListener('touchend', handleEnd);
 
         function animate() {
-            ctx.clearRect(0, 0, width, height);
+            // FIX: Explicitly paint the top half backdrop pure black each frame
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, width, height);
 
             currentAmplitudeModifier += (targetAmplitudeModifier - currentAmplitudeModifier) * 0.1;
             currentYShift += (targetYShift - currentYShift) * 0.1;
@@ -191,10 +192,12 @@ module.exports = {
             ctx.lineTo(width, height);
             ctx.closePath();
 
+            // Render lower water portion fluid layout 
             ctx.fillStyle = '#ffffff';
             ctx.fill();
 
-            ctx.lineWidth = 4;
+            // Crisp wave border stroke separation line
+            ctx.lineWidth = 5;
             ctx.strokeStyle = '#000000';
             ctx.stroke();
 
