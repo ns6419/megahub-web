@@ -53,4 +53,4 @@ app.post('/submit-ticket', (req, res) => {
 });
 
 // Total UI layout structure completely written without backticks to eliminate compilation faults
-                      
+        
