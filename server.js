@@ -34,3 +34,4 @@ app.post('/submit-ticket', (req, res) => {
     ntfyReq.on('error', (e) => { res.status(500).send('ERROR: ' + e.message); });
     ntfyReq.write(dataBuffer);
     ntfyReq.end();
+    
