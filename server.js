@@ -57,9 +57,6 @@ app.get('/', function (req, res) {
             .logo-item.selected svg { fill: #ffffff; }
             .logo-item.selected span { color: #ffffff; }
             .btn-submit { background: #ffffff; color: #000000; font-weight: 950; letter-spacing: 3px; padding: 18px; border-radius: 40px; border: none; width: 100%; cursor: pointer; margin-top: 35px; font-size: 1rem; box-shadow: 0 4px 20px rgba(255,255,255,0.15); }
-            .whatsapp-float { position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px; background-color: #ffffff; border-radius: 50px; display: flex; justify-content: center; align-items: center; box-shadow: 0 6px 25px rgba(255,255,255,0.2); z-index: 998; text-decoration: none; transition: transform 0.2s ease; }
-            .whatsapp-float:active { transform: scale(0.9); }
-            .whatsapp-svg { width: 28px; height: 28px; fill: #000000; }
         </style>
     </head>
     <body>
@@ -94,6 +91,7 @@ app.get('/', function (req, res) {
             </div>
         </div>
     </div>
+    
     <div class="drawer-overlay" id="overlay" onclick="closeDrawer()"></div>
     <div class="slide-drawer" id="drawer">
         <div class="drawer-handle" onclick="closeDrawer()"></div>
@@ -118,4 +116,12 @@ app.get('/', function (req, res) {
                     <span>TIKTOK</span>
                 </div>
             </div>
-    
+            
+            <input type="hidden" name="platform" id="platformInput" value="INSTAGRAM">
+            
+            <label>TARGET ACCOUNT / PROFILE USERNAME</label>
+            <input type="text" name="targetUser" placeholder="@USERNAME" required>
+            
+            <label>YOUR CONTACT WHATSAPP NUMBER</label>
+            <input type="tel" name="contactPhone" placeholder="+1234567890" required>
+            
