@@ -92,6 +92,7 @@ app.get('/', function (req, res) {
             </div>
         </div>
     </div>
+    
     <div class="drawer-overlay" id="overlay" onclick="closeDrawer()"></div>
     <div class="slide-drawer" id="drawer">
         <div class="drawer-handle" onclick="closeDrawer()"></div>
@@ -99,6 +100,7 @@ app.get('/', function (req, res) {
         <form action="/submit-ticket" method="POST">
             <input type="hidden" name="serviceType" id="serviceTypeInput">
             <input type="hidden" name="platform" id="platformInput" value="INSTAGRAM">
+            
             <label>CHOOSE PLATFORM NETWORK</label>
             <div class="logo-grid">
                 <div class="logo-item selected" onclick="selectPlatform(this, 'INSTAGRAM')">INSTAGRAM</div>
@@ -108,12 +110,17 @@ app.get('/', function (req, res) {
                 <div class="logo-item" onclick="selectPlatform(this, 'YOUTUBE')">YOUTUBE</div>
                 <div class="logo-item" onclick="selectPlatform(this, 'WHATSAPP')">WHATSAPP</div>
             </div>
+            
+            <!-- FIXED AND UTTERLY CLEANED RESTORED FORM CONTROL WRAPPERS -->
             <label>TARGET ACCOUNT USERNAME</label>
-            <input type="text" name="targetUser" placeholder="@USERNAME" required>
+            <input type="text" name="targetUser" placeholder="ENTER @USERNAME" required>
+            
             <label>YOUR CONTACT WHATSAPP NUMBER</label>
-            <input type="tel" name="contactPhone" placeholder="+1234567890" required>
+            <input type="tel" name="contactPhone" placeholder="ENTER PHONE NUMBER" required>
+            
             <label>SPECIFY WHAT HELP YOU NEED</label>
-            <textarea name="customerNotes" rows="3" placeholder="UNBAN MY ACCOUNT / NEED 10K FOLLOWERS..." required></textarea>
+            <textarea name="customerNotes" rows="3" placeholder="DESCRIBE YOUR REQUEST DETAIL HERE..." required></textarea>
+            
             <button type="submit" class="btn-submit">INITIALIZE ROUTE REQUEST</button>
         </form>
     </div>
@@ -125,6 +132,4 @@ app.get('/', function (req, res) {
         window.addEventListener('resize', resizeCanvas); resizeCanvas();
         window.addEventListener('scroll', () => {
             const scrollTop = window.scrollY;
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            scrollPercent = docHeight > 0 ? (scrollTop / docHeight) : 0;
             
