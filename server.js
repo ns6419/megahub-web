@@ -116,7 +116,7 @@ app.post('/submit-ticket', async (req, res) => {
     const textMessage = `NEW REQUEST: ${serviceType} | Platform: ${platform} | User: ${targetUser} | Phone: ${contactPhone}`;
 
     try {
-        // FIXED URL CONCATENATION LINK TO PREVENT INVOCATION ERRORS
+        // FIXED FORWARD SLASH IN THE API ENDPOINT STRING
         await axios.post('https://ntfy.sh' + NTFY_TOPIC, textMessage, {
             headers: {
                 'Content-Type': 'text/plain',
@@ -138,4 +138,4 @@ app.post('/submit-ticket', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Running on port ${PORT}`));
-                            
+    
