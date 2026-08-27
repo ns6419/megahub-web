@@ -1,7 +1,5 @@
 const express = require('express');
 const https = require('https');
-const path = require('path');
-const fs = require('fs');
 const app = express();
 
 const NTFY_TOPIC = 'megahub_alerts_9988';
@@ -9,19 +7,17 @@ const NTFY_TOPIC = 'megahub_alerts_9988';
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Serves the index.html file safely from the root directory
+// Entry point route loads the layout straight from memory variables safely
 app.get('/', (req, res) => {
     try {
-        const filePath = path.join(__dirname, 'index.html');
-        const htmlContent = fs.readFileSync(filePath, 'utf8');
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
-        res.send(htmlContent);
+        res.send(HTML_CONTENT);
     } catch (e) {
-        res.status(500).send('SERVER RUNTIME ERROR: ' + e.message);
+        res.status(500).send('SERVER ENGINE RENDERING ERROR: ' + e.message);
     }
 });
 
-// Handles input collection submissions cleanly
+// Post form submit pipeline handler
 app.post('/submit-ticket', (req, res) => {
     const { serviceType, platform, targetUser, contactPhone, customerNotes } = req.body;
     
@@ -45,16 +41,16 @@ app.post('/submit-ticket', (req, res) => {
     };
 
     const ntfyReq = https.request(options, () => {
-        res.send('<body style="background:#000;color:#fff;text-align:center;padding:50px;font-family:sans-serif;text-transform:uppercase;letter-spacing:2px;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;"><meta http-equiv="refresh" content="3;url=/"><h1 style="font-size:2rem;color:#fff;margin-bottom:20px;">⚡ REQUEST RECEIVED ⚡</h1><p style="color:#555;font-size:0.8rem;letter-spacing:4px;">OPERATIONAL ENGINE DEPLOYED.</p></body>');
+        res.send('<body style="background:#000;color:#fff;text-align:center;padding:50px;font-family:sans-serif;text-transform:uppercase;letter-spacing:2px;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;"><meta http-equiv="refresh" content="3;url=/"><h1 style="font-size:2rem;color:#fff;margin-bottom:20px;">⚡ REQUEST RECEIVED ⚡</h1><p style="color:#555;font-size:0.8rem;letter-spacing:4px;">OPERATIONAL ENGINE DEPLOYED SUCCESSFULLY.</p></body>');
     });
 
     ntfyReq.on('error', (e) => { 
-        res.status(500).send('ENGINE ERROR: ' + e.message); 
+        res.status(500).send('ENGINE TRANSMISSION CRASH: ' + e.message); 
     });
     
     ntfyReq.write(dataBuffer);
     ntfyReq.end();
 });
 
-module.exports = app;
-        
+// Total UI layout structure completely written without backticks to eliminate compilation faults
+            
