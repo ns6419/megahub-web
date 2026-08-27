@@ -8,20 +8,18 @@ const NTFY_TOPIC = 'megahub_alerts_9988';
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Stable native route loads the layout module locally with zero external network risk
+// Main home route
 app.get('/', (req, res) => {
     try {
-        // Explicitly using path.join to avoid Vercel bundling path issues
         const template = require(path.join(__dirname, 'template.js'));
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
         res.send(template.HTML_CODE);
     } catch (e) {
-        // This will print the actual error on your screen if it still breaks
         res.status(500).send('SERVER ERROR: ' + e.message);
     }
 });
 
-// Ticket Submission Handler Pipeline
+// Ticket Submission Route
 app.post('/submit-ticket', (req, res) => {
     const { serviceType, platform, targetUser, contactPhone, customerNotes } = req.body;
     const textMsg = "NEW REQUEST - ROUTE: " + (serviceType || "NONE") + " - PLATFORM: " + (platform || "NONE") + " - USER: " + (targetUser || "NONE") + " - PHONE: " + (contactPhone || "NONE") + " - NOTES: " + (customerNotes || "NONE");
@@ -44,3 +42,4 @@ app.post('/submit-ticket', (req, res) => {
 });
 
 module.exports = app;
+    
