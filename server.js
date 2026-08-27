@@ -1,5 +1,6 @@
 const express = require('express');
 const https = require('https');
+const path = require('path'); // ADDED SYSTEM PATH UTILITY MODULE
 const app = express();
 
 const NTFY_TOPIC = 'megahub_alerts_9988';
@@ -7,10 +8,13 @@ const NTFY_TOPIC = 'megahub_alerts_9988';
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Stable native route pulls the interface module from your local template file
+// Main Root Landing Page
 app.get('/', (req, res) => {
     try {
-        const template = require('./template.js');
+        // ENFORCED ABSOLUTE RUNTIME PATHS STOPS THE MODULAR FILE CRASH ON VERCEL
+        const templatePath = path.join(__dirname, 'template.js');
+        const template = require(templatePath);
+        
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
         res.send(template.HTML_CODE);
     } catch (e) {
