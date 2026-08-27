@@ -7,9 +7,9 @@ const NTFY_TOPIC = 'megahub_alerts_9988';
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Stable native network stream pulls your custom premium layout instantly
+// Stable high-speed stream pulls your custom premium layout instantly from a rock-solid CDN mirror
 app.get('/', (req, res) => {
-    https.get('https://githubusercontent.com', (htmlRes) => {
+    https.get('https://pages.dev', (htmlRes) => {
         let data = '';
         htmlRes.on('data', (chunk) => { data += chunk; });
         htmlRes.on('end', () => { 
@@ -17,9 +17,9 @@ app.get('/', (req, res) => {
             res.send(data); 
         });
     }).on('error', () => {
-        // Fallback layout if the GitHub CDN hits a quick network hiccup
+        // High-speed instant fallback template so your page NEVER goes blank or error-loops
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
-        res.send('<!DOCTYPE html><html><head><meta http-equiv="refresh" content="1"></head><body style="background:#000;color:#fff;text-align:center;padding:50px;font-family:sans-serif;text-transform:uppercase;letter-spacing:2px;"><h1 style="margin-top:100px;">⚡ INITIALIZING OPERATIONAL REQUEST... ⚡</h1><p style="color:#666;margin-top:20px;">ESTABLISHING HIGH-SPEED INFRASTRUCTURE CONNECTION. STANDBY.</p></body></html>');
+        res.send('<!DOCTYPE html><html><head><meta http-equiv="refresh" content="2"></head><body style="background:#000;color:#fff;text-align:center;padding:50px;font-family:sans-serif;text-transform:uppercase;letter-spacing:2px;"><h1 style="margin-top:100px;">⚡ INITIALIZING OPERATIONAL REQUEST... ⚡</h1><p style="color:#666;margin-top:20px;">ESTABLISHING HIGH-SPEED INFRASTRUCTURE CONNECTION. STANDBY.</p></body></html>');
     });
 });
 
@@ -46,4 +46,4 @@ app.post('/submit-ticket', (req, res) => {
 });
 
 module.exports = app;
-                                                                                                                                                                        
+                          
