@@ -15,12 +15,13 @@ const HTML_CONTENT = `
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
         }
         .header-section {
             background: #000000;
             color: #ffffff;
             text-align: center;
-            padding: 60px 20px 60px 20px;
+            padding: 60px 20px 80px 20px;
             position: relative;
         }
         .header-section h1 {
@@ -38,24 +39,23 @@ const HTML_CONTENT = `
             text-transform: uppercase;
             font-weight: 600;
             opacity: 0.8;
+            position: relative;
+            z-index: 10;
         }
-        /* Curved wave divider separating the black and white zones */
+        /* Dynamic interactive water canvas container */
         .wave-divider {
             position: absolute;
-            bottom: -2px;
+            bottom: 0;
             left: 0;
             width: 100%;
-            overflow: hidden;
+            height: 60px;
             line-height: 0;
+            z-index: 5;
         }
-        .wave-divider svg {
-            position: relative;
+        canvas {
+            width: 100%;
+            height: 100%;
             display: block;
-            width: calc(150% + 1.3px);
-            height: 50px;
-        }
-        .wave-divider .shape-fill {
-            fill: #ffffff;
         }
         .content-section {
             background: #ffffff;
@@ -64,6 +64,8 @@ const HTML_CONTENT = `
             display: flex;
             justify-content: center;
             align-items: flex-start;
+            position: relative;
+            z-index: 10;
         }
         .form-container {
             width: 100%;
@@ -127,9 +129,7 @@ const HTML_CONTENT = `
     <p>Designed & Owned by: Hadi</p>
     
     <div class="wave-divider">
-        <svg data-name="Layer 1" xmlns="http://w3.org" viewBox="0 0 1200 120" preserveAspectRatio="none">
-            <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" class="shape-fill"></path>
-        </svg>
+        <canvas id="waterCanvas"></canvas>
     </div>
 </div>
 
@@ -165,6 +165,117 @@ const HTML_CONTENT = `
     </div>
 </div>
 
+<script>
+    const canvas = document.getElementById('waterCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let width = canvas.width = canvas.offsetWidth;
+    let height = canvas.height = canvas.offsetHeight;
+
+    // Number of liquid string nodes across the width
+    const springCount = 70;
+    const springs = [];
+    
+    // Water physical tension constants
+    const K = 0.04; 
+    const DAMPING = 0.03; 
+    const SPREAD = 0.22;
+
+    class WaterNode {
+        constructor(x) {
+            this.x = x;
+            this.currentHeight = height;
+            this.targetHeight = height * 0.5;
+            this.velocity = 0;
+        }
+        update() {
+            const currentDelta = this.targetHeight - this.currentHeight;
+            this.velocity += K * currentDelta - this.velocity * DAMPING;
+            this.currentHeight += this.velocity;
+        }
+    }
+
+    for (let i = 0; i < springCount; i++) {
+        springs.push(new WaterNode((width / (springCount - 1)) * i));
+    }
+
+    function splash(clientX) {
+        const rect = canvas.getBoundingClientRect();
+        const touchX = clientX - rect.left;
+        const targetIndex = Math.floor((touchX / width) * springCount);
+        if (targetIndex >= 0 && targetIndex < springCount) {
+            springs[targetIndex].velocity = -25;
+        }
+    }
+
+    // Capture touch movements on mobile browsers seamlessly
+    canvas.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) splash(e.touches[0].clientX);
+    }, { passive: true });
+    
+    canvas.addEventListener('touchstart', (e) => {
+        if (e.touches.length > 0) splash(e.touches[0].clientX);
+    }, { passive: true });
+
+    canvas.addEventListener('mousemove', (e) => {
+        splash(e.clientX);
+    });
+
+    let loopTracker = 0;
+    function runFluidSimulation() {
+        loopTracker += 0.04;
+        ctx.clearRect(0, 0, width, height);
+
+        // Constant natural idle wave oscillation
+        const defaultSway = Math.sin(loopTracker) * 4;
+        springs.forEach(node => node.targetHeight = (height * 0.5) + defaultSway);
+
+        for (let i = 0; i < springCount; i++) {
+            springs[i].update();
+        }
+
+        const leftSideDeltas = new Array(springCount).fill(0);
+        const rightSideDeltas = new Array(springCount).fill(0);
+
+        // Run multi-pass tension wave distribution across neighboring vectors
+        for (let calculationPass = 0; calculationPass < 8; calculationPass++) {
+            for (let i = 0; i < springCount; i++) {
+                if (i > 0) {
+                    leftSideDeltas[i] = SPREAD * (springs[i].currentHeight - springs[i - 1].currentHeight);
+                    springs[i - 1].velocity += leftSideDeltas[i];
+                }
+                if (i < springCount - 1) {
+                    rightSideDeltas[i] = SPREAD * (springs[i].currentHeight - springs[i + 1].currentHeight);
+                    springs[i + 1].velocity += rightSideDeltas[i];
+                }
+            }
+        }
+
+        // Render white reactive fluid mesh boundary path
+        ctx.beginPath();
+        ctx.moveTo(0, height);
+        ctx.lineTo(springs[0].x, springs[0].currentHeight);
+
+        for (let i = 1; i < springCount; i++) {
+            ctx.lineTo(springs[i].x, springs[i].currentHeight);
+        }
+
+        ctx.lineTo(width, height);
+        ctx.closePath();
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+
+        requestAnimationFrame(runFluidSimulation);
+    }
+
+    window.addEventListener('resize', () => {
+        width = canvas.width = canvas.offsetWidth;
+        height = canvas.height = canvas.offsetHeight;
+    });
+
+    runFluidSimulation();
+</script>
+
 </body>
 </html>
 `;
@@ -197,11 +308,4 @@ app.post('/submit-ticket', (req, res) => {
         headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Content-Length': dataBuffer.length }
     };
     const ntfyReq = https.request(options, () => {
-        res.send('<body style="background:#000;color:#fff;text-align:center;padding:50px;font-family:sans-serif;text-transform:uppercase;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;"><meta http-equiv="refresh" content="3;url=/"><h1 style="font-size:2rem;">⚡ REQUEST RECEIVED ⚡</h1></body>');
-    });
-    ntfyReq.on('error', (e) => { res.status(500).send('ENGINE TRANSMISSION CRASH: ' + e.message); });
-    ntfyReq.write(dataBuffer);
-    ntfyReq.end();
-});
-
-module.exports = app;
+        
