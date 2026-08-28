@@ -220,7 +220,7 @@ const UI = `
             }
 
             // Translucent glowing liquid white color brush overlay
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.fillStyle = '#ffffff';
             ctx.beginPath();
             ctx.moveTo(0, height);
             ctx.lineTo(0, springs[0].y);
