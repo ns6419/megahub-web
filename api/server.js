@@ -251,12 +251,12 @@ const HTML_CONTENT = `
 
         ctx.beginPath();
         ctx.moveTo(0, height);
-        ctx.lineTo(0, springs[0].currentHeight);
-
-        for (let i = 1; i < springCount; i++) {
-            ctx.lineTo(springs[i].x, springs[i].currentHeight);
+        if (springs.length > 0) {
+            ctx.lineTo(0, springs[0].currentHeight);
+            for (let i = 1; i < springCount; i++) {
+                ctx.lineTo(springs[i].x, springs[i].currentHeight);
+            }
         }
-
         ctx.lineTo(width, height);
         ctx.closePath();
         ctx.fillStyle = '#ffffff';
