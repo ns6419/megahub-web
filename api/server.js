@@ -171,7 +171,7 @@ const UI = `
         let height = canvas.height = window.innerHeight;
 
         const POINTS = 22;
-        const BASE_Y = height * 0.85; // Waves float calmly under your panel cards
+        const BASE_Y = height * 0.81; // Waves float calmly under your panel cards
         const TENSION = 0.015;
         const DAMPING = 0.96;
 
