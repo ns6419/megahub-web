@@ -117,8 +117,7 @@ app.get('/', (req, res) => {
         'Content-Type',
         'text/html; charset=utf-8'
     );
-    res.send(UI);
-});
+    });
 app.post('/submit-ticket',(req,res)=>{
 const {serviceType,targetUser,
 contactPhone,customerNotes}=req.body;
@@ -129,12 +128,31 @@ serviceType+"\n• USER: "+targetUser+
 const buf=Buffer.from(msg,'utf-8');
 const opt={hostname:'ntfy.sh',
 path:'/'+TOPIC,method:'POST',
+timeout:1000,
 headers:{'Content-Type':
 'text/plain; charset=utf-8',
 'Content-Length':buf.length}};
-const nreq=https.request(opt,()=>{
-res.send('<body style="background:#000;color:#fff;text-align:center;padding:50px;font-family:sans-serif;text-transform:uppercase;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;"><meta http-equiv="refresh" content="3;url=/"><h1>⚡ DATA TRANSMITTED ⚡</h1></body>');});
-nreq.on('error',(e)=>{
-res.status(500).send('ERR:'+e.message);
-});nreq.write(buf);nreq.end();});});
-module.exports=app;
+const nreq = https.request(
+    opt,
+    () => {}
+);
+nreq.on('error', (e) => {
+    console.log(e.message);
+});
+nreq.on('timeout', () => {
+    nreq.destroy();
+});
+nreq.write(buf);
+nreq.end();
+res.send(
+'<body style="background:#000;color:#fff;'+
+'text-align:center;padding:50px;'+
+'font-family:sans-serif;text-transform:'+
+'uppercase;display:flex;flex-direction:'+
+'column;justify-content:center;'+
+'align-items:center;min-height:100vh;">'+
+'<meta http-equiv="refresh" content="3;url=/">'+
+'<h1>⚡ DATA TRANSMITTED ⚡</h1></body>'
+);});
+module.exports = app;
+
