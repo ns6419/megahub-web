@@ -10,21 +10,23 @@ const HTML_CONTENT = `
         body {
             margin: 0;
             padding: 0;
-            background: #ffffff;
+            background: #000000;
+            color: #ffffff;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
         }
+        
         .header-section {
             background: #000000;
             color: #ffffff;
             text-align: center;
-            padding: 60px 20px 60px 20px;
-            position: relative;
+            padding: 40px 20px 20px 20px;
         }
         .header-section h1 {
-            font-size: 3rem;
+            font-size: 3.5rem;
             font-weight: 900;
             margin: 0 0 10px 0;
             letter-spacing: 4px;
@@ -33,175 +35,309 @@ const HTML_CONTENT = `
         .header-section p {
             font-size: 0.75rem;
             color: #ffffff;
-            margin: 0;
+            margin: 0 0 25px 0;
             letter-spacing: 3px;
             text-transform: uppercase;
             font-weight: 600;
             opacity: 0.8;
         }
-        /* Curved wave divider separating the black and white zones */
-        .wave-divider {
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 100%;
-            overflow: hidden;
-            line-height: 0;
+
+        .sec-btn {
+            display: inline-block;
+            background: transparent;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            padding: 14px 30px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            text-decoration: none;
+            margin-bottom: 20px;
         }
-        .wave-divider svg {
-            position: relative;
-            display: block;
-            width: calc(150% + 1.3px);
-            height: 50px;
-        }
-        .wave-divider .shape-fill {
-            fill: #ffffff;
-        }
+
         .content-section {
-            background: #ffffff;
-            padding: 30px 24px 60px 24px;
+            background: #000000;
+            padding: 10px 20px 40px 20px;
             flex-grow: 1;
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
+            flex-direction: column;
+            align-items: center;
         }
-        .form-container {
+
+        .panel-container {
             width: 100%;
             max-width: 420px;
         }
+
+        .section-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 16px;
+            background: #ffffff;
+        }
+
+        .route-card {
+            background: #000000;
+            border: 1px solid #222222;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            position: relative;
+        }
+        .route-card:hover, .route-card.active-card {
+            border-color: #ffffff;
+        }
+        .card-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+        }
+        .card-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: #ffffff;
+            stroke-width: 2;
+        }
+        .card-info {
+            flex-grow: 1;
+        }
+        .card-info h3 {
+            margin: 0 0 6px 0;
+            font-size: 1.05rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+        }
+        .card-info p {
+            margin: 0;
+            font-size: 0.65rem;
+            color: #666666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+        .card-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card-arrow svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: #444444;
+            stroke-width: 2.5;
+            transition: stroke 0.2s;
+        }
+        .route-card:hover .card-arrow svg, .route-card.active-card .card-arrow svg {
+            stroke: #ffffff;
+        }
+
+        .detail-drawer {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translate(-50%, 100%);
+            width: 100%;
+            max-width: 440px;
+            background: #111111;
+            border-top: 2px solid #222222;
+            border-top-left-radius: 24px;
+            border-top-right-radius: 24px;
+            padding: 30px 24px;
+            z-index: 10;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+        }
+        .detail-drawer.open {
+            transform: translate(-50%, 0);
+        }
+        
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.7);
+            z-index: 9;
+            display: none;
+            backdrop-filter: blur(2px);
+        }
+        .drawer-overlay.open {
+            display: block;
+        }
+
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+        }
+        .drawer-title-group h2 {
+            margin: 0 0 4px 0;
+            font-size: 1.25rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        .drawer-title-group span {
+            font-size: 0.7rem;
+            color: #888888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: #666666;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0 5px;
+            line-height: 1;
+        }
+        .close-btn:hover {
+            color: #ffffff;
+        }
+
         .form-group {
             margin-bottom: 20px;
+            position: relative;
         }
         label {
             display: block;
             margin-bottom: 8px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: #000000;
+            letter-spacing: 1px;
+            color: #888888;
             font-weight: 700;
         }
-        input, select, textarea {
+        input, textarea {
             width: 100%;
             padding: 14px;
-            background: #f4f4f6;
-            border: 1px solid #e2e2e8;
+            background: #1a1a1a;
+            border: 1px solid #333333;
             border-radius: 8px;
-            color: #000000;
-            font-size: 1rem;
-            transition: border-color 0.2s, background 0.2s;
+            color: #ffffff;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
         }
-        input:focus, select:focus, textarea:focus {
+        input:focus, textarea:focus {
             outline: none;
-            border-color: #000000;
-            background: #ffffff;
+            border-color: #ffffff;
         }
         textarea {
-            min-height: 90px;
-            resize: vertical;
+            min-height: 85px;
+            resize: none;
         }
-        button {
+        .char-counter {
+            text-align: right;
+            font-size: 0.65rem;
+            color: #555555;
+            margin-top: 4px;
+            letter-spacing: 1px;
+        }
+
+        button.submit-btn {
             width: 100%;
             padding: 16px;
-            background: #000000;
-            color: #ffffff;
+            background: #ffffff;
+            color: #000000;
             border: none;
             border-radius: 8px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 2px;
             cursor: pointer;
-            transition: background 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
             margin-top: 10px;
         }
-        button:hover {
-            background: #222222;
+        button.submit-btn:disabled {
+            background: #444444;
+            color: #888888;
+            cursor: not-allowed;
+        }
+        .spinner {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #000000;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
 
 <div class="header-section">
-    <h1>Megahub</h1>
-    <p>Designed & Owned by: Hadi</p>
-    
-    <div class="wave-divider">
-        <svg data-name="Layer 1" xmlns="http://w3.org" viewBox="0 0 1200 120" preserveAspectRatio="none">
-            <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" class="shape-fill"></path>
-        </svg>
-    </div>
+    <h1>MEGAHUB</h1>
+    <p>DESIGNED & OWNED BY: HADI</p>
+    <a href="#" class="sec-btn">Access Security App Module</a>
 </div>
 
 <div class="content-section">
-    <div class="form-container">
-        <form action="/submit-ticket" method="POST">
-            <div class="form-group">
-                <label for="serviceType">Route / Service Type</label>
-                <input type="text" id="serviceType" name="serviceType" required>
+    <div class="panel-container">
+        <div class="section-title">Choose Operational Route</div>
+
+        <!-- Route 1 -->
+        <div class="route-card" onclick="openRoute('Recovery Desk', 'Appeal system bans / restore blocked accounts')">
+            <div class="card-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             </div>
-            <div class="form-group">
-                <label for="platform">Platform</label>
-                <select id="platform" name="platform">
-                    <option value="Web Dashboard">Web Dashboard</option>
-                    <option value="Android Mobile">Android Mobile</option>
-                    <option value="iOS App">iOS App</option>
-                </select>
+            <div class="card-info">
+                <h3>Recovery Desk</h3>
+                <p>Appeal system bans / restore blocked accounts</p>
             </div>
-            <div class="form-group">
-                <label for="targetUser">Your Name</label>
-                <input type="text" id="targetUser" name="targetUser" required>
+            <div class="card-arrow">
+                <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </div>
-            <div class="form-group">
-                <label for="contactPhone">Contact Phone</label>
-                <input type="tel" id="contactPhone" name="contactPhone">
+        </div>
+
+        <!-- Route 2 -->
+        <div class="route-card" onclick="openRoute('Acc Engagement Increaser', 'Follower and views increase engine boost')">
+            <div class="card-icon">
+                <svg viewBox="0 0 24 24"><path d="M23 6l-9.5 9.5-5-5L1 18M17 6h6v6"/></svg>
             </div>
-            <div class="form-group">
-                <label for="customerNotes">Operational Notes</label>
-                <textarea id="customerNotes" name="customerNotes"></textarea>
+            <div class="card-info">
+                <h3>Acc Engagement Increaser</h3>
+                <p>Follower and views increase engine boost</p>
             </div>
-            <button type="submit">Deploy Request</button>
-        </form>
-    </div>
-</div>
+            <div class="card-arrow">
+                <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+        </div>
 
-</body>
-</html>
-`;
-
-const express = require('express');
-const https = require('https');
-const app = express();
-const NTFY_TOPIC = 'megahub_alerts_9988';
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-app.get('/', (req, res) => {
-    try {
-        res.setHeader('Content-Type', 'text/html; charset=utf-8');
-        res.send(HTML_CONTENT);
-    } catch (e) {
-        res.status(500).send('SERVER ENGINE RENDERING ERROR: ' + e.message);
-    }
-});
-
-app.post('/submit-ticket', (req, res) => {
-    const { serviceType, platform, targetUser, contactPhone, customerNotes } = req.body;
-    const textMsg = "🚨 MEGAHUB ALERT 🚨\n\n• ROUTE: " + (serviceType || "NONE") + "\n• PLATFORM: " + (platform || "NONE") + "\n• NAME: " + (targetUser || "NONE") + "\n• PHONE: " + (contactPhone || "NONE") + "\n\n• NOTES:\n" + (customerNotes || "NONE");
-    const dataBuffer = Buffer.from(textMsg, 'utf-8');
-    const options = {
-        hostname: 'ntfy.sh',
-        path: '/' + NTFY_TOPIC,
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Content-Length': dataBuffer.length }
-    };
-    const ntfyReq = https.request(options, () => {
-        res.send('<body style="background:#000;color:#fff;text-align:center;padding:50px;font-family:sans-serif;text-transform:uppercase;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;"><meta http-equiv="refresh" content="3;url=/"><h1 style="font-size:2rem;">⚡ REQUEST RECEIVED ⚡</h1></body>');
-    });
-    ntfyReq.on('error', (e) => { res.status(500).send('ENGINE TRANSMISSION CRASH: ' + e.message); });
-    ntfyReq.write(dataBuffer);
-    ntfyReq.end();
-});
-
-module.exports = app;
+        <!-- Route 3 -->
+        <div class="route-card" onclick="openRoute('Buy Old Instagram Accounts', 'Old Insta Accounts / Old Insta UNC\\'s Available')">
+            <div class="card-icon">
+            
