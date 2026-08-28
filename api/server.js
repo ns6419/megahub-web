@@ -42,7 +42,6 @@ const HTML_CONTENT = `
             position: relative;
             z-index: 10;
         }
-        /* Dynamic interactive water canvas container */
         .wave-divider {
             position: absolute;
             bottom: -2px;
@@ -206,13 +205,16 @@ const HTML_CONTENT = `
         }
     }
 
-    // Fixed mobile touch event target handling
     canvas.addEventListener('touchmove', (e) => {
-        if (e.touches && e.touches.length > 0) splash(e.touches[0].clientX);
+        if (e.touches && e.touches.length > 0) {
+            splash(e.touches[0].clientX);
+        }
     }, { passive: true });
     
     canvas.addEventListener('touchstart', (e) => {
-        if (e.touches && e.touches.length > 0) splash(e.touches[0].clientX);
+        if (e.touches && e.touches.length > 0) {
+            splash(e.touches[0].clientX);
+        }
     }, { passive: true });
 
     canvas.addEventListener('mousemove', (e) => {
@@ -247,7 +249,6 @@ const HTML_CONTENT = `
             }
         }
 
-        // Fixed text drawing syntax
         ctx.beginPath();
         ctx.moveTo(0, height);
         ctx.lineTo(0, springs[0].currentHeight);
@@ -305,4 +306,5 @@ app.post('/submit-ticket', (req, res) => {
     };
     const ntfyReq = https.request(options, () => {
         res.send('<body style="background:#000;color:#fff;text-align:center;padding:50px;font-family:sans-serif;text-transform:uppercase;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;"><meta http-equiv="refresh" content="3;url=/"><h1 style="font-size:2rem;">⚡ REQUEST RECEIVED ⚡</h1></body>');
-        
+    });
+    
