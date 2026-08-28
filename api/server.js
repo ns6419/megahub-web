@@ -165,115 +165,117 @@ const HTML_CONTENT = `
 </div>
 
 <script>
-    const canvas = document.getElementById('waterCanvas');
-    const ctx = canvas.getContext('2d');
+    window.addEventListener('DOMContentLoaded', () => {
+        const canvas = document.getElementById('waterCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
 
-    let width = canvas.width = canvas.offsetWidth;
-    let height = canvas.height = canvas.offsetHeight;
+        let width = canvas.width = canvas.offsetWidth;
+        let height = canvas.height = canvas.offsetHeight;
 
-    const springCount = 60;
-    const springs = [];
-    
-    const K = 0.04; 
-    const DAMPING = 0.03; 
-    const SPREAD = 0.2;
+        const springCount = 60;
+        const springs = [];
+        
+        const K = 0.04; 
+        const DAMPING = 0.03; 
+        const SPREAD = 0.2;
 
-    class WaterNode {
-        constructor(x) {
-            this.x = x;
-            this.currentHeight = height * 0.5;
-            this.targetHeight = height * 0.5;
-            this.velocity = 0;
+        class WaterNode {
+            constructor(x) {
+                this.x = x;
+                this.currentHeight = height * 0.5;
+                this.targetHeight = height * 0.5;
+                this.velocity = 0;
+            }
+            update() {
+                const currentDelta = this.targetHeight - this.currentHeight;
+                this.velocity += K * currentDelta - this.velocity * DAMPING;
+                this.currentHeight += this.velocity;
+            }
         }
-        update() {
-            const currentDelta = this.targetHeight - this.currentHeight;
-            this.velocity += K * currentDelta - this.velocity * DAMPING;
-            this.currentHeight += this.velocity;
-        }
-    }
-
-    for (let i = 0; i < springCount; i++) {
-        springs.push(new WaterNode((width / (springCount - 1)) * i));
-    }
-
-    function splash(clientX) {
-        const rect = canvas.getBoundingClientRect();
-        const touchX = clientX - rect.left;
-        const targetIndex = Math.floor((touchX / width) * springCount);
-        if (targetIndex >= 0 && targetIndex < springCount) {
-            springs[targetIndex].velocity = -25;
-        }
-    }
-
-    canvas.addEventListener('touchmove', (e) => {
-        if (e.touches && e.touches.length > 0) {
-            splash(e.touches[0].clientX);
-        }
-    }, { passive: true });
-    
-    canvas.addEventListener('touchstart', (e) => {
-        if (e.touches && e.touches.length > 0) {
-            splash(e.touches[0].clientX);
-        }
-    }, { passive: true });
-
-    canvas.addEventListener('mousemove', (e) => {
-        splash(e.clientX);
-    });
-
-    let loopTracker = 0;
-    function runFluidSimulation() {
-        loopTracker += 0.04;
-        ctx.clearRect(0, 0, width, height);
-
-        const defaultSway = Math.sin(loopTracker) * 3;
-        springs.forEach(node => node.targetHeight = (height * 0.5) + defaultSway);
 
         for (let i = 0; i < springCount; i++) {
-            springs[i].update();
+            springs.push(new WaterNode((width / (springCount - 1)) * i));
         }
 
-        const leftSideDeltas = new Array(springCount).fill(0);
-        const rightSideDeltas = new Array(springCount).fill(0);
+        function splash(clientX) {
+            const rect = canvas.getBoundingClientRect();
+            const touchX = clientX - rect.left;
+            const targetIndex = Math.floor((touchX / width) * springCount);
+            if (targetIndex >= 0 && targetIndex < springCount) {
+                springs[targetIndex].velocity = -25;
+            }
+        }
 
-        for (let calculationPass = 0; calculationPass < 8; calculationPass++) {
+        canvas.addEventListener('touchmove', (e) => {
+            if (e.touches && e.touches.length > 0) {
+                splash(e.touches[0].clientX);
+            }
+        }, { passive: true });
+        
+        canvas.addEventListener('touchstart', (e) => {
+            if (e.touches && e.touches.length > 0) {
+                splash(e.touches[0].clientX);
+            }
+        }, { passive: true });
+
+        canvas.addEventListener('mousemove', (e) => {
+            splash(e.clientX);
+        });
+
+        let loopTracker = 0;
+        function runFluidSimulation() {
+            loopTracker += 0.04;
+            ctx.clearRect(0, 0, width, height);
+
+            const defaultSway = Math.sin(loopTracker) * 3;
+            springs.forEach(node => node.targetHeight = (height * 0.5) + defaultSway);
+
             for (let i = 0; i < springCount; i++) {
-                if (i > 0) {
-                    leftSideDeltas[i] = SPREAD * (springs[i].currentHeight - springs[i - 1].currentHeight);
-                    springs[i - 1].velocity += leftSideDeltas[i];
-                }
-                if (i < springCount - 1) {
-                    rightSideDeltas[i] = SPREAD * (springs[i].currentHeight - springs[i + 1].currentHeight);
-                    springs[i + 1].velocity += rightSideDeltas[i];
+                springs[i].update();
+            }
+
+            const leftSideDeltas = new Array(springCount).fill(0);
+            const rightSideDeltas = new Array(springCount).fill(0);
+
+            for (let calculationPass = 0; calculationPass < 8; calculationPass++) {
+                for (let i = 0; i < springCount; i++) {
+                    if (i > 0) {
+                        leftSideDeltas[i] = SPREAD * (springs[i].currentHeight - springs[i - 1].currentHeight);
+                        springs[i - 1].velocity += leftSideDeltas[i];
+                    }
+                    if (i < springCount - 1) {
+                        rightSideDeltas[i] = SPREAD * (springs[i].currentHeight - springs[i + 1].currentHeight);
+                        springs[i + 1].velocity += rightSideDeltas[i];
+                    }
                 }
             }
-        }
 
-        ctx.beginPath();
-        ctx.moveTo(0, height);
-        if (springs.length > 0) {
-            ctx.lineTo(0, springs[0].currentHeight);
-            for (let i = 1; i < springCount; i++) {
-                ctx.lineTo(springs[i].x, springs[i].currentHeight);
+            ctx.beginPath();
+            ctx.moveTo(0, height);
+            if (springs.length > 0) {
+                ctx.lineTo(0, springs[0].currentHeight);
+                for (let i = 1; i < springCount; i++) {
+                    ctx.lineTo(springs[i].x, springs[i].currentHeight);
+                }
             }
+            ctx.lineTo(width, height);
+            ctx.closePath();
+            ctx.fillStyle = '#ffffff';
+            ctx.fill();
+
+            requestAnimationFrame(runFluidSimulation);
         }
-        ctx.lineTo(width, height);
-        ctx.closePath();
-        ctx.fillStyle = '#ffffff';
-        ctx.fill();
 
-        requestAnimationFrame(runFluidSimulation);
-    }
+        window.addEventListener('resize', () => {
+            width = canvas.width = canvas.offsetWidth;
+            height = canvas.height = canvas.offsetHeight;
+        });
 
-    window.addEventListener('resize', () => {
-        width = canvas.width = canvas.offsetWidth;
-        height = canvas.height = canvas.offsetHeight;
+        runFluidSimulation();
     });
-
-    runFluidSimulation();
 </script>
-
-</head>
+</body>
 </html>
 `;
 
@@ -296,15 +298,10 @@ app.get('/', (req, res) => {
 
 app.post('/submit-ticket', (req, res) => {
     const { serviceType, platform, targetUser, contactPhone, customerNotes } = req.body;
-    const textMsg = "🚨 MEGAHUB ALERT 🚨\n\n• ROUTE: " + (serviceType || "NONE") + "\n• PLATFORM: " + (platform || "NONE") + "\n• NAME: " + (targetUser || "NONE") + "\n• PHONE: " + (contactPhone || "NONE") + "\n\n• NOTES:\n" + (customerNotes || "NONE");
+    const textMsg = "🚨 MEGAHUB ALERT 🚨\\n\\n• ROUTE: " + (serviceType || "NONE") + "\\n• PLATFORM: " + (platform || "NONE") + "\\n• NAME: " + (targetUser || "NONE") + "\\n• PHONE: " + (contactPhone || "NONE") + "\\n\\n• NOTES:\\n" + (customerNotes || "NONE");
     const dataBuffer = Buffer.from(textMsg, 'utf-8');
     const options = {
         hostname: 'ntfy.sh',
         path: '/' + NTFY_TOPIC,
         method: 'POST',
-        headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Content-Length': dataBuffer.length }
-    };
-    const ntfyReq = https.request(options, () => {
-        res.send('<body style="background:#000;color:#fff;text-align:center;padding:50px;font-family:sans-serif;text-transform:uppercase;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;"><meta http-equiv="refresh" content="3;url=/"><h1 style="font-size:2rem;">⚡ REQUEST RECEIVED ⚡</h1></body>');
-    });
-    
+        
