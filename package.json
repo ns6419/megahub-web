@@ -1,15 +1,8 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "server.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "server.js"
-    }
-  ]
+  "name": "megahub",
+  "version": "1.0.0",
+  "main": "api/server.js",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
 }
