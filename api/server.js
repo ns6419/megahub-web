@@ -181,4 +181,3 @@ app.post('/submit-ticket', (req, res) => {
 
 // Export the application instance for Vercel Serverless
 module.exports = app;
-    
