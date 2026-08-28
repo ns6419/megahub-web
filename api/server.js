@@ -153,6 +153,7 @@ res.send(
 'align-items:center;min-height:100vh;">'+
 '<meta http-equiv="refresh" content="3;url=/">'+
 '<h1>⚡ DATA TRANSMITTED ⚡</h1></body>'
-);});
-module.exports = app;
+);
+});
 
+module.exports = app;
