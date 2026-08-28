@@ -273,7 +273,7 @@ const HTML_CONTENT = `
     runFluidSimulation();
 </script>
 
-</body>
+</head>
 </html>
 `;
 
