@@ -15,13 +15,12 @@ const HTML_CONTENT = `
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
         }
         .header-section {
             background: #000000;
             color: #ffffff;
             text-align: center;
-            padding: 160px 20px 180px 20px;
+            padding: 60px 20px 60px 20px;
             position: relative;
         }
         .header-section h1 {
@@ -40,31 +39,31 @@ const HTML_CONTENT = `
             font-weight: 600;
             opacity: 0.8;
         }
-        
-        /* Interactive Liquid Canvas Container */
-        .wave-container {
+        /* Curved wave divider separating the black and white zones */
+        .wave-divider {
             position: absolute;
-            bottom: 0;
+            bottom: -2px;
             left: 0;
             width: 100%;
-            height: 220px;
-            pointer-events: auto;
+            overflow: hidden;
+            line-height: 0;
         }
-        #waterCanvas {
+        .wave-divider svg {
+            position: relative;
             display: block;
-            width: 100%;
-            height: 100%;
+            width: calc(150% + 1.3px);
+            height: 50px;
         }
-
+        .wave-divider .shape-fill {
+            fill: #ffffff;
+        }
         .content-section {
             background: #ffffff;
-            padding: 50px 24px 60px 24px;
+            padding: 30px 24px 60px 24px;
             flex-grow: 1;
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            position: relative;
-            z-index: 10;
         }
         .form-container {
             width: 100%;
@@ -127,8 +126,10 @@ const HTML_CONTENT = `
     <h1>Megahub</h1>
     <p>Designed & Owned by: Hadi</p>
     
-    <div class="wave-container">
-        <canvas id="waterCanvas"></canvas>
+    <div class="wave-divider">
+        <svg data-name="Layer 1" xmlns="http://w3.org" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" class="shape-fill"></path>
+        </svg>
     </div>
 </div>
 
@@ -164,133 +165,9 @@ const HTML_CONTENT = `
     </div>
 </div>
 
-<script>
-    const canvas = document.getElementById('waterCanvas');
-    const ctx = canvas.getContext('2d');
-
-    let width, height;
-    let points = [];
-    const numPoints = 25;       
-    const springConstant = 0.035; 
-    const damping = 0.93;        
-    const spread = 0.12;        
-    let baseHeight;
-
-    let lastMouseX = null;
-    let lastMouseY = null;
-
-    function resize() {
-        width = canvas.width = canvas.parentElement.clientWidth;
-        height = canvas.height = canvas.parentElement.clientHeight;
-        baseHeight = height * 0.45; 
-
-        points = [];
-        for (let i = 0; i < numPoints; i++) {
-            points.push({
-                x: (width / (numPoints - 1)) * i,
-                y: baseHeight,
-                targetY: baseHeight,
-                velocity: 0
-            });
-        }
-    }
-
-    function splash(x, force) {
-        if (x < 0 || x > width) return;
-        const index = Math.round((x / width) * (numPoints - 1));
-        if (points[index]) {
-            points[index].velocity += force;
-        }
-    }
-
-    function handleInteraction(clientX, clientY) {
-        const rect = canvas.getBoundingClientRect();
-        const x = clientX - rect.left;
-        const y = clientY - rect.top;
-
-        if (y > baseHeight - 60 && y < baseHeight + 100) {
-            if (lastMouseX !== null) {
-                const speed = Math.abs(x - lastMouseX);
-                const force = Math.min(speed * 0.25, 12); 
-                splash(x, (y > baseHeight) ? -force : force);
-            }
-        }
-        lastMouseX = x;
-        lastMouseY = y;
-    }
-
-    window.addEventListener('mousemove', (e) => handleInteraction(e.clientX, e.clientY));
-    
-    window.addEventListener('touchmove', (e) => {
-        if(e.touches && e.touches.length > 0) {
-            handleInteraction(e.touches[0].clientX, e.touches[0].clientY);
-        }
-    }, { passive: true });
-
-    window.addEventListener('touchend', () => { lastMouseX = null; });
-    window.addEventListener('mouseleave', () => { lastMouseX = null; });
-
-    function updatePhysics() {
-        for (let i = 0; i < numPoints; i++) {
-            const p = points[i];
-            const displacement = p.targetY - p.y;
-            p.velocity += springConstant * displacement;
-            p.y += p.velocity;
-            p.velocity *= damping;
-        }
-
-        for (let iteration = 0; iteration < 4; iteration++) {
-            for (let i = 0; i < numPoints; i++) {
-                if (i > 0) {
-                    const leftImpact = spread * (points[i].y - points[i - 1].y);
-                    points[i - 1].velocity += leftImpact;
-                    points[i - 1].y += leftImpact;
-                }
-                if (i < numPoints - 1) {
-                    const rightImpact = spread * (points[i].y - points[i + 1].y);
-                    points[i + 1].velocity += rightImpact;
-                    points[i + 1].y += rightImpact;
-                }
-            }
-        }
-    }
-
-    function animate() {
-        updatePhysics();
-        ctx.clearRect(0, 0, width, height);
-
-        const time = Date.now() * 0.002;
-        for (let i = 0; i < numPoints; i++) {
-            points[i].targetY = baseHeight + Math.sin(time + (i * 0.3)) * 8;
-        }
-
-        ctx.fillStyle = "#ffffff";
-        ctx.beginPath();
-        ctx.moveTo(0, height);
-        ctx.lineTo(points[0].x, points[0].y);
-
-        for (let i = 0; i < numPoints - 1; i++) {
-            const xc = (points[i].x + points[i + 1].x) / 2;
-            const yc = (points[i].y + points[i + 1].y) / 2;
-            ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
-        }
-
-        ctx.lineTo(points[numPoints - 1].x, points[numPoints - 1].y);
-        ctx.lineTo(width, height);
-        ctx.closePath();
-        ctx.fill();
-
-        requestAnimationFrame(animate);
-    }
-
-    window.addEventListener('resize', resize);
-    resize();
-    animate();
-</script>
-
 </body>
 </html>
-\`;
+`;
 
 const express = require('express');
 const https = require('https');
@@ -311,10 +188,20 @@ app.get('/', (req, res) => {
 
 app.post('/submit-ticket', (req, res) => {
     const { serviceType, platform, targetUser, contactPhone, customerNotes } = req.body;
-    const textMsg = "🚨 MEGAHUB ALERT 🚨\\n\\n• ROUTE: " + (serviceType || "NONE") + "\\n• PLATFORM: " + (platform || "NONE") + "\\n• NAME: " + (targetUser || "NONE") + "\\n• PHONE: " + (contactPhone || "NONE") + "\\n\\n• NOTES:\\n" + (customerNotes || "NONE");
+    const textMsg = "🚨 MEGAHUB ALERT 🚨\n\n• ROUTE: " + (serviceType || "NONE") + "\n• PLATFORM: " + (platform || "NONE") + "\n• NAME: " + (targetUser || "NONE") + "\n• PHONE: " + (contactPhone || "NONE") + "\n\n• NOTES:\n" + (customerNotes || "NONE");
     const dataBuffer = Buffer.from(textMsg, 'utf-8');
     const options = {
         hostname: 'ntfy.sh',
         path: '/' + NTFY_TOPIC,
         method: 'POST',
-        
+        headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Content-Length': dataBuffer.length }
+    };
+    const ntfyReq = https.request(options, () => {
+        res.send('<body style="background:#000;color:#fff;text-align:center;padding:50px;font-family:sans-serif;text-transform:uppercase;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;"><meta http-equiv="refresh" content="3;url=/"><h1 style="font-size:2rem;">⚡ REQUEST RECEIVED ⚡</h1></body>');
+    });
+    ntfyReq.on('error', (e) => { res.status(500).send('ENGINE TRANSMISSION CRASH: ' + e.message); });
+    ntfyReq.write(dataBuffer);
+    ntfyReq.end();
+});
+
+module.exports = app;
