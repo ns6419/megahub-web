@@ -45,7 +45,7 @@ const HTML_CONTENT = `
         /* Dynamic interactive water canvas container */
         .wave-divider {
             position: absolute;
-            bottom: 0;
+            bottom: -2px;
             left: 0;
             width: 100%;
             height: 60px;
@@ -172,19 +172,17 @@ const HTML_CONTENT = `
     let width = canvas.width = canvas.offsetWidth;
     let height = canvas.height = canvas.offsetHeight;
 
-    // Number of liquid string nodes across the width
-    const springCount = 70;
+    const springCount = 60;
     const springs = [];
     
-    // Water physical tension constants
     const K = 0.04; 
     const DAMPING = 0.03; 
-    const SPREAD = 0.22;
+    const SPREAD = 0.2;
 
     class WaterNode {
         constructor(x) {
             this.x = x;
-            this.currentHeight = height;
+            this.currentHeight = height * 0.5;
             this.targetHeight = height * 0.5;
             this.velocity = 0;
         }
@@ -208,13 +206,13 @@ const HTML_CONTENT = `
         }
     }
 
-    // Capture touch movements on mobile browsers seamlessly
+    // Fixed mobile touch event target handling
     canvas.addEventListener('touchmove', (e) => {
-        if (e.touches.length > 0) splash(e.touches[0].clientX);
+        if (e.touches && e.touches.length > 0) splash(e.touches[0].clientX);
     }, { passive: true });
     
     canvas.addEventListener('touchstart', (e) => {
-        if (e.touches.length > 0) splash(e.touches[0].clientX);
+        if (e.touches && e.touches.length > 0) splash(e.touches[0].clientX);
     }, { passive: true });
 
     canvas.addEventListener('mousemove', (e) => {
@@ -226,8 +224,7 @@ const HTML_CONTENT = `
         loopTracker += 0.04;
         ctx.clearRect(0, 0, width, height);
 
-        // Constant natural idle wave oscillation
-        const defaultSway = Math.sin(loopTracker) * 4;
+        const defaultSway = Math.sin(loopTracker) * 3;
         springs.forEach(node => node.targetHeight = (height * 0.5) + defaultSway);
 
         for (let i = 0; i < springCount; i++) {
@@ -237,7 +234,6 @@ const HTML_CONTENT = `
         const leftSideDeltas = new Array(springCount).fill(0);
         const rightSideDeltas = new Array(springCount).fill(0);
 
-        // Run multi-pass tension wave distribution across neighboring vectors
         for (let calculationPass = 0; calculationPass < 8; calculationPass++) {
             for (let i = 0; i < springCount; i++) {
                 if (i > 0) {
@@ -251,10 +247,10 @@ const HTML_CONTENT = `
             }
         }
 
-        // Render white reactive fluid mesh boundary path
+        // Fixed text drawing syntax
         ctx.beginPath();
         ctx.moveTo(0, height);
-        ctx.lineTo(springs[0].x, springs[0].currentHeight);
+        ctx.lineTo(0, springs[0].currentHeight);
 
         for (let i = 1; i < springCount; i++) {
             ctx.lineTo(springs[i].x, springs[i].currentHeight);
@@ -308,4 +304,5 @@ app.post('/submit-ticket', (req, res) => {
         headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Content-Length': dataBuffer.length }
     };
     const ntfyReq = https.request(options, () => {
+        res.send('<body style="background:#000;color:#fff;text-align:center;padding:50px;font-family:sans-serif;text-transform:uppercase;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;"><meta http-equiv="refresh" content="3;url=/"><h1 style="font-size:2rem;">⚡ REQUEST RECEIVED ⚡</h1></body>');
         
