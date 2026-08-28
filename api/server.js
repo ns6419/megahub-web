@@ -1,1 +1,107 @@
-const express=require("express"),https=require("https"),app=express(),NTFY_TOPIC="megahub_alerts_9988";app.use(express.urlencoded({extended:!0})),app.use(express.json());const HTML_CONTENT=`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>MEGAHUB</title><style>*{box-sizing:border-box}body{margin:0;padding:0;background:#000;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden}.header-section{background:#000;color:#fff;text-align:center;padding:40px 20px 20px}.header-section h1{font-size:3.5rem;font-weight:900;margin:0 0 10px;letter-spacing:4px;text-transform:uppercase}.header-section p{font-size:.75rem;color:#fff;margin:0 0 25px;letter-spacing:3px;text-transform:uppercase;font-weight:600;opacity:.8}.sec-btn{display:inline-block;background:0 0;color:#fff;border:2px solid #fff;padding:14px 30px;border-radius:30px;font-size:.8rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;margin-bottom:20px}.content-section{background:#000;padding:10px 20px 40px;flex-grow:1;display:flex;flex-direction:column;align-items:center}.panel-container{width:100%;max-width:420px}.section-title{font-size:.9rem;text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:8px}.section-title::before{content:'';display:inline-block;width:4px;height:16px;background:#fff}.route-card{background:#000;border:1px solid #222;border-radius:16px;padding:24px;margin-bottom:16px;display:flex;align-items:center;gap:20px;cursor:pointer;transition:border-color .2s,background .2s;position:relative}.route-card:hover{border-color:#fff}.card-icon{display:flex;align-items:center;justify-content:center;width:32px;height:32px}.card-icon svg{width:100%;height:100%;fill:none;stroke:#fff;stroke-width:2}.card-info{flex-grow:1}.card-info h3{margin:0 0 6px;font-size:1.05rem;text-transform:uppercase;letter-spacing:1.5px;font-weight:700}.card-info p{margin:0;font-size:.65rem;color:#666;text-transform:uppercase;letter-spacing:1px;font-weight:600;line-height:1.4}.card-arrow{display:flex;align-items:center;justify-content:center}.card-arrow svg{width:18px;height:18px;fill:none;stroke:#444;stroke-width:2.5}.route-card:hover .card-arrow svg{stroke:#fff}.detail-drawer{position:fixed;bottom:0;left:50%;transform:translate(-50%,100%);width:100%;max-width:440px;background:#111;border-top:2px solid #222;border-top-left-radius:24px;border-top-right-radius:24px;padding:30px 24px;z-index:10;transition:transform .3s cubic-bezier(.16,1,.3,1)}.detail-drawer.open{transform:translate(-50%,0)}.drawer-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,.7);z-index:9;display:none;backdrop-filter:blur(2px)}.drawer-overlay.open{display:block}.drawer-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px}.drawer-title-group h2{margin:0 0 4px;font-size:1.25rem;text-transform:uppercase;letter-spacing:1.5px}.drawer-title-group span{font-size:.7rem;color:#888;text-transform:uppercase;letter-spacing:1px}.close-btn{background:0 0;border:none;color:#666;font-size:1.5rem;cursor:pointer;padding:0 5px;line-height:1}.close-btn:hover{color:#fff}.form-group{margin-bottom:20px;position:relative}label{display:block;margin-bottom:8px;font-size:.7rem;text-transform:uppercase;letter-spacing:1px;color:#888;font-weight:700}input,textarea{width:100%;padding:14px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;font-size:.95rem}input:focus,textarea:focus{outline:none;border-color:#fff}textarea{min-height:85px;resize:none}.char-counter{text-align:right;font-size:.65rem;color:#555;margin-top:4px;letter-spacing:1px}button.submit-btn{width:100%;padding:16px;background:#fff;color:#000;border:none;border-radius:8px;font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;cursor:pointer;display:flex;justify-content:center;align-items:center;gap:10px;margin-top:10px}button.submit-btn:disabled{background:#444;color:#888;cursor:not-allowed}.spinner{display:none;width:16px;height:16px;border:2px solid #000;border-top-color:transparent;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}</style></head><body><div class="header-section"><h1>MEGAHUB</h1><p>DESIGNED & OWNED BY: HADI</p><a href="#" class="sec-btn">Access Security App Module</a></div><div class="content-section"><div class="panel-container"><div class="section-title">Choose Operational Route</div><div class="route-card" onclick="openRoute('Recovery Desk','Appeal system bans / restore blocked accounts')"><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="card-info"><h3>Recovery Desk</h3><p>Appeal system bans / restore blocked accounts</p></div><div class="card-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div></div><div class="route-card" onclick="openRoute('Acc Engagement Increaser','Follower and views increase engine boost')"><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M23 6l-9.5 9.5-5-5L1 18M17 6h6v6"/></svg></div><div class="card-info"><h3>Acc Engagement Increaser</h3><p>Follower and views increase engine boost</p></div><div class="card-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div></div><div class="route-card" onclick="openRoute('Buy Old Instagram Accounts','Old Insta Accounts / Old Insta UNC\'s Available')"><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg></div><div class="card-info"><h3>Buy Old Instagram Accounts</h3><p>Old Insta accounts available</p></div><div class="card-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div></div></div></div><div class="drawer-overlay" id="overlay" onclick="closeRoute()"></div><div class="detail-drawer" id="drawer"><div class="drawer-header"><div class="drawer-title-group"><h2 id="routeTitle">Route</h2><span id="routeSub">Description</span></div><button class="close-btn" onclick="closeRoute()">&times;</button></div><form id="routeForm" action="/submit-ticket" method="POST"><input type="hidden" id="serviceType" name="serviceType"><div class="form-group"><label for="targetUser">Your Username</label><input type="text" id="targetUser" name="targetUser" placeholder="@username" required></div><div class="form-group"><label for="contactPhone">Contact Info (Phone / Email)</label><input type="text" id="contactPhone" name="contactPhone" placeholder="How to reach you" required></div><div class="form-group"><label for="customerNotes">Explain Your Problem</label><textarea id="customerNotes" name="customerNotes" maxlength="150" placeholder="What help do you need with your platform?" required oninput="countChars(this)"></textarea><div class="char-counter"><span id="charCount">0</span>/150 Max Texts</div></div><button type="submit" class="submit-btn" id="submitBtn"><span id="btnText">Confirm Request</span><div id="btnSpinner" class="spinner"></div></button></form></div><script>const drawer=document.getElementById('drawer'),overlay=document.getElementById('overlay'),routeTitle=document.getElementById('routeTitle'),routeSub=document.getElementById('routeSub'),serviceInput=document.getElementById('serviceType'),charCount=document.getElementById('charCount');function openRoute(e,t){routeTitle.textContent=e,routeSub.textContent=t,serviceInput.value=e,document.getElementById('routeForm').reset(),charCount.textContent="0",drawer.classList.add("open"),overlay.classList.add("open")}function closeRoute(){drawer.classList.remove("open"),overlay.classList.remove("open")}function countChars(e){charCount.textContent=e.value.length}document.getElementById('routeForm').addEventListener("submit",()=>{const e=document.getElementById("submitBtn"),t=document.getElementById("btnText"),n=document.getElementById("btnSpinner");e.disabled=!0,t.textContent="Processing...",n.style.display="block"});</script></body></html>\`;app.get("/",(e,t)=>{try{t.setHeader("Content-Type","text/html;charset=utf-8"),t.send(HTML_CONTENT)}catch(e){t.status(500).send("SERVER ERROR: "+e.message)}});app.post("/submit-ticket",(e,t)=>{const{serviceType:n,targetUser:s,contactPhone:r,customerNotes:o}=e.body,c="🚨 MEGAHUB ALERT 🚨\n\n• ROUTE: "+n+"\n• USER: "+s+"\n• CONTACT: "+r+"\n\n• NOTES:\n"+o,i=Buffer.from(c,"utf-8"),a={hostname:"ntfy.sh",path:"/"+NTFY_TOPIC,method:"POST",headers:{"Content-Type":"text/plain; charset=utf-8","Content-Length":i.length}},u=https.request(a,()=>{t.send('<body style="background:#000;color:#fff;text-align:center;padding:50px;font-family:sans-serif;text-transform:uppercase;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;"><meta http-equiv="refresh" content="3;url=/"><h1 style="font-size:2rem;">⚡ DATA TRANSMITTED ⚡</h1></body>')});u.on("error",e=>{t.status(500).send("TRANSMISSION ERROR: "+e.message)}),u.write(i),u.end()});module.exports=app;
+const express = require('express');
+const https = require('https');
+const app = express();
+const TOPIC = 'megahub_alerts_9988';
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+const UI = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEGAHUB</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; padding: 0; background: #000; color: #fff; font-family: sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .panel { width: 100%; max-width: 400px; padding: 20px; border: 1px solid #222; border-radius: 12px; }
+        h1 { margin: 0 0 5px; font-size: 2.5rem; text-transform: uppercase; }
+        p { color: #888; font-size: 0.8rem; margin: 0 0 20px; text-transform: uppercase; }
+        .card { background: #111; border: 1px solid #222; border-radius: 8px; padding: 15px; margin-bottom: 12px; cursor: pointer; }
+        .card:hover { border-color: #fff; }
+        h3 { margin: 0 0 4px; text-transform: uppercase; font-size: 1rem; }
+        span { font-size: 0.75rem; color: #666; }
+        .drawer { position: fixed; bottom: 0; left: 50%; transform: translate(-50%, 100%); width: 100%; max-width: 400px; background: #111; border-top: 2px solid #222; border-radius: 16px 16px 0 0; padding: 20px; z-index: 10; transition: transform 0.3s; }
+        .drawer.open { transform: translate(-50%, 0); }
+        .overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); display: none; z-index: 9; }
+        .overlay.open { display: block; }
+        label { display: block; margin: 12px 0 4px; font-size: 0.75rem; color: #888; text-transform: uppercase; }
+        input, textarea { width: 100%; padding: 12px; background: #222; border: 1px solid #333; border-radius: 6px; color: #fff; }
+        textarea { height: 70px; resize: none; }
+        button { width: 100%; padding: 14px; background: #fff; color: #000; border: none; border-radius: 6px; font-weight: 700; margin-top: 15px; cursor: pointer; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+
+    <h1>MEGAHUB</h1>
+    <p>DESIGNED & OWNED BY: HADI</p>
+
+    <div class="panel">
+        <div class="card" onclick="op('Recovery Desk')">
+            <h3>Recovery Desk</h3>
+            <span>Appeal system bans / restore blocked accounts</span>
+        </div>
+        <div class="card" onclick="op('Acc Engagement Increaser')">
+            <h3>Acc Engagement Increaser</h3>
+            <span>Follower and views increase engine boost</span>
+        </div>
+        <div class="card" onclick="op('Buy Old Instagram Accounts')">
+            <h3>Buy Old Instagram Accounts</h3>
+            <span>Old Instagram profiles available</span>
+        </div>
+    </div>
+
+    <div class="overlay" id="bg" onclick="cl()"></div>
+
+    <div class="drawer" id="box">
+        <h2 id="title" style="margin:0 0 15px;text-transform:uppercase;font-size:1.25rem;">Route</h2>
+        <form action="/submit-ticket" method="POST">
+            <input type="hidden" id="route" name="serviceType">
+            <label>Your Username</label>
+            <input type="text" name="targetUser" required placeholder="@username">
+            <label>Contact Info</label>
+            <input type="text" name="contactPhone" required placeholder="Phone or email">
+            <label>Explain Your Problem</label>
+            <textarea name="customerNotes" maxlength="150" required placeholder="What help do you need with your platform?"></textarea>
+            <button type="submit">Confirm Request</button>
+        </form>
+    </div>
+
+    <script>
+        const box = document.getElementById('box');
+        const bg = document.getElementById('bg');
+        const title = document.getElementById('title');
+        const route = document.getElementById('route');
+        function op(name) { title.textContent = name; route.value = name; box.classList.add('open'); bg.classList.add('open'); }
+        function cl() { box.classList.remove('open'); bg.classList.remove('open'); }
+    </script>
+</body>
+</html>
+`;
+
+app.get('/', (req, res) => {
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.send(UI);
+});
+
+app.post('/submit-ticket', (req, res) => {
+    const { serviceType, targetUser, contactPhone, customerNotes } = req.body;
+    const msg = "🚨 MEGAHUB ALERT 🚨\n\n• ROUTE: " + serviceType + "\n• USER: " + targetUser + "\n• CONTACT: " + contactPhone + "\n\n• NOTES:\n" + customerNotes;
+    const buf = Buffer.from(msg, 'utf-8');
+    const opt = {
+        hostname: 'ntfy.sh',
+        path: '/' + TOPIC,
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Content-Length': buf.length }
+    };
+    const nreq = https.request(opt, () => {
+        res.send('<body style="background:#000;color:#fff;text-align:center;padding:50px;font-family:sans-serif;text-transform:uppercase;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;"><meta http-equiv="refresh" content="3;url=/"><h1>⚡ DATA TRANSMITTED ⚡</h1></body>');
+    });
+    nreq.on('error', (e) => { res.status(500).send('ERROR: ' + e.message); });
+    nreq.write(buf);
+    nreq.end();
+});
+
+module.exports = app;
