@@ -136,5 +136,5 @@ const nreq=https.request(opt,()=>{
 res.send('<body style="background:#000;color:#fff;text-align:center;padding:50px;font-family:sans-serif;text-transform:uppercase;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;"><meta http-equiv="refresh" content="3;url=/"><h1>⚡ DATA TRANSMITTED ⚡</h1></body>');});
 nreq.on('error',(e)=>{
 res.status(500).send('ERR:'+e.message);
-});nreq.write(buf);nreq.end();});
+});nreq.write(buf);nreq.end();});});
 module.exports=app;
