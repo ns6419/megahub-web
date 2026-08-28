@@ -2,7 +2,8 @@ const express = require('express');
 const https = require('https');
 const app = express();
 const TOPIC = 'megahub_alerts_9988';
-
+const NTFY_TOPIC = 'megahub_alerts_9988';
+    
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 const UI = `
