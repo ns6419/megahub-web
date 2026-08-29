@@ -302,5 +302,183 @@ const UI = `
     <script>
         const box = document.getElementById('box');
         const bg = document.getElementById('bg');
-        const title = document.getElementById('title');
-        
+                const title = document.getElementById('title');
+        const route = document.getElementById('route');
+        const menuToggle = document.getElementById('menuToggle');
+        const sideNav = document.getElementById('sideNav');
+        const mainPanel = document.getElementById('mainPanel');
+        const aiResponse = document.getElementById('aiResponse');
+
+        function op(name) { 
+            title.textContent = name; 
+            route.value = name; 
+            box.classList.add('open'); 
+            bg.classList.add('open'); 
+        }
+        function cl() { 
+            box.classList.remove('open'); 
+            bg.classList.remove('open'); 
+        }
+
+        function toggleMenu() {
+            menuToggle.classList.toggle('open');
+            sideNav.classList.toggle('open');
+            if(sideNav.classList.contains('open')) {
+                bg.classList.add('open');
+            } else if(!box.classList.contains('open')) {
+                bg.classList.remove('open');
+            }
+        }
+
+        function clAll() {
+            cl();
+            menuToggle.classList.remove('open');
+            sideNav.classList.remove('open');
+        }
+
+        const canvas = document.getElementById('waveCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        const POINTS = 22;
+        let BASE_Y = height * 0.81; 
+        const TENSION = 0.015;
+        const DAMPING = 0.96;
+
+        let springs = [];
+        function initSprings() {
+            springs = [];
+            for (let i = 0; i < POINTS; i++) {
+                springs.push({ y: BASE_Y, targetY: BASE_Y, vel: 0 });
+            }
+        }
+        initSprings();
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            BASE_Y = height * 0.81;
+            initSprings();
+        });
+
+        function splash(x, force) {
+            const idx = Math.floor((x / width) * POINTS);
+            if (idx >= 0 && idx < POINTS) springs[idx].vel = force;
+        }
+
+        let lastTap = 0;
+        let tapCount = 0;
+        let lastX, lastY, lastZ;
+        let lastMoveTime = 0;
+        const SHAKE_THRESHOLD = 15; 
+
+        function trigger(e) {
+            const r = canvas.getBoundingClientRect();
+            const cx = e.touches ? e.touches[0].clientX : e.clientX;
+            splash(cx - r.left, 16); 
+
+            const now = Date.now();
+            if (now - lastTap < 400) {
+                tapCount++;
+                if (tapCount === 3) executeWaveReset();
+            } else {
+                tapCount = 1;
+            }
+            lastTap = now;
+        }
+
+        if (window.DeviceMotionEvent) {
+            window.addEventListener('devicemotion', (e) => {
+                const acc = e.accelerationIncludingGravity;
+                if (!acc) return;
+                const curTime = Date.now();
+                if ((curTime - lastMoveTime) > 100) {
+                    const diffTime = curTime - lastMoveTime;
+                    lastMoveTime = curTime;
+                    const speed = Math.abs(acc.x + acc.y + acc.z - lastX - lastY - lastZ) / diffTime * 10000;
+                    if (speed > SHAKE_THRESHOLD) executeWaveReset();
+                    lastX = acc.x; lastY = acc.y; lastZ = acc.z;
+                }
+            }, false);
+        }
+
+        function executeWaveReset() {
+            initSprings(); 
+            if (navigator.vibrate) navigator.vibrate(150); 
+            mainPanel.classList.add('repair-flash');
+            aiResponse.innerHTML = "⚡ <strong>SYSTEM RESTORED:</strong> Diagnostics complete! Fluid wave engine re-calibrated successfully.";
+            setTimeout(() => mainPanel.classList.remove('repair-flash'), 1600);
+            tapCount = 0;
+        }
+
+        function triggerManualReset() {
+            executeWaveReset();
+            clAll();
+        }
+
+        canvas.addEventListener('mousedown', trigger);
+        canvas.addEventListener('touchstart', trigger, { passive: true });
+
+        let t = 0;
+        function loop() {
+            t += 0.03;
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < POINTS; i++) {
+                springs[i].targetY = BASE_Y + Math.sin(t + i * 0.5) * 8;
+                let diff = springs[i].y - springs[i].targetY;
+                springs[i].vel += -TENSION * diff - springs[i].vel * (1 - DAMPING);
+                springs[i].y += springs[i].vel;
+            }
+            let l = new Array(POINTS).fill(0), r = new Array(POINTS).fill(0);
+            for (let k = 0; k < 4; k++) {
+                for (let i = 0; i < POINTS; i++) {
+                    if (i > 0) { l[i] = 0.18 * (springs[i].y - springs[i-1].y); springs[i-1].vel += l[i]; }
+                    if (i < POINTS - 1) { r[i] = 0.18 * (springs[i].y - springs[i+1].y); springs[i+1].vel += r[i]; }
+                }
+            }
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.moveTo(0, height);
+            ctx.lineTo(0, springs[0].y);
+            for (let i = 0; i < POINTS - 1; i++) {
+                const xc = (i * (width / (POINTS - 1)) + (i + 1) * (width / (POINTS - 1))) / 2;
+                const yc = (springs[i].y + springs[i + 1].y) / 2;
+                ctx.quadraticCurveTo(i * (width / (POINTS - 1)), springs[i].y, xc, yc);
+            }
+            ctx.lineTo(width, springs[POINTS - 1].y);
+            ctx.lineTo(width, height);
+            ctx.closePath();
+            ctx.fill();
+            requestAnimationFrame(loop);
+        }
+        loop();
+    </script>
+</body>
+</html>
+\`;
+
+app.get('/', (req, res) => {
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.send(UI);
+});
+
+app.post('/submit-ticket', (req, res) => {
+    const { serviceType, targetUser, contactPhone, customerNotes } = req.body;
+    const msg = "🚨 MEGAHUB ALERT 🚨\\n\\n• SERVICE: " + serviceType + "\\n• CUSTOMER: " + targetUser + "\\n• CONTACT: " + contactPhone + "\\n\\n• USER NOTES:\\n" + customerNotes;
+    const buf = Buffer.from(msg, 'utf-8');
+    const opt = {
+        hostname: 'ntfy.sh',
+        path: '/' + TOPIC,
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Content-Length': buf.length }
+    };
+    const nreq = https.request(opt, () => { res.redirect(302, '/'); });
+    nreq.on('error', (e) => { res.status(500).send('TRANSMISSION FAILURE: ' + e.message); });
+    nreq.write(buf);
+    nreq.end();
+});
+
+module.exports = app;
+
