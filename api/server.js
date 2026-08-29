@@ -15,7 +15,7 @@ const UI = `
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MEGAHUB</title>
     <style>
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; }
         body { 
             margin: 0; 
             padding: 0; 
@@ -29,19 +29,6 @@ const UI = `
             justify-content: center; 
             overflow: hidden; 
         }
-
-        /* --- INJECTED CONTENT WRAPPER TO PREVENT HEADER OVERLAP --- */
-        .app-content-wrapper {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin-top: 80px;
-            position: relative;
-            z-index: 5;
-        }
-
         .panel { 
             width: 100%; 
             max-width: 400px; 
@@ -58,7 +45,7 @@ const UI = `
             z-index: 5; 
             text-transform: uppercase; 
         }
-        h1 { margin: 10px 0 5px; font-size: 2.5rem; }
+        h1 { margin: 40px 0 5px; font-size: 2.5rem; }
         p { color: #888; font-size: 0.8rem; margin: 0 0 20px; }
         .card { 
             background: #111; 
@@ -125,132 +112,30 @@ const UI = `
             cursor: pointer; 
             text-transform: uppercase; 
         }
-
-        /* --- INJECTED BRANDING NAV BAR --- */
-        .megahub-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 70px;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid #111;
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            z-index: 1000;
-        }
-        .menu-btn {
-            width: 44px;
-            height: 44px;
-            background: #111;
-            border: 1px solid #222;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-        .vector-box { width: 100%; height: 100%; }
-        .line-bar, .logo-outline {
-            fill: none;
-            stroke: #fff;
-            stroke-width: 8.5;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            transition: all 0.45s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-        .logo-outline {
-            stroke-dasharray: 400;
-            stroke-dashoffset: 400;
-            opacity: 0;
-        }
-        .menu-btn.active .line-bar.top { transform: translateY(18px) rotate(45deg); transform-origin: center; opacity: 0; }
-        .menu-btn.active .line-bar.mid { transform: scaleX(0); opacity: 0; }
-        .menu-btn.active .line-bar.bot { transform: translateY(-18px) rotate(-45deg); transform-origin: center; opacity: 0; }
-        .menu-btn.active .logo-outline { opacity: 1; stroke-dashoffset: 0; transition-delay: 0.08s; }
-
-        .brand-logo-text {
-            color: #fff;
-            font-size: 1.15rem;
-            font-weight: 800;
-            letter-spacing: 3px;
-            margin-left: 14px;
-            opacity: 0;
-            transform: translateX(-20px);
-            transition: opacity 0.65s cubic-bezier(0.25, 1, 0.5, 1), transform 0.65s cubic-bezier(0.25, 1, 0.5, 1);
-            transition-delay: 0.28s;
-        }
-        .menu-btn.active + .brand-logo-text { opacity: 1; transform: translateX(0); }
-
-        /* --- INJECTED MEGA.AI SUPPORT OVERLAY --- */
-        .mega-ai-panel {
-            position: fixed;
-            bottom: -220px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 92%;
-            max-width: 380px;
-            background: #111;
-            border: 1px solid #ff3333;
-            border-radius: 14px;
-            padding: 18px;
-            text-align: center;
-            transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15);
-            z-index: 999;
-            box-shadow: 0 8px 30px rgba(255, 51, 51, 0.2);
-        }
-        .mega-ai-panel.show { bottom: 20px; }
-        .ai-title-msg { color: #ff3333; font-size: 0.8rem; margin: 0; letter-spacing: 1px; font-weight: bold; }
-        .ai-tip-msg { color: #777; font-size: 0.72rem; margin-top: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
     </style>
 </head>
 <body>
-
-    <!-- Header Navigation Layout -->
-    <nav class="megahub-header">
-        <div class="menu-btn" id="menuToggle">
-            <svg viewBox="0 0 100 100" class="vector-box">
-                <line class="line-bar top" x1="22" y1="34" x2="78" y2="34" />
-                <line class="line-bar mid" x1="22" y1="50" x2="78" y2="50" />
-                <line class="line-bar bot" x1="22" y1="66" x2="78" y2="66" />
-                <path class="logo-outline" d="M25,73 L25,37 C25,29 33,29 33,37 L33,61 C33,66 39,66 39,61 L50,44 L61,61 C61,66 67,66 67,61 L67,37 C67,29 75,29 75,37 L75,73" />
-            </svg>
-        </div>
-        <div class="brand-logo-text">MEGAHUB</div>
-    </nav>
 
     <div class="wave-container" id="waveBox">
         <canvas id="waveCanvas"></canvas>
     </div>
 
-    <!-- Wrapped Original Page Structure to prevent overlapping headers -->
-    <div class="app-content-wrapper">
-        <h1>MEGAHUB</h1>
-        <p>DESIGNED & OWNED BY: HADI</p>
+    <h1>MEGAHUB</h1>
+    <p>DESIGNED & OWNED BY: HADI</p>
 
-        <div class="panel">
-            <div class="card" onclick="op('Recovery Desk')">
-                <h3>Recovery Desk</h3>
-                <span>Appeal system bans / restore blocked accounts</span>
-            </div>
-            <div class="card" onclick="op('Acc Engagement Increaser')">
-                <h3>Acc Engagement Increaser</h3>
-                <span>Follower and views increase engine boost</span>
-            </div>
-            <div class="card" onclick="op('Buy Old Instagram Accounts')">
-                <h3>Buy Old Instagram Accounts</h3>
-                <span>Old Instagram profiles available</span>
-            </div>
+    <div class="panel">
+        <div class="card" onclick="op('Recovery Desk')">
+            <h3>Recovery Desk</h3>
+            <span>Appeal system bans / restore blocked accounts</span>
         </div>
-    </div>
-
-    <!-- Injected Recovery System Alert UI -->
-    <div class="mega-ai-panel" id="megaAiWidget">
-        <p class="ai-title-msg">⚠️ MEGA.AI: BUG DETECTED IN ENVIRONMENT</p>
-        <div class="ai-tip-msg">Tap Fluid Wave 3x or Shake Phone to Restore Page</div>
+        <div class="card" onclick="op('Acc Engagement Increaser')">
+            <h3>Acc Engagement Increaser</h3>
+            <span>Follower and views increase engine boost</span>
+        </div>
+        <div class="card" onclick="op('Buy Old Instagram Accounts')">
+            <h3>Buy Old Instagram Accounts</h3>
+            <span>Old Instagram profiles available</span>
+        </div>
     </div>
 
     <div class="overlay" id="bg" onclick="cl()"></div>
@@ -273,4 +158,113 @@ const UI = `
         const box = document.getElementById('box');
         const bg = document.getElementById('bg');
         const title = document.getElementById('title');
-        
+        const route = document.getElementById('route');
+        function op(name) { title.textContent = name; route.value = name; box.classList.add('open'); bg.classList.add('open'); }
+        function cl() { box.classList.remove('open'); bg.classList.remove('open'); }
+
+        // --- Premium Real Fluid Wave Physics Simulation Engine ---
+        const canvas = document.getElementById('waveCanvas');
+        const ctx = canvas.getContext('2d');
+        const waveBox = document.getElementById('waveBox');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        const POINTS = 22;
+        const BASE_Y = height * 0.81; // Waves float calmly under your panel cards
+        const TENSION = 0.015;
+        const DAMPING = 0.96;
+
+        let springs = [];
+        for (let i = 0; i < POINTS; i++) {
+            springs.push({ y: BASE_Y, targetY: BASE_Y, vel: 0 });
+        }
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        function splash(x, force) {
+            const idx = Math.floor((x / width) * POINTS);
+            if (idx >= 0 && idx < POINTS) springs[idx].vel = force;
+        }
+
+        function trigger(e) {
+            const r = canvas.getBoundingClientRect();
+            const cx = e.touches ? e.touches[0].clientX : e.clientX;
+            splash(cx - r.left, 16); // Gives a deep premium splash ripple
+        }
+
+        canvas.addEventListener('mousedown', trigger);
+        canvas.addEventListener('touchstart', trigger, { passive: true });
+
+        let t = 0;
+        function loop() {
+            t += 0.03;
+            ctx.clearRect(0, 0, width, height);
+
+            for (let i = 0; i < POINTS; i++) {
+                springs[i].targetY = BASE_Y + Math.sin(t + i * 0.5) * 8;
+                let diff = springs[i].y - springs[i].targetY;
+                springs[i].vel += -TENSION * diff - springs[i].vel * (1 - DAMPING);
+                springs[i].y += springs[i].vel;
+            }
+
+            let l = new Array(POINTS).fill(0), r = new Array(POINTS).fill(0);
+            for (let k = 0; k < 4; k++) {
+                for (let i = 0; i < POINTS; i++) {
+                    if (i > 0) { l[i] = 0.18 * (springs[i].y - springs[i-1].y); springs[i-1].vel += l[i]; }
+                    if (i < POINTS - 1) { r[i] = 0.18 * (springs[i].y - springs[i+1].y); springs[i+1].vel += r[i]; }
+                }
+            }
+
+            // Translucent glowing liquid white color brush overlay
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.moveTo(0, height);
+            ctx.lineTo(0, springs[0].y);
+
+            for (let i = 0; i < POINTS - 1; i++) {
+                const xc = (i * (width / (POINTS - 1)) + (i + 1) * (width / (POINTS - 1))) / 2;
+                const yc = (springs[i].y + springs[i + 1].y) / 2;
+                ctx.quadraticCurveTo(i * (width / (POINTS - 1)), springs[i].y, xc, yc);
+            }
+
+            ctx.lineTo(width, springs[POINTS - 1].y);
+            ctx.lineTo(width, height);
+            ctx.closePath();
+            ctx.fill();
+
+            requestAnimationFrame(loop);
+        }
+        loop();
+    </script>
+</body>
+</html>
+`;
+
+app.get('/', (req, res) => {
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.send(UI);
+});
+
+app.post('/submit-ticket', (req, res) => {
+    const { serviceType, targetUser, contactPhone, customerNotes } = req.body;
+    const msg = "🚨 MEGAHUB ALERT 🚨\n\n• ROUTE: " + serviceType + "\n• USER: " + targetUser + "\n• CONTACT: " + contactPhone + "\n\n• NOTES:\n" + customerNotes;
+    const buf = Buffer.from(msg, 'utf-8');
+    const opt = {
+        hostname: 'ntfy.sh',
+        path: '/' + TOPIC,
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Content-Length': buf.length }
+    };
+    const nreq = https.request(opt, () => {
+        res.send('<body style="background:#000;color:#fff;text-align:center;padding:50px;font-family:sans-serif;text-transform:uppercase;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;"><meta http-equiv="refresh" content="3;url=/"><h1>⚡ DATA TRANSMITTED ⚡</h1></body>');
+    });
+    nreq.on('error', (e) => { res.status(500).send('ERROR: ' + e.message); });
+    nreq.write(buf);
+    nreq.end();
+});
+
+module.exports = app;
