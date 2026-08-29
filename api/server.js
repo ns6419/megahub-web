@@ -1,129 +1,17 @@
 const express = require('express');
 const https = require('https');
 const app = express();
-
 const TOPIC = 'megahub_alerts_9988';
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY; 
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>MEGAHUB</title><style>*{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif;}body,html{background:#000;height:100%;overflow-x:hidden;color:#fff;}.wrapper{min-height:85vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;position:relative;z-index:2;}h1{font-size:2.5rem;font-weight:800;margin-bottom:4px;}.card{background:#0c0c0c;border:1px solid #1c1c1c;border-radius:14px;padding:24px;cursor:pointer;width:100%;max-width:440px;margin-bottom:16px;color:#fff;}.nav-header{position:fixed;top:0;right:0;padding:20px;z-index:1000;}#toggle{background:#0c0c0c;border:1px solid #1c1c1c;padding:12px;border-radius:12px;cursor:pointer;font-weight:700;}.wave-box{position:relative;width:100%;height:15vh;background:#000;z-index:1;}canvas{position:absolute;top:0;left:0;width:100%;height:100%;}.bottom-half{width:100%;height:20vh;background:#fff;position:relative;z-index:1;}#drawer{position:fixed;top:0;right:-100%;width:100%;max-width:400px;height:100%;background:#050505;border-left:1px solid #111;transition:0.4s;z-index:999;display:flex;flex-direction:column;}#drawer.open{right:0;}.chat-box{flex:1;padding:24px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;}.msg{padding:12px 16px;border-radius:10px;max-width:85%;}.user{background:#fff;color:#000;align-self:flex-end;}.ai{background:#111;color:#fff;border:1px solid #222;}#overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:center;z-index:2000;}#overlay.open{display:flex;}.modal{background:#0c0c0c;border:1px solid #1c1c1c;border-radius:14px;padding:28px;width:90%;max-width:400px;}input,textarea{width:100%;background:#111;border:1px solid #222;padding:14px;color:#fff;border-radius:8px;margin-bottom:12px;outline:none;}button{width:100%;background:#fff;color:#000;border:none;padding:14px;border-radius:8px;font-weight:700;cursor:pointer;}</style></head><body><header class="nav-header"><div id="toggle" onclick="tMenu()">MEGA.AI</div></header><div class="wrapper"><h1>MEGAHUB</h1><p style="color:#666;margin-bottom:30px;text-transform:uppercase;font-size:0.8rem;">Designed & Owned By: Hadi</p><div class="card" onclick="oForm('RECOVERY DESK')"><h3>RECOVERY DESK</h3><p style="color:#555;font-size:0.9rem;">Appeal system bans / restore blocked accounts</p></div><div class="card" onclick="oForm('ACC ENGAGEMENT INCREASER')"><h3>ACC ENGAGEMENT INCREASER</h3><p style="color:#555;font-size:0.9rem;">Follower and views increase engine boost</p></div><div class="card" onclick="oForm('BUY OLD INSTAGRAM ACCOUNTS')"><h3>BUY OLD INSTAGRAM ACCOUNTS</h3><p style="color:#555;font-size:0.9rem;">Old Instagram profiles available</p></div></div><div class="wave-box"><canvas id="canvas"></canvas></div><div class="bottom-half"></div><div id="drawer"><div style="padding:32px 24px 20px;border-bottom:1px solid #111;"><h2>MEGA.AI HELP DESK</h2></div><div class="chat-box" id="cBox"><div class="msg ai">Hello! I am MEGA.AI by HADI. How can I help?</div></div><div style="padding:20px;display:flex;gap:12px;"><input id="aiInp" placeholder="Type a message..."><button onclick="askAI()">Send</button></div></div><div id="overlay"><div class="modal"><h3 id="mTitle" style="margin-bottom:18px;">Submit Ticket</h3><input type="hidden" id="sType"><input id="tUser" placeholder="Your Username"><input id="tPhone" placeholder="Your Contact Details"><textarea id="tNotes" placeholder="Explain your problem..." style="height:100px;resize:none;"></textarea><button onclick="subT()">Submit Request</button><button onclick="cForm()" style="background:#222;color:#fff;margin-top:8px;">Cancel</button></div></div><script>function tMenu(){document.getElementById('drawer').classList.toggle('open');}function oForm(n){document.getElementById('sType').value=n;document.getElementById('mTitle').innerText=n;document.getElementById('overlay').classList.add('open');}function cForm(){document.getElementById('overlay').classList.remove('open');}async function subT(){const s=document.getElementById('sType').value,u=document.getElementById('tUser').value.trim(),p=document.getElementById('tPhone').value.trim(),n=document.getElementById('tNotes').value.trim();if(!u||!p||!n)return alert('Fill all options');try{const res=await fetch('/submit-ticket',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({serviceType:s,targetUser:u,contactPhone:p,customerNotes:n})});const d=await res.json();if(d.success){alert('Request sent!');cForm();}}catch{alert('Error');}}async function askAI(){const inp=document.getElementById('aiInp'),box=document.getElementById('cBox'),prompt=inp.value.trim();if(!prompt)return;const u=document.createElement('div');u.className='msg user';u.innerText=prompt;box.appendChild(u);inp.value='';const a=document.createElement('div');a.className='msg ai';a.innerText='Thinking...';box.appendChild(a);box.scrollTop=box.scrollHeight;try{const res=await fetch('/api/ask-ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})});const d=await res.json();a.innerText=d.reply;}catch{a.innerText='AI Offline.';}box.scrollTop=box.scrollHeight;}const canvas=document.getElementById('canvas'),ctx=canvas.getContext('2d');let w=canvas.width=canvas.offsetWidth,h=canvas.height=canvas.offsetHeight,rip=0;function draw(){ctx.clearRect(0,0,w,h);ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(0,h);for(let i=0;i<=8;i++){let x=(w/8)*i,y=h/2+Math.sin(Date.now()*0.003+i)*(12+rip);ctx.lineTo(x,y);}ctx.lineTo(w,h);ctx.closePath();ctx.fill();if(rip>0)rip*=0.96;requestAnimationFrame(draw);}window.addEventListener('click',()=>{rip=45;});draw();</script></body></html>`;
+
 app.get('/', (req, res) => {
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
-    res.send(`
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEGAHUB</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-        body { background: #000; color: #fff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        .title-container { text-align: center; margin-bottom: 40px; }
-        .dashboard { width: 100%; max-width: 440px; display: flex; flex-direction: column; gap: 16px; }
-        .card { background: #0c0c0c; border: 1px solid #1c1c1c; border-radius: 14px; padding: 24px; cursor: pointer; }
-        .card h3 { margin-bottom: 6px; }
-        .card p { color: #555; font-size: 0.9rem; }
-        .nav-header { position: fixed; top: 0; right: 0; padding: 20px; z-index: 1000; }
-        .menu-toggle { width: 44px; height: 44px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 12px; background: #0c0c0c; border-radius: 12px; }
-        .bar { width: 100%; height: 2.5px; background: #fff; transition: 0.3s; }
-        .menu-toggle.open .bar1 { transform: translateY(8.5px) rotate(45deg); }
-        .menu-toggle.open .bar2 { opacity: 0; }
-        .menu-toggle.open .bar3 { transform: translateY(-8.5px) rotate(-45deg); }
-        .ai-drawer { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%; background: #050505; border-left: 1px solid #111; transition: 0.4s; z-index: 999; display: flex; flex-direction: column; }
-        .ai-drawer.open { right: 0; }
-        .chat-box { flex: 1; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
-        .msg { padding: 12px 16px; border-radius: 10px; max-width: 85%; }
-        .msg.user { background: #fff; color: #000; align-self: flex-end; }
-        .msg.ai { background: #111; color: #fff; align-self: flex-start; }
-        .chat-input-area { padding: 20px; display: flex; gap: 12px; }
-        .chat-input-area input { flex: 1; background: #0c0c0c; border: 1px solid #1c1c1c; padding: 14px; color: #fff; border-radius: 8px; }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 2000; }
-        .modal-overlay.open { display: flex; }
-        .modal-content { background: #0c0c0c; border: 1px solid #1c1c1c; border-radius: 14px; padding: 28px; width: 100%; max-width: 400px; }
-        .modal-content input, .modal-content textarea { width: 100%; background: #111; border: 1px solid #222; padding: 14px; color: #fff; border-radius: 8px; margin-bottom: 12px; }
-        .modal-content button { width: 100%; background: #fff; color: #000; border: none; padding: 14px; border-radius: 8px; font-weight: 700; }
-    </style>
-</head>
-<body>
-    <header class="nav-header">
-        <div class="menu-toggle" onclick="toggleMenu(this)">
-            <div class="bar bar1"></div>
-            <div class="bar bar2"></div>
-            <div class="bar bar3"></div>
-        </div>
-    </header>
-    <div class="title-container">
-        <h1>MEGAHUB</h1>
-        <p>Designed & Owned By: Hadi</p>
-    </div>
-    <div class="dashboard">
-        <div class="card" onclick="openForm('RECOVERY DESK')">
-            <h3>RECOVERY DESK</h3>
-            <p>Appeal system bans / restore blocked accounts</p>
-        </div>
-        <div class="card" onclick="openForm('ACC ENGAGEMENT INCREASER')">
-            <h3>ACC ENGAGEMENT INCREASER</h3>
-            <p>Follower and views increase engine boost</p>
-        </div>
-        <div class="card" onclick="openForm('BUY OLD INSTAGRAM ACCOUNTS')">
-            <h3>BUY OLD INSTAGRAM ACCOUNTS</h3>
-            <p>Old Instagram profiles available</p>
-        </div>
-    </div>
-    <div class="ai-drawer" id="aiDrawer">
-        <div class="chat-box" id="chatBox"><div class="msg ai">Hello! I am MEGA.AI by HADI.</div></div>
-        <div class="chat-input-area">
-            <input type="text" id="aiPrompt" placeholder="Type a message...">
-            <button onclick="askAI()">Send</button>
-        </div>
-    </div>
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal-content">
-            <h3 id="modalTitle">Submit Ticket</h3>
-            <input type="hidden" id="serviceType">
-            <input type="text" id="targetUser" placeholder="Username">
-            <input type="text" id="contactPhone" placeholder="Contact Details">
-            <textarea id="customerNotes" placeholder="Explain your problem..."></textarea>
-            <button onclick="submitTicket()">Submit Request</button>
-            <button onclick="closeForm()" style="background:#222;color:#fff;margin-top:8px;">Close</button>
-        </div>
-    </div>
-    <script>
-        function toggleMenu(el) { el.classList.toggle('open'); document.getElementById('aiDrawer').classList.toggle('open'); }
-        function openForm(n) { document.getElementById('serviceType').value = n; document.getElementById('modalTitle').innerText = n; document.getElementById('modalOverlay').classList.add('open'); }
-        function closeForm() { document.getElementById('modalOverlay').classList.remove('open'); }
-        async function submitTicket() {
-            const serviceType = document.getElementById('serviceType').value;
-            const targetUser = document.getElementById('targetUser').value;
-            const contactPhone = document.getElementById('contactPhone').value;
-            const customerNotes = document.getElementById('customerNotes').value;
-            if(!targetUser || !contactPhone || !customerNotes) return alert('Fill all fields');
-            try {
-                const res = await fetch('/submit-ticket', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ serviceType, targetUser, contactPhone, customerNotes })
-                });
-                const d = await res.json();
-                if(d.success) { alert('Sent successfully!'); closeForm(); }
-            } catch { alert('Error.'); }
-        }
-        async function askAI() {
-            const inp = document.getElementById('aiPrompt'); const box = document.getElementById('chatBox'); const prompt = inp.value.trim();
-            if(!prompt) return;
-            const u = document.createElement('div'); u.className = 'msg user'; u.innerText = prompt; box.appendChild(u); inp.value = '';
-            const a = document.createElement('div'); a.className = 'msg ai'; a.innerText = 'Thinking...'; box.appendChild(a);
-            try {
-                const res = await fetch('/api/ask-ai', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt }) });
-                const d = await res.json(); a.innerText = d.reply;
-            } catch { a.innerText = 'AI Offline.'; }
-        }
-    </script>
-</body>
-</html>
-    `);
+    res.send(html);
 });
 
 app.post('/api/ask-ai', (req, res) => {
@@ -141,8 +29,9 @@ app.post('/api/ask-ai', (req, res) => {
         aiRes.on('end', () => { 
             try { 
                 const resJson = JSON.parse(body);
+                // Fixed layout indices structure [0] to target properties correctly
                 res.json({ reply: resJson.candidates[0].content.parts[0].text.trim() }); 
-            } catch { res.json({ reply: "AI line fluctuation." }); } 
+            } catch(e) { res.json({ reply: "AI line fluctuation." }); } 
         });
     });
     aiReq.on('error', () => res.json({ reply: "AI error." }));
@@ -160,4 +49,4 @@ app.post('/submit-ticket', (req, res) => {
 });
 
 module.exports = app;
-                
+                                              
