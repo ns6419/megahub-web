@@ -1,9 +1,46 @@
 const express = require('express');
 const https = require('https');
 const app = express();
+
 const TOPIC = 'megahub_alerts_9988';
-const GEMINI_API_KEY = 'AQ.Ab8RN6LEPSJmSJrnva51M_Qmy2ZcFKuFt0cNI6s1I14EghAHTw';
+const GEMINI_API_KEY = 'AQ.Ab8RN6LEPSJmSJrnva51M_Qmy2ZcFKuFt0cNI6s1I14EghAHTw'; 
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-const UI = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>MEGAHUB</title><style>*{box-sizing:border-box}body{margin:0;padding:0;background:#000;color:#fff;font-family:sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;position:relative}.burger-container{position:absolute;top:20px;right:20px;width:44px;height:44px;cursor:pointer;z-index:120;display:flex;align-items:center;justify-content:center}.burger-svg{width:32px;height:32px;fill:none;stroke:#fff;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}.line-top{d:path("M 4 8 L 28 8");transition:d .4s cubic-bezier(.4,0,.2,1),stroke .3s}.line-mid{d:path("M 4 16 L 28 16");transition:opacity .3s;opacity:1}.line-bot{d:path("M 4 24 L 28 24");transition:d .4s cubic-bezier(.4,0,.2,1),stroke .3s}.burger-container.active .line-top{d:path("M 4 24 L 4 10 C 4 6,9 6,9 10 L 9 20 C 9 24,14 24,14 20 L 16 14 L 18 20 C 18 24,23 24,23 20 L 23 10 C 23 6,28 6,28 10 L 28 24");stroke:#fff}.burger-container.active .line-mid{opacity:0}.burger-container.active .line-bot{d:path("M 11 14 L 14 10 L 16 15 L 18 10 L 21 14");stroke:#fff}.nav-menu{position:fixed;top:0;right:-100%;width:280px;height:100vh;background:rgba(10,10,10,.96);border-left:1px solid #222;display:flex;flex-direction:column;padding:70px 20px 20px;gap:15px;z-index:110;transition:right .3s ease-in-out;box-shadow:-10px 0 30px rgba(0,0,0,.6)}.nav-menu.open{right:0}.nav-menu a{color:#888;text-decoration:none;text-transform:uppercase;font-size:.9rem;font-weight:600;letter-spacing:1px;transition:color 0.2s}.nav-menu a:hover{color:#fff}.ai-menu-box{border:1px solid #222;border-radius:8px;padding:12px;background:#05050c;display:flex;flex-direction:column;gap:8px;margin-top:10px}.ai-chat-box{height:120px;overflow-y:auto;font-size:.8rem;color:#ccc;border:1px solid #111;padding:6px;background:#000;white-space:pre-wrap}.ai-input-row{display:flex;gap:5px}.ai-input-row input{flex:1;background:#111;border:1px solid #222;color:#fff;padding:8px;border-radius:4px;font-size:.8rem;outline:none}.ai-input-row button{background:#fff;color:#000;border:none;padding:0 12px;border-radius:4px;font-weight:700;font-size:.75rem;cursor:pointer}.panel{width:100%;max-width:400px;padding:20px;border:1px solid #222;border-radius:12px;background:#000;position:relative;z-index:5}h1,p{text-align:center;position:relative;z-index:5;text-transform:uppercase}h1{margin:40px 0 5px;font-size:2.5rem}p{color:#888;font-size:.8rem;margin:0 0 20px}.card{background:#111;border:1px solid #222;border-radius:8px;padding:15px;margin-bottom:12px;cursor:pointer;transition:border-color .2s}.card:hover{border-color:#fff}h3{margin:0 0 4px;text-transform:uppercase;font-size:1rem;color:#fff}span{font-size:.75rem;color:#666}.wave-container{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1}canvas{display:block;width:100%;height:100%}.drawer{position:fixed;bottom:0;left:50%;transform:translate(-50%,100%);width:100%;max-width:400px;background:#111;border-top:2px solid #222;border-radius:16px 16px 0 0;padding:20px;z-index:10;transition:transform .3s;color:#fff}.drawer.open{transform:translate(-50%,0)}.overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,.7);display:none;z-index:9}.overlay.open{display:block}label{display:block;margin:12px 0 4px;font-size:0.75rem;color:#888;text-transform:uppercase}input,textarea{width:100%;padding:12px;background:#222;border:1px solid #333;border-radius:6px;color:#fff;margin-bottom:5px}textarea{height:70px;resize:none}.drawer button{width:100%;padding:14px;background:#fff;color:#000;border:none;border-radius:6px;font-weight:700;margin-top:15px;cursor:pointer;text-transform:uppercase}</style></head><body><div class="burger-container" id="burgerToggle" onclick="toggleMenu()"><svg class="burger-svg" viewBox="0 0 32 32"><path class="line-top" /><path class="line-mid" /><path class="line-bot" /></svg></div><nav class="nav-menu" id="navMenu"><a href="/">Home Menu</a><a href="/admin">Portal Login</a><div class="ai-menu-box"><div style="font-size:.75rem;font-weight:700;letter-spacing:1px;color:#fff">🤖 MEGA.AI SUPPORT</div><div class="ai-chat-box" id="aiBox">Ask anything about our services...</div><div class="ai-input-row"><input type="text" id="aiInp" placeholder="Ask AI..."><button onclick="sendAI()">SEND</button></div></div></nav><div class="wave-container"><canvas id="waveCanvas"></canvas></div><h1>MEGAHUB</h1><p>DESIGNED & OWNED BY: HADI</p><div class="panel"><div class="card" onclick="op('Recovery Desk')"><h3>Recovery Desk</h3><span>Appeal system bans / restore blocked accounts</span></div><div class="card" onclick="op('Acc Engagement Increaser')"><h3>Acc Engagement Increaser</h3><span>Follower and views increase engine boost</span></div><div class="card" onclick="op('Buy Old Instagram Accounts')"><h3>Buy Old Instagram Accounts</h3><span>Old Instagram profiles available</span></div></div><div class="overlay" id="bg" onclick="cl()"></div><div class="drawer" id="box"><h2 id="title" style="margin:0 0 15px;text-transform:uppercase;font-size:1.25rem;">Route</h2><form id="ticketForm"><input type="hidden" id="route" name="serviceType"><label>Your Username</label><input type="text" name="targetUser" required placeholder="@username"><label>Contact Info</label><input type="text" name="contactPhone" required placeholder="Phone or email"><label>Explain Your Problem</label><textarea name="customerNotes" maxlength="150" required placeholder="What help do you need?"></textarea><button type="submit" id="submitBtn">Confirm Request</button></form></div>`
-const UI = ";"app.get('/', (req, res) => { res.send(UI); });app.post('/api/ask-ai', (req, res) => {const { prompt } = req.body;const sys = "You are MEGA.AI by HADI. Keep answers very short.";const data = JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], systemInstruction: { parts: [{ text: sys }] } });const opt = { hostname: '://googleapis.com', path: '/v1beta/models/gemini-1.5-flash:generateContent?key=' + GEMINI_API_KEY, method: 'POST', headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data) } };const aiReq = https.request(opt, (aiRes) => {let body = ''; aiRes.on('data', (c) => body += c);aiRes.on('end', () => { try { res.json({ reply: JSON.parse(body).candidates[0].content.parts[0].text.trim() }); } catch { res.json({ reply: "MEGA.AI line busy." }); } });});aiReq.on('error', () => res.json({ reply: "AI error." }));aiReq.write(data); aiReq.end();});app.post('/submit-ticket', (req, res) => {const { serviceType, targetUser, contactPhone, customerNotes } = req.body;const msg = "ALERT: " + serviceType + " User: " + targetUser;const buf = Buffer.from(msg, 'utf-8');const opt = { hostname: 'ntfy.sh', path: '/' + TOPIC, method: 'POST', headers: { 'Content-Type': 'text/plain', 'Content-Length': buf.length } };const nreq = https.request(opt, () => { res.json({ success: true }); });nreq.on('error', (e) => res.status(500).json({ error: e.message }));nreq.write(buf); nreq.end();});module.exports = app;
+
+app.get('/', (req, res) => {
+    https.get('https://jsonsilo.com', (rawRes) => {
+        let html = '';
+        rawRes.on('data', (chunk) => { html += chunk; });
+        rawRes.on('end', () => {
+            res.setHeader('Content-Type', 'text/html; charset=utf-8');
+            res.send(html);
+        });
+    }).on('error', () => { res.send('Reload Page'); });
+});
+
+app.post('/api/ask-ai', (req, res) => {
+    const { prompt } = req.body;
+    const sys = "You are MEGA.AI by HADI. Help with boosts and recovery.";
+    const data = JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], systemInstruction: { parts: [{ text: sys }] } });
+    const opt = { hostname: '://googleapis.com', path: `/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, method: 'POST', headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data) } };
+    const aiReq = https.request(opt, (aiRes) => {
+        let body = ''; aiRes.on('data', (c) => body += c);
+        aiRes.on('end', () => { try { res.json({ reply: JSON.parse(body).candidates[0].content.parts[0].text.trim() }); } catch { res.json({ reply: "AI line fluctuation." }); } });
+    });
+    aiReq.on('error', () => res.json({ reply: "AI error." }));
+    aiReq.write(data); aiReq.end();
+});
+
+app.post('/submit-ticket', (req, res) => {
+    const { serviceType, targetUser, contactPhone, customerNotes } = req.body;
+    const msg = `🚨 MEGAHUB ALERT 🚨\n\n• SERVICE: ${serviceType}\n• USER: ${targetUser}\n• CONTACT: ${contactPhone}\n\n• NOTES:\n${customerNotes}`;
+    const buf = Buffer.from(msg, 'utf-8');
+    const opt = { hostname: 'ntfy.sh', path: '/' + TOPIC, method: 'POST', headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Content-Length': buf.length } };
+    const nreq = https.request(opt, () => { res.json({ success: true }); });
+    nreq.on('error', (e) => res.status(500).json({ error: e.message }));
+    nreq.write(buf); nreq.end();
+});
+
+module.exports = app;
+                  
