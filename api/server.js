@@ -180,19 +180,6 @@ const UI = `
         .mega-ai-alert.show { bottom: 20px; }
         .ai-headline { color: #ff3333; font-size: 0.8rem; margin: 0; letter-spacing: 1px; font-weight: bold; text-transform: uppercase; }
         .ai-instructions { color: #777; font-size: 0.72rem; margin-top: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .request-motion-btn {
-            background: #ff3333;
-            color: #fff;
-            border: none;
-            padding: 6px 12px;
-            font-size: 0.65rem;
-            border-radius: 4px;
-            margin-top: 10px;
-            font-weight: bold;
-            text-transform: uppercase;
-            cursor: pointer;
-            display: none;
-        }
 
         .wave-container { 
             position: fixed; 
@@ -288,4 +275,12 @@ const UI = `
     </div>
 
     <!-- MEGA.AI Emergency Layout Component -->
+    <div class="mega-ai-alert" id="megaAiWidget">
+        <p class="ai-headline">⚠️ MEGA.AI: CORE INSTABILITY TRACKED</p>
+        <div class="ai-instructions">Tap Fluid Surface 3x or Shake Phone to Reset</div>
+    </div>
+
+    <div class="overlay" id="bg" onclick="cl()"></div>
+
+    <div class="drawer" id="box">
     
