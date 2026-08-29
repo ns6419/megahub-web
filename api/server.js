@@ -2,7 +2,6 @@ const express = require('express');
 const https = require('https');
 const app = express();
 const TOPIC = 'megahub_alerts_9988';
-const NTFY_TOPIC = 'megahub_alerts_9988';
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -70,6 +69,7 @@ const UI = `
         }
         canvas { display: block; width: 100%; height: 100%; }
         
+        /* Bottom Request Drawer */
         .drawer { 
             position: fixed; 
             bottom: 0; 
@@ -112,239 +112,195 @@ const UI = `
             cursor: pointer; 
             text-transform: uppercase; 
         }
-          .top-navbar { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 60px; 
-            display: flex; 
-            align-items: center; 
-            padding: 0 20px; 
-            z-index: 20; 
-            background: transparent; 
+
+        /* --- PREMIUM TRANSFORMING MENU BUTTON --- */
+        .menu-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
         }
-        .menu-trigger { 
-            background: none; 
-            border: none; 
-            cursor: pointer; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: space-between; 
-            width: 24px; 
-            height: 16px; 
-            padding: 0; 
-            z-index: 21; 
+        .menu-btn:hover { border-color: #fff; }
+        .menu-btn .line {
+            width: 24px;
+            height: 2px;
+            background: #fff;
+            margin: 3px 0;
+            transition: all 0.3s ease;
+            border-radius: 2px;
         }
-        .menu-trigger span { 
-            display: block; 
-            width: 100%; 
-            height: 2.5px; 
-            background-color: #fff; 
-            border-radius: 2px; 
-            transition: all 0.3s ease; 
+        /* Morphing lines into the custom structural M logo design */
+        .menu-btn.open {
+            background: #000;
+            border-color: #fff;
+            border-radius: 12px;
         }
-        .nav-section { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100vw; 
-            height: 100vh; 
-            background: #0d0d0d; 
-            z-index: 30; 
-            transform: translateX(-100%); 
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
-            padding: 20px; 
-            display: flex; 
-            flex-direction: column; 
+        .menu-btn.open .line:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+            width: 28px;
         }
-        .nav-section.active { 
-            transform: translateX(0); 
+        .menu-btn.open .line:nth-child(2) {
+            opacity: 0;
+            transform: scale(0);
         }
-        .nav-header { 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            width: 100%; 
-            height: 60px; 
-            margin-bottom: 40px; 
+        .menu-btn.open .line:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+            width: 28px;
         }
-        .logo-brand-combo { 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
+
+        /* --- SIDEBAR MENU & MEGA.AI STYLING --- */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            width: 320px;
+            height: 100vh;
+            background: #0a0a0a;
+            border-left: 1px solid #222;
+            z-index: 90;
+            transition: right 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+            padding: 80px 20px 20px;
+            display: flex;
+            flex-direction: column;
         }
-        .app-logo { 
-            width: 44px; 
-            height: 44px; 
-            opacity: 0; 
-            transform: scale(0.6) rotate(-45deg); 
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s; 
+        .sidebar.open { right: 0; }
+        
+        .ai-container {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-        .nav-section.active .app-logo { 
-            opacity: 1; 
-            transform: scale(1) rotate(0deg); 
+        .ai-header {
+            font-weight: bold;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .sliding-title { 
-            font-size: 1.5rem; 
-            font-weight: bold; 
-            letter-spacing: 2px; 
-            text-transform: uppercase; 
-            color: #fff; 
-            opacity: 0; 
-            transform: translateX(-20px); 
-            transition: all 0.4s ease 0.4s; 
+        .ai-header::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #00ff66;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #00ff66;
         }
-        .nav-section.active .sliding-title { 
-            opacity: 1; 
-            transform: translateX(0); 
+        .ai-bubble {
+            background: #1a1a1a;
+            border: 1px solid #222;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            color: #ccc;
+            margin-bottom: 15px;
         }
-        .close-btn { 
-            background: none; 
-            border: none; 
-            color: #fff; 
-            font-size: 2rem; 
-            cursor: pointer; 
-            line-height: 1; 
-            padding: 5px; 
+        .ai-bubble strong { color: #fff; }
+        .ai-hint-btn {
+            background: #222;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.2s;
+            text-transform: uppercase;
+            font-weight: 600;
         }
-        .ai-section-box { 
-            background: linear-gradient(135deg, #141414 0%, #1a1a1a 100%); 
-            border: 1px solid #262626; 
-            border-radius: 16px; 
-            padding: 24px; 
-            position: relative; 
-            overflow: hidden; 
-            margin: 0 auto; 
-            max-width: 400px; 
-            width: 100%; 
+        .ai-hint-btn:hover { background: #333; border-color: #444; }
+
+        /* Quick notice flashing animation */
+        @keyframes pulseAlert {
+            0% { border-color: #222; }
+            50% { border-color: #00ff66; }
+            100% { border-color: #222; }
         }
-        .ai-section-box::before { 
-            content: ""; 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            pointer-events: none; 
-        }
-        .ai-badge { background: #fff; color: #000; font-size: 0.65rem; font-weight: bold; padding: 3px 8px; border-radius: 4px; }
-        .ai-title { margin: 0 0 8px 0; font-size: 1.25rem; text-transform: uppercase; letter-spacing: 0.5px; }
-        .ai-desc { color: #a3a3a3; font-size: 0.85rem; line-height: 1.4; margin: 0 0 20px 0; }
-        .ai-action-btn { width: 100%; padding: 14px; background: #ffffff; color: #000000; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        .panel { background: #141414; border: 1px solid #262626; border-radius: 12px; padding: 16px; margin-bottom: 12px; cursor: pointer; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); display: none; z-index: 40; }
-        .overlay.open { display: block; }
-        .drawer { position: fixed; bottom: 0; left: 0; width: 100%; background: #0d0d0d; border-top: 1px solid #262626; border-radius: 20px 20px 0 0; padding: 24px; transform: translateY(100%); transition: transform 0.3s ease; z-index: 50; }
-        .drawer.open { transform: translateY(0); }
+        .repair-flash { animation: pulseAlert 0.8s ease 2; }
     </style>
 </head>
 <body>
 
-    <div id="waveBox">
+    <!-- Menu Trigger Button -->
+    <div class="menu-btn" id="menuToggle" onclick="toggleMenu()">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+    </div>
+
+    <!-- Sidebar Navigation with MEGA.AI Workspace -->
+    <div class="sidebar" id="sideNav">
+        <div class="ai-container">
+            <div>
+                <div class="ai-header">MEGA.AI CORE</div>
+                <div class="ai-bubble" id="aiResponse">
+                    Greetings! I am your dynamic recovery assistant. If you experience performance lags or rendering issues on our engine dashboard, simply <strong>tap the fluid wave 3 times</strong> or shake your terminal window to safely reset configuration loops!
+                </div>
+            </div>
+            <button class="ai-hint-btn" onclick="triggerManualReset()">Execute Self-Repair</button>
+        </div>
+    </div>
+
+    <div class="wave-container" id="waveBox">
         <canvas id="waveCanvas"></canvas>
     </div>
 
-    <div class="top-navbar">
-        <button class="menu-trigger" onclick="toggleMenu(true)">
-            <span></span><span></span><span></span>
-        </button>
-    </div>
+    <h1>MEGAHUB</h1>
+    <p>DESIGNED & OWNED BY: HADI</p>
 
-    <div class="nav-section" id="navSection">
-        <div class="nav-header">
-            <div class="logo-brand-combo">
-                <svg class="app-logo" viewBox="0 0 100 100" xmlns="http://w3.org">
-                    <rect x="2" y="2" width="96" height="96" rx="26" fill="#171717" stroke="#333" stroke-width="2"/>
-                    <path d="M 28 66 C 26 38, 44 32, 44 48 C 44 54, 50 60 C 50 60, 56 54, 56 48 C 56 32, 74 38, 72 66" fill="none" stroke="#ffffff" stroke-width="7.5" stroke-linecap="round"/>
-                    <path d="M 38 46 L 50 56 L 62 46" fill="none" stroke="#ffffff" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <div class="sliding-title">Megahub</div>
-            </div>
-            <button class="close-btn" onclick="toggleMenu(false)">&times;</button>
-        </div>
-        
-        <div class="ai-section-box">
-            <span class="ai-badge">System Core</span>
-            <h4 class="ai-title">MEGA.AI Support</h4>
-            <p class="ai-desc">Is the website crashing, or are you facing issues with your account boost configurations? Run diagnostic testing right now.</p>
-            <button class="ai-action-btn" onclick="runAIDiagnostics()">Launch AI Recovery</button>
-        </div>
-    </div>
-
-    <div style="padding: 80px 20px 20px 20px; color: #fff; font-family: sans-serif;">
-        <h1>MEGAHUB</h1>
-        <p style="color: #666; margin-bottom: 30px;">DESIGNED & OWNED BY: HADI</p>
-
-        <div class="panel" onclick="op('Recovery Desk')">
+    <div class="panel" id="mainPanel">
+        <div class="card" onclick="op('Recovery Desk')">
             <h3>Recovery Desk</h3>
-            <span style="color: #888; font-size: 0.9rem;">Appeal system bans / restore blocked accounts</span>
+            <span>Appeal system bans / restore blocked accounts</span>
         </div>
-
-        <div class="panel" onclick="op('Acc Engagement Increaser')">
+        <div class="card" onclick="op('Acc Engagement Increaser')">
             <h3>Acc Engagement Increaser</h3>
-            <span style="color: #888; font-size: 0.9rem;">Follower and views increase engine boost</span>
+            <span>Follower and views increase engine boost</span>
         </div>
-
-        <div class="panel" onclick="op('Buy Old Instagram Accounts')">
+        <div class="card" onclick="op('Buy Old Instagram Accounts')">
             <h3>Buy Old Instagram Accounts</h3>
-            <span style="color: #888; font-size: 0.9rem;">Buy Old Instagram profiles available</span>
+            <span>Old Instagram profiles available</span>
         </div>
     </div>
 
-    <div class="overlay" id="bg" onclick="cl()"></div>
+    <div class="overlay" id="bg" onclick="clAll()"></div>
+
     <div class="drawer" id="box">
-        <h2 id="title" style="margin: 0 0 15px 0; text-transform: uppercase; font-size: 1.25rem;">Route</h2>
-        <form action="/submit-ticket" method="POST" style="display: flex; flex-direction: column; gap: 12px;">
+        <h2 id="title" style="margin:0 0 15px;text-transform:uppercase;font-size:1.25rem;">Route</h2>
+        <form action="/submit-ticket" method="POST">
             <input type="hidden" id="route" name="serviceType">
-            
-            <label style="color: #888; font-size: 0.85rem;">Username</label>
-            <input type="text" name="targetUser" placeholder="@username" required style="padding: 12px; background: #141414; border: 1px solid #262626; border-radius: 6px; color: #fff;">
-            
-            <label style="color: #888; font-size: 0.85rem;">Contact Phone</label>
-            <input type="tel" name="contactPhone" placeholder="+123456789" required style="padding: 12px; background: #141414; border: 1px solid #262626; border-radius: 6px; color: #fff;">
-            
-            <label style="color: #888; font-size: 0.85rem;">Customer Notes</label>
-            <textarea name="customerNotes" placeholder="Describe your request..." required style="padding: 12px; background: #141414; border: 1px solid #262626; border-radius: 6px; color: #fff; min-height: 80px; resize: vertical;"></textarea>
-            
-            <button type="submit" style="padding: 14px; background: #fff; color: #000; border: none; border-radius: 6px; font-weight: bold; margin-top: 10px; cursor: pointer;">Submit Request</button>
+            <label>Your Username</label>
+            <input type="text" name="targetUser" required placeholder="@username">
+            <label>Contact Info</label>
+            <input type="text" name="contactPhone" required placeholder="Phone or email">
+            <label>Explain Your Problem</label>
+            <textarea name="customerNotes" maxlength="150" required placeholder="What help do you need with your platform?"></textarea>
+            <button type="submit">Confirm Request</button>
         </form>
     </div>
 
     <script>
         const box = document.getElementById('box');
-        const bg = document.getElementById('bg');
-        const title = document.getElementById('title');
-        const route = document.getElementById('route');
         
-        function toggleMenu(open) {
-            const nav = document.getElementById('navSection');
-            if (open) { nav.classList.add('active'); } 
-            else { nav.classList.remove('active'); }
-        }
-
-        function runAIDiagnostics() {
-            alert("⚡ MEGA.AI SUPPORT: Diagnostics complete! System pipelines refreshed and account node routes stabilized successfully.");
-            toggleMenu(false);
-        }
-        function op(name) { title.textContent = name; route.value = name; box.classList.add('open'); bg.classList.add('open'); }
-        function cl() { box.classList.remove('open'); bg.classList.remove('open'); }
-
-        // --- Premium Real Fluid Wave Physics Simulation Engine ---
-        const canvas = document.getElementById('waveCanvas');
-        const ctx = canvas.getContext('2d');
-
-        let width = canvas.width = window.innerWidth;
-        let height = canvas.height = window.innerHeight;
-
-        const POINTS = 22;
-        const BASE_Y = height * 0.81; 
-        const TENSION = 0.015;
-        const DAMPING = 0.96;
-
-        let springs = [];
-        for (let i = 0; i < POINTS; i++) {
-            springs.push({ y: BASE_Y, targetY: BASE_Y, vel: 0 });
-        }
-
-  
