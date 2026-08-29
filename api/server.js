@@ -8,7 +8,7 @@ const GEMINI_API_KEY = 'AQ.Ab8RN6LEPSJmSJrnva51M_Qmy2ZcFKuFt0cNI6s1I14EghAHTw';
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Securely fetches your intact fluid wave layout with the integrated sidebar AI assistant
+// Pulls your complete original HTML interface structure securely from GitHub production streams
 app.get('/', (req, res) => {
     https.get('https://githubusercontent.com', (rawRes) => {
         let html = '';
@@ -17,32 +17,21 @@ app.get('/', (req, res) => {
             res.setHeader('Content-Type', 'text/html; charset=utf-8');
             res.send(html); 
         });
-    }).on('error', () => { res.send('<h3>MEGAHUB Stream Busy. Reload Page...</h3>'); });
+    }).on('error', () => { res.send('<h3>MEGAHUB Connection Busy. Reload Page...</h3>'); });
 });
 
 app.post('/api/ask-ai', (req, res) => {
     const { prompt } = req.body;
-    const sys = "You are MEGA.AI by HADI. Help with social media growth, engagement boosts, and account recovery. Keep answers short.";
+    const sys = "You are MEGA.AI by HADI. Help with social media growth, boosts, and account recovery. Keep answers short.";
     const postData = JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], systemInstruction: { parts: [{ text: sys }] } });
-    
-    const options = { 
-        hostname: '://googleapis.com', 
-        path: `/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, 
-        method: 'POST', 
-        headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(postData) } 
-    };
+    const options = { hostname: '://googleapis.com', path: `/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, method: 'POST', headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(postData) } };
     
     const aiReq = https.request(options, (aiRes) => {
-        let body = '';
-        aiRes.on('data', (chunk) => body += chunk);
+        let body = ''; aiRes.on('data', (chunk) => body += chunk);
         aiRes.on('end', () => {
             try {
-                const parsed = JSON.parse(body);
-                const replyText = parsed.candidates[0].content.parts[0].text;
-                res.json({ reply: replyText.trim() });
-            } catch (err) {
-                res.json({ reply: "MEGA.AI line busy. Try again." });
-            }
+                res.json({ reply: JSON.parse(body).candidates[0].content.parts[0].text.trim() });
+            } catch (err) { res.json({ reply: "MEGA.AI line busy. Try again." }); }
         });
     });
     aiReq.on('error', () => res.json({ reply: "AI engine connection offline." }));
@@ -60,4 +49,3 @@ app.post('/submit-ticket', (req, res) => {
 });
 
 module.exports = app;
-          
