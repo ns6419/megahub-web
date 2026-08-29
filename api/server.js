@@ -104,4 +104,50 @@ const UI = `<!DOCTYPE html>
             } catch {} finally { submitBtn.disabled = false; }
         });
         async function sendAIChat() {
+        try {
+const res = await fetch('/api/ask-ai', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: document.getElementById('aiInputField').value.trim() }) });
+const data = await res.json();
+alert(data.reply);
+} catch {}
+}
+const canvas = document.getElementById('waveCanvas'); const ctx = canvas.getContext('2d'); let width = canvas.width = window.innerWidth; let height = canvas.height = window.innerHeight;
+let springs = []; for (let i = 0; i < 22; i++) springs.push({ y: height * 0.81, targetY: height * 0.81, vel: 0 });
+window.addEventListener('resize', () => { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; for (let i = 0; i < 22; i++) springs[i].targetY = height * 0.81; });
+canvas.addEventListener('touchstart', (e) => { const idx = Math.floor(((e.touches[0].clientX - canvas.getBoundingClientRect().left) / width) * 22); if (idx >= 0 && idx < 22) springs[idx].vel = 16; }, { passive: true });
+let t = 0;
+function loop() {
+t += 0.03; ctx.clearRect(0, 0, width, height);
+for (let i = 0; i < 22; i++) { springs[i].targetY = (height * 0.81) + Math.sin(t + i * 0.5) * 8; springs[i].vel += -0.015 * (springs[i].y - springs[i].targetY) - springs[i].vel * 0.04; springs[i].y += springs[i].vel; }
+ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.moveTo(0, height); ctx.lineTo(0, springs[0].y);
+for (let i = 0; i < 21; i++) { ctx.quadraticCurveTo(i * (width / 21), springs[i].y, ((i * (width / 21)) + ((i + 1) * (width / 21))) / 2, (springs[i].y + springs[i + 1].y) / 2); }
+ctx.lineTo(width, springs[21].y); ctx.lineTo(width, height); ctx.closePath(); ctx.fill(); requestAnimationFrame(loop);
+}
+loop();
+</script>
+</body>
+</html>\`;
+
+app.get('/', (req, res) => { res.send(UI); });
+
+app.post('/api/ask-ai', (req, res) => {
+const { prompt } = req.body;
+const postData = JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], systemInstruction: { parts: [{ text: "You are MEGA.AI assistant by HADI." }] } });
+const options = { hostname: '://googleapis.com', path: \`/v1beta/models/gemini-1.5-flash:generateContent?key=\${GEMINI_API_KEY}\`, method: 'POST', headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(postData) } };
+const aiReq = https.request(options, (aiRes) => {
+let body = ''; aiRes.on('data', (chunk) => body += chunk);
+aiRes.on('end', () => { try { res.json({ reply: JSON.parse(body).candidates[0].content.parts[0].text }); } catch { res.json({ reply: "AI fluctuation. Try again." }); } });
+});
+aiReq.write(postData); aiReq.end();
+});
+
+app.post('/submit-ticket', (req, res) => {
+const { serviceType, targetUser, contactPhone, customerNotes } = req.body;
+const msg = \`🚨 MEGAHUB ALERT 🚨\\n• ROUTE: \${serviceType}\\n• USER: \${targetUser}\\n• NOTES: \${customerNotes}\`;
+const opt = { hostname: 'ntfy.sh', path: '/' + TOPIC, method: 'POST', headers: { 'Content-Type': 'text/plain; charset=utf-8' } };
+const nreq = https.request(opt, () => { res.json({ success: true }); });
+nreq.write(Buffer.from(msg, 'utf-8')); nreq.end();
+});
+
+module.exports = app;
+
         
