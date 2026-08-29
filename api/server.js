@@ -140,7 +140,6 @@ const UI = `
             transition: all 0.3s ease;
             border-radius: 2px;
         }
-        /* Morphing lines into the custom structural M logo design */
         .menu-btn.open {
             background: #000;
             border-color: #fff;
@@ -232,7 +231,6 @@ const UI = `
         }
         .ai-hint-btn:hover { background: #333; border-color: #444; }
 
-        /* Quick notice flashing animation */
         @keyframes pulseAlert {
             0% { border-color: #222; }
             50% { border-color: #00ff66; }
@@ -303,4 +301,6 @@ const UI = `
 
     <script>
         const box = document.getElementById('box');
+        const bg = document.getElementById('bg');
+        const title = document.getElementById('title');
         
