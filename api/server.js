@@ -1,6 +1,5 @@
 const express = require('express');
 const https = require('https');
-const cookieParser = require('cookie-parser');
 const app = express();
 
 const TOPIC = 'megahub_alerts_9988';
@@ -8,9 +7,7 @@ const GEMINI_API_KEY = 'AQ.Ab8RN6LEPSJmSJrnva51M_Qmy2ZcFKuFt0cNI6s1I14EghAHTw';
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cookieParser());
 
-// Fixed Line 14: Uses a clean, reliable static link string
 app.get('/', (req, res) => {
     https.get('https://pastebin.com', (rawRes) => {
         let html = '';
@@ -23,15 +20,12 @@ app.post('/api/ask-ai', (req, res) => {
     const { prompt } = req.body;
     const sys = 'You are MEGA.AI by HADI. Help with views, boosts, and recovery.';
     const data = JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], systemInstruction: { parts: [{ text: sys }] } });
-    
-    // Fixed Line 25: Formatted perfectly with the correct server address
     const opt = { 
         hostname: '://googleapis.com', 
         path: '/v1beta/models/gemini-1.5-flash:generateContent?key=' + GEMINI_API_KEY, 
         method: 'POST', 
         headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data) } 
     };
-    
     const aiReq = https.request(opt, (aiRes) => {
         let body = ''; aiRes.on('data', (c) => { body += c; });
         aiRes.on('end', () => { 
