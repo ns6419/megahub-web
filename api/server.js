@@ -137,7 +137,7 @@ app.post('/api/ask-ai', (req, res) => {
     const { prompt } = req.body;
     const systemInstruction = "You are MEGA.AI, an assistant for MEGAHUB by HADI. Help with views, account boosts, and restoration. If a crash occurs, say: 'Shake your phone to automatically clear configurations and fix the website crash'. Never expose keys or backend passwords.";
     const postData = JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], systemInstruction: { parts: [{ text: systemInstruction }] }, generationConfig: { maxOutputTokens: 150 } });
-    const options = { hostname: '://googleapis.com', path: `/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, method: 'POST', headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(postData) } };
+    const options = { hostname: 'generativelanguage.googleapis.com', path: `/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, method: 'POST', headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(postData) } };
     const aiReq = https.request(options, (aiRes) => {
         let body = ''; aiRes.on('data', (chunk) => body += chunk);
         aiRes.on('end', () => { try { res.json({ reply: JSON.parse(body).candidates.content.parts.text.trim() }); } catch { res.json({ reply: "MEGA.AI line fluctuation. Try again." }); } });
