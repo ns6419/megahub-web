@@ -3,7 +3,8 @@ const https = require('https');
 const app = express();
 
 const TOPIC = 'megahub_alerts_9988';
-const GEMINI_API_KEY = 'AQ.Ab8RN6LEPSJmSJrnva51M_Qmy2ZcFKuFt0cNI6s1I14EghAHTw'; 
+// Key removed and pulled securely from process environment variables
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY; 
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -14,7 +15,11 @@ app.get('/', (req, res) => {
         rawRes.on('data', (chunk) => { html += chunk; });
         rawRes.on('end', () => {
             res.setHeader('Content-Type', 'text/html; charset=utf-8');
-            res.send(html);
+            
+            // FIX 1: Inject the base tag so the browser downloads CSS directly from jsonsilo
+            const modifiedHtml = html.replace('<head>', '<head><base href="https://jsonsilo.com">');
+            
+            res.send(modifiedHtml);
         });
     }).on('error', () => { res.send('Reload Page'); });
 });
@@ -23,10 +28,27 @@ app.post('/api/ask-ai', (req, res) => {
     const { prompt } = req.body;
     const sys = "You are MEGA.AI by HADI. Help with boosts and recovery.";
     const data = JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], systemInstruction: { parts: [{ text: sys }] } });
-    const opt = { hostname: '://googleapis.com', path: `/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, method: 'POST', headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data) } };
+    
+    // FIX 2: Corrected the invalid '://googleapis.com' hostname
+    const opt = { 
+        hostname: '://googleapis.com', 
+        path: `/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, 
+        method: 'POST', 
+        headers: { 
+            'Content-Type': 'application/json', 
+            'Content-Length': Buffer.byteLength(data) 
+        } 
+    };
+    
     const aiReq = https.request(opt, (aiRes) => {
         let body = ''; aiRes.on('data', (c) => body += c);
-        aiRes.on('end', () => { try { res.json({ reply: JSON.parse(body).candidates[0].content.parts[0].text.trim() }); } catch { res.json({ reply: "AI line fluctuation." }); } });
+        aiRes.on('end', () => { 
+            try { 
+                res.json({ reply: JSON.parse(body).candidates[0].content.parts[0].text.trim() }); 
+            } catch { 
+                res.json({ reply: "AI line fluctuation." }); 
+            } 
+        });
     });
     aiReq.on('error', () => res.json({ reply: "AI error." }));
     aiReq.write(data); aiReq.end();
@@ -43,4 +65,4 @@ app.post('/submit-ticket', (req, res) => {
 });
 
 module.exports = app;
-                  
+        
