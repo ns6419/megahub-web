@@ -302,7 +302,7 @@ const UI = `
     <script>
         const box = document.getElementById('box');
         const bg = document.getElementById('bg');
-                const title = document.getElementById('title');
+               const title = document.getElementById('title');
         const route = document.getElementById('route');
         const menuToggle = document.getElementById('menuToggle');
         const sideNav = document.getElementById('sideNav');
@@ -481,4 +481,3 @@ app.post('/submit-ticket', (req, res) => {
 });
 
 module.exports = app;
-
