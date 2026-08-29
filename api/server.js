@@ -190,98 +190,196 @@ const UI = `
             z-index: 1; 
         }
         canvas { display: block; width: 100%; height: 100%; }
-        
-        .drawer { 
-            position: fixed; 
-            bottom: 0; 
-            left: 50%; 
-            transform: translate(-50%, 100%); 
-            width: 100%; 
-            max-width: 400px; 
-            background: #111; 
-            border-top: 2px solid #222; 
-            border-radius: 16px 16px 0 0; 
-            padding: 22px; 
-            z-index: 10; 
-            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1); 
-            color: #fff; 
-        }
-        .drawer.open { transform: translate(-50%, 0); }
-        .overlay { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100vw; 
-            height: 100vh; 
-            background: rgba(0,0,0,0.75); 
-            display: none; 
-            z-index: 9; 
-        }
-        .overlay.open { display: block; }
-        label { display: block; margin: 12px 0 4px; font-size: 0.72rem; color: #888; text-transform: uppercase; }
-        input, textarea { width: 100%; padding: 12px; background: #222; border: 1px solid #333; border-radius: 6px; color: #fff; font-size: 16px; }
-        textarea { height: 70px; resize: none; }
-        button { 
-            width: 100%; 
-            padding: 14px; 
-            background: #fff; 
-            color: #000; 
-            border: none; 
-            border-radius: 6px; 
-            font-weight: 700; 
-            margin-top: 15px; 
-            cursor: pointer; 
-            text-transform: uppercase; 
-        }
-    </style>
-</head>
-<body>
-
-    <!-- Top Sticky Bar -->
-    <nav class="megahub-header">
-        <div class="menu-btn" id="menuToggle">
-            <svg viewBox="0 0 100 100" class="vector-container">
-                <line class="burger-line top" x1="22" y1="34" x2="78" y2="34" />
-                <line class="burger-line mid" x1="22" y1="50" x2="78" y2="50" />
-                <line class="burger-line bot" x1="22" y1="66" x2="78" y2="66" />
-                <path class="custom-logo-path" d="M25,73 L25,37 C25,29 33,29 33,37 L33,61 C33,66 39,66 39,61 L50,44 L61,61 C61,66 67,66 67,61 L67,37 C67,29 75,29 75,37 L75,73" />
-            </svg>
-        </div>
-        <div class="swipe-text">MEGAHUB</div>
-    </nav>
-
-    <div class="wave-container" id="waveBox">
-        <canvas id="waveCanvas"></canvas>
-    </div>
-
-    <div class="app-container">
-        <h1>MEGAHUB</h1>
-        <p>DESIGNED & OWNED BY: HADI</p>
-
-        <div class="panel">
-            <div class="card" onclick="op('Recovery Desk')">
-                <h3>Recovery Desk</h3>
-                <span>Appeal system bans / restore blocked accounts</span>
-            </div>
-            <div class="card" onclick="op('Acc Engagement Increaser')">
-                <h3>Acc Engagement Increaser</h3>
-                <span>Follower and views increase engine boost</span>
-            </div>
-            <div class="card" onclick="op('Buy Old Instagram Accounts')">
-                <h3>Buy Old Instagram Accounts</h3>
-                <span>Old Instagram profiles available</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- MEGA.AI Emergency Layout Component -->
-    <div class="mega-ai-alert" id="megaAiWidget">
-        <p class="ai-headline">⚠️ MEGA.AI: CORE INSTABILITY TRACKED</p>
-        <div class="ai-instructions">Tap Fluid Surface 3x or Shake Phone to Reset</div>
-    </div>
-
-    <div class="overlay" id="bg" onclick="cl()"></div>
-
+            <!-- Delete everything from here down in your old file and paste this: -->
     <div class="drawer" id="box">
         <h2 id="title" style="margin:0 0 15px;text-transform:uppercase;font-size:1.15rem;">Route</h2>
+        <form action="/submit-ticket" method="POST">
+            <input type="hidden" id="route" name="serviceType">
+            <label>Your Username</label>
+            <input type="text" name="targetUser" required placeholder="@username">
+            <label>Contact Info</label>
+            <input type="text" name="contactPhone" required placeholder="Phone or email">
+            <label>Explain Your Problem</label>
+            <textarea name="customerNotes" maxlength="150" required placeholder="What help do you need?"></textarea>
+            <button type="submit">Confirm Request</button>
+        </form>
+    </div>
+
+    <script>
+        const box = document.getElementById('box');
+        const bg = document.getElementById('bg');
+        const title = document.getElementById('title');
+        const route = document.getElementById('route');
+        const menuToggle = document.getElementById('menuToggle');
+        const megaAiWidget = document.getElementById('megaAiWidget');
+
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+        });
+
+        function op(name) { title.textContent = name; route.value = name; box.classList.add('open'); bg.classList.add('open'); }
+        function cl() { box.classList.remove('open'); bg.classList.remove('open'); }
+
+        const canvas = document.getElementById('waveCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        const POINTS = 16;
+        let BASE_Y = height * 0.83; 
+        const TENSION = 0.015;
+        const DAMPING = 0.95;
+
+        let springs = [];
+        for (let i = 0; i < POINTS; i++) {
+            springs.push({ y: BASE_Y, targetY: BASE_Y, vel: 0 });
+        }
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            BASE_Y = height * 0.83;
+        });
+
+        let waveTapSequenceCounter = 0;
+        let waveSequenceResetTimer;
+
+        function splash(x, force) {
+            const idx = Math.floor((x / width) * POINTS);
+            if (idx >= 0 && idx < POINTS) springs[idx].vel = force;
+
+            if (megaAiWidget.classList.contains('show')) {
+                waveTapSequenceCounter++;
+                clearTimeout(waveSequenceResetTimer);
+                waveSequenceResetTimer = setTimeout(() => { waveTapSequenceCounter = 0; }, 1000);
+
+                if (waveTapSequenceCounter >= 3) {
+                    processHardwareSystemReboot();
+                }
+            }
+        }
+
+        function handleInteraction(e) {
+            const r = canvas.getBoundingClientRect();
+            const cx = e.touches && e.touches.length > 0 ? e.touches.clientX : e.clientX;
+            if(cx !== undefined) {
+                splash(cx - r.left, 26);
+            }
+        }
+
+        canvas.addEventListener('mousedown', handleInteraction);
+        canvas.addEventListener('touchstart', handleInteraction, { passive: true });
+
+        if (window.DeviceMotionEvent) {
+            let previousX, previousY;
+            let totalShakePointsAccumulated = 0;
+
+            window.addEventListener('devicemotion', (event) => {
+                let motionAccel = event.accelerationIncludingGravity;
+                if (!motionAccel || !motionAccel.x || !megaAiWidget.classList.contains('show')) return;
+
+                if (previousX !== undefined) {
+                    let diffMotionX = Math.abs(previousX - motionAccel.x);
+                    let diffMotionY = Math.abs(previousY - motionAccel.y);
+
+                    if (diffMotionX > 14 && diffMotionY > 14) {
+                        totalShakePointsAccumulated++;
+                        if (totalShakePointsAccumulated > 5) {
+                            processHardwareSystemReboot();
+                        }
+                    }
+                }
+                previousX = motionAccel.x;
+                previousY = motionAccel.y;
+            });
+        }
+
+        function processHardwareSystemReboot() {
+            megaAiWidget.querySelector('.ai-headline').innerText = "⚡ MEGA.AI: PURGING CACHE... REBOOTING";
+            for (let i = 0; i < POINTS; i++) {
+                springs[i].vel = (Math.random() - 0.5) * 70;
+            }
+            setTimeout(() => {
+                location.reload();
+            }, 900);
+        }
+
+        window.addEventListener('error', () => {
+            megaAiWidget.classList.add('show');
+        });
+
+        window.simulateBug = function() {
+            window.dispatchEvent(new Event('error'));
+        };
+
+        let t = 0;
+        function loop() {
+            t += 0.035;
+            ctx.clearRect(0, 0, width, height);
+
+            for (let i = 0; i < POINTS; i++) {
+                springs[i].targetY = BASE_Y + Math.sin(t + i * 0.6) * 7;
+                let diff = springs[i].y - springs[i].targetY;
+                springs[i].vel += -TENSION * diff - springs[i].vel * (1 - DAMPING);
+                springs[i].y += springs[i].vel;
+            }
+
+            let l = new Array(POINTS).fill(0), r = new Array(POINTS).fill(0);
+            for (let k = 0; k < 4; k++) {
+                for (let i = 0; i < POINTS; i++) {
+                    if (i > 0) { l[i] = 0.18 * (springs[i].y - springs[i-1].y); springs[i-1].vel += l[i]; }
+                    if (i < POINTS - 1) { r[i] = 0.18 * (springs[i].y - springs[i+1].y); springs[i+1].vel += r[i]; }
+                }
+            }
+
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.moveTo(0, height);
+            ctx.lineTo(0, springs[0].y); // Fixed typo here
+
+            for (let i = 0; i < POINTS - 1; i++) {
+                const xc = (i * (width / (POINTS - 1)) + (i + 1) * (width / (POINTS - 1))) / 2;
+                const yc = (springs[i].y + springs[i + 1].y) / 2;
+                ctx.quadraticCurveTo(i * (width / (POINTS - 1)), springs[i].y, xc, yc);
+            }
+
+            ctx.lineTo(width, springs[POINTS - 1].y);
+            ctx.lineTo(width, height);
+            ctx.closePath();
+            ctx.fill();
+
+            requestAnimationFrame(loop);
+        }
+        loop();
+    </script>
+</body>
+</html>
+\`;
+
+app.get('/', (req, res) => {
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.send(UI);
+});
+
+app.post('/submit-ticket', (req, res) => {
+    const { serviceType, targetUser, contactPhone, customerNotes } = req.body;
+    const msg = "🚨 MEGAHUB ALERT 🚨\\n\\n• ROUTE: " + serviceType + "\\n• USER: " + targetUser + "\\n• CONTACT: " + contactPhone + "\\n\\n• NOTES:\\n" + customerNotes;
+    const buf = Buffer.from(msg, 'utf-8');
+    const opt = {
+        hostname: 'ntfy.sh',
+        path: '/' + TOPIC,
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Content-Length': buf.length }
+    };
+    const nreq = https.request(opt, () => {
+        res.send('<body style="background:#000;color:#fff;text-align:center;padding:50px;font-family:sans-serif;text-transform:uppercase;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;"><meta http-equiv="refresh" content="3;url=/"><h1>⚡ DATA TRANSMITTED ⚡</h1></body>');
+    });
+    nreq.on('error', (e) => { res.status(500).send('ERROR: ' + e.message); });
+    nreq.write(buf);
+    nreq.end();
+});
+
+module.exports = app;
+
         
