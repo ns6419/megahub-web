@@ -190,8 +190,7 @@ const UI = `
             z-index: 1; 
         }
         canvas { display: block; width: 100%; height: 100%; }
-            <!-- Delete everything from here down in your old file and paste this: -->
-    <div class="drawer" id="box">
+           <div class="drawer" id="box">
         <h2 id="title" style="margin:0 0 15px;text-transform:uppercase;font-size:1.15rem;">Route</h2>
         <form action="/submit-ticket" method="POST">
             <input type="hidden" id="route" name="serviceType">
@@ -336,7 +335,7 @@ const UI = `
             ctx.fillStyle = '#ffffff';
             ctx.beginPath();
             ctx.moveTo(0, height);
-            ctx.lineTo(0, springs[0].y); // Fixed typo here
+            ctx.lineTo(0, springs[0].y); 
 
             for (let i = 0; i < POINTS - 1; i++) {
                 const xc = (i * (width / (POINTS - 1)) + (i + 1) * (width / (POINTS - 1))) / 2;
@@ -381,5 +380,3 @@ app.post('/submit-ticket', (req, res) => {
 });
 
 module.exports = app;
-
-        
