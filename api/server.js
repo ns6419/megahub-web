@@ -219,7 +219,7 @@ const UI = `
         }
         .overlay.open { display: block; }
         label { display: block; margin: 12px 0 4px; font-size: 0.72rem; color: #888; text-transform: uppercase; }
-        input, textarea { width: 100%; padding: 12px; background: #222; border: 1px solid #333; border-radius: 6px; color: #fff; font-size: 16px; /* Prevents auto-zoom on iOS Safari */ }
+        input, textarea { width: 100%; padding: 12px; background: #222; border: 1px solid #333; border-radius: 6px; color: #fff; font-size: 16px; }
         textarea { height: 70px; resize: none; }
         button { 
             width: 100%; 
@@ -283,4 +283,5 @@ const UI = `
     <div class="overlay" id="bg" onclick="cl()"></div>
 
     <div class="drawer" id="box">
-    
+        <h2 id="title" style="margin:0 0 15px;text-transform:uppercase;font-size:1.15rem;">Route</h2>
+        
