@@ -13,9 +13,7 @@ app.use(cookieParser());
 const UI = `<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEGAHUB</title>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>MEGAHUB</title>
     <style>
         * { box-sizing: border-box; }
         body { margin: 0; padding: 0; background: #000; color: #fff; font-family: sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; position: relative; }
@@ -62,23 +60,19 @@ const UI = `<!DOCTYPE html>
         input, textarea { width: 100%; padding: 12px; background: #222; border: 1px solid #333; border-radius: 6px; color: #fff; margin-bottom: 5px;}
         textarea { height: 70px; resize: none; }
         .drawer button { width: 100%; padding: 14px; background: #fff; color: #000; border: none; border-radius: 6px; font-weight: 700; margin-top: 15px; cursor: pointer; text-transform: uppercase; }
-        .drawer button:disabled { background: #555; cursor: not-allowed; }
     </style>
 </head>
 <body>
     <button class="ai-trigger-btn" onclick="openAI()">MEGA.AI</button>
-    <div class="burger-container" id="burgerToggle" onclick="toggleMenu()">
-        <svg class="burger-svg" viewBox="0 0 32 32"><path class="line-top" /><path class="line-mid" /><path class="line-bot" /></svg>
-    </div>
+    <div class="burger-container" id="burgerToggle" onclick="toggleMenu()"><svg class="burger-svg" viewBox="0 0 32 32"><path class="line-top" /><path class="line-mid" /><path class="line-bot" /></svg></div>
     <nav class="nav-menu" id="navMenu"><a href="/">Home Menu</a><a href="/admin">Portal Login</a></nav>
     <div class="ai-drawer" id="aiDrawer">
         <div class="ai-header"><h3>🤖 MEGA.AI ASSISTANT</h3><span class="ai-close" onclick="closeAI()">✕</span></div>
         <div class="ai-chat-box" id="aiChatBox"><div class="msg bot">Hello! I am MEGA.AI, built by HADI. How can I assist you with our platform operations today?</div></div>
-        <div class="ai-input-area"><input type="text" id="aiInputField" placeholder="Ask MEGA.AI something..." onkeydown="if(event.key==='Enter') sendAIChat()"><button onclick="sendAIChat()" id="aiSendBtn">SEND</button></div>
+        <div class="ai-input-area"><input type="text" id="aiInputField" placeholder="Ask MEGA.AI something..."><button onclick="sendAIChat()" id="aiSendBtn">SEND</button></div>
     </div>
     <div class="wave-container"><canvas id="waveCanvas"></canvas></div>
-    <h1>MEGAHUB</h1>
-    <p>DESIGNED & OWNED BY: HADI</p>
+    <h1>MEGAHUB</h1><p>DESIGNED & OWNED BY: HADI</p>
     <div class="panel">
         <div class="card" onclick="op('Recovery Desk')"><h3>Recovery Desk</h3><span>Appeal system bans / restore blocked accounts</span></div>
         <div class="card" onclick="op('Acc Engagement Increaser')"><h3>Acc Engagement Increaser</h3><span>Follower and views increase engine boost</span></div>
@@ -100,14 +94,13 @@ const UI = `<!DOCTYPE html>
         function openAI() { document.getElementById('aiDrawer').classList.add('open'); }
         function closeAI() { document.getElementById('aiDrawer').classList.remove('open'); }
         const box = document.getElementById('box'); const bg = document.getElementById('bg'); const title = document.getElementById('title'); const route = document.getElementById('route'); const ticketForm = document.getElementById('ticketForm'); const submitBtn = document.getElementById('submitBtn');
-    
         function op(name) { title.textContent = name; route.value = name; box.classList.add('open'); bg.classList.add('open'); }
         function cl() { box.classList.remove('open'); bg.classList.remove('open'); }
         ticketForm.addEventListener('submit', async (e) => {
-            e.preventDefault(); submitBtn.disabled = true; submitBtn.textContent = 'Transmitting...';
+            e.preventDefault(); submitBtn.disabled = true;
             try {
                 const res = await fetch('/submit-ticket', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(ticketForm)) });
-                                if (res.ok) { alert('⚡ DATA TRANSMITTED ⚡'); ticketForm.reset(); cl(); }
+                if (res.ok) { alert('⚡ DATA TRANSMITTED ⚡'); ticketForm.reset(); cl(); }
             } catch {} finally { submitBtn.disabled = false; }
         });
         async function sendAIChat() {
@@ -164,5 +157,5 @@ app.post('/submit-ticket', (req, res) => {
 });
 
 module.exports = app;
+
     
-                
