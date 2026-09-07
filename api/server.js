@@ -1,62 +1,47 @@
-const express = require('express'), https = require('https'), app = express();
-const T = 'megahub_alerts_9988', K = process.env.GEMINI_API_KEY;
+const express=require('express'),https=require('https'),app=express();
+const T='megahub_alerts_9988',K=process.env.GEMINI_API_KEY;
 app.use(express.urlencoded({extended:true})).use(express.json());
 
-// Fetches your HTML structure dynamically to keep the server file light and completely uncut
-app.get('/', (req, res) => {
-    // REPLACE THE URL BELOW WITH YOUR RAW PASTEBIN LINK CONTAINING YOUR HTML TEMPLATE
-    https.get('https://pastebin.com', (cdnRes) => {
-        let body = '';
-        cdnRes.on('data', (chunk) => body += chunk);
-        cdnRes.on('end', () => {
-            res.setHeader('Content-Type', 'text/html;charset=utf-8');
-            res.send(body);
-        });
-    }).on('error', () => {
-        res.status(500).send("System line fluctuation.");
-    });
-});
+const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>MEGAHUB</title><style>*{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif;}body,html{background:#000;height:100%;overflow:hidden;color:#fff;position:relative;}.wrapper{position:absolute;top:0;left:0;width:100%;height:85vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;z-index:2;}h1{font-size:2.4rem;font-weight:800;margin-bottom:2px;}.card{background:#0c0c0c;border:1px solid #1c1c1c;border-radius:12px;padding:20px;cursor:pointer;width:100%;max-width:420px;margin-bottom:12px;color:#fff;}.nav-header{position:fixed;top:0;right:0;padding:20px;z-index:1000;}#toggle{background:#0c0c0c;border:1px solid #1c1c1c;padding:12px;border-radius:12px;cursor:pointer;font-weight:700;}.wave-box{position:absolute;bottom:10vh;left:0;width:100%;height:15vh;background:transparent;z-index:1;}canvas{width:100%;height:100%;z-index:1;display:block;}.bottom-half{position:absolute;bottom:0;left:0;width:100%;height:12vh;background:#fff;z-index:0;}#drawer{position:fixed;top:0;right:-100%;width:100%;max-width:400px;height:100%;background:#050505;border-left:1px solid #111;transition:0.4s;z-index:999;display:flex;flex-direction:column;}#drawer.open{right:0;}.chat-box{flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;}.msg{padding:10px 14px;border-radius:8px;max-width:85%;}.user{background:#fff;color:#000;align-self:flex-end;}.ai{background:#111;color:#fff;border:1px solid #222;}#overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:center;z-index:2000;}#overlay.open{display:flex;}.modal{background:#0c0c0c;border:1px solid #1c1c1c;border-radius:14px;padding:24px;width:90%;max-width:380px;}input,textarea{width:100%;background:#111;border:1px solid #222;padding:12px;color:#fff;border-radius:6px;margin-bottom:10px;outline:none;}button{width:100%;background:#fff;color:#000;border:none;padding:12px;border-radius:6px;font-weight:700;cursor:pointer;}.ai-options-container{padding:0 20px 10px;display:flex;flex-direction:column;gap:8px;}.quick-btn{background:#111;border:1px solid #222;color:#eee;padding:10px 14px;border-radius:20px;font-size:0.82rem;font-weight:600;text-align:right;cursor:pointer;width:100%;}</style></head><body><header class="nav-header"><div id="toggle" onclick="tMenu()">MEGA.AI</div></header><div class="wrapper"><h1>MEGAHUB</h1><p style="color:#666;margin-bottom:20px;text-transform:uppercase;font-size:0.8rem;">Designed & Owned By: Hadi</p><div class="card" onclick="oForm('RECOVERY DESK')"><h3>RECOVERY DESK</h3><p style="color:#555;font-size:0.85rem;">Appeal system bans / restore blocked accounts</p></div><div class="card" onclick="oForm('ACC ENGAGEMENT INCREASER')"><h3>ACC ENGAGEMENT INCREASER</h3><p style="color:#555;font-size:0.85rem;">Follower and views increase engine boost</p></div><div class="card" onclick="oForm('BUY OLD INSTAGRAM ACCOUNTS')"><h3>BUY OLD INSTAGRAM ACCOUNTS</h3><p style="color:#555;font-size:0.85rem;">Old Instagram profiles available</p></div></div><div class="wave-box"><canvas id="canvas"></canvas></div><div class="bottom-half"></div><div id="drawer"><div style="padding:24px 20px 15px;border-bottom:1px solid #111;"><h2>MEGA.AI HELP DESK</h2></div><div class="chat-box" id="cBox"><div class="msg ai">Hello! I am MEGA.AI by HADI. Choose a question or type below:</div></div><div class="ai-options-container" id="aiOptions"><div class="quick-btn" onclick="sq(1)">⚠️ Facing problem with our AI</div><div class="quick-btn" onclick="sq(2)">🌐 Which platform helps we provide?</div><div class="quick-btn" onclick="sq(3)">🚀 How do I order a boost right now?</div></div><div style="padding:15px;display:flex;gap:10px;"><input id="aiInp" style="margin:0;" placeholder="Type a message..."><button onclick="askAI()">Send</button></div></div><div id="overlay"><div class="modal"><h3 id="mTitle" style="margin-bottom:14px;">Submit Ticket</h3><input type="hidden" id="sType"><input id="tUser" placeholder="Your Username"><input id="tPhone" placeholder="Your Contact Details"><textarea id="tNotes" placeholder="Explain your problem..." style="height:80px;resize:none;"></textarea><button onclick="subT()">Submit Request</button><button onclick="cForm()" style="background:#222;color:#fff;margin-top:6px;">Cancel</button></div></div><script>function tMenu(){document.getElementById('drawer').classList.toggle('open');}function oForm(n){document.getElementById('sType').value=n;document.getElementById('mTitle').innerText=n;document.getElementById('overlay').classList.add('open');}function cForm(){document.getElementById('overlay').classList.remove('open');}async function subT(){const s=document.getElementById('sType').value,u=document.getElementById('tUser').value.trim(),p=document.getElementById('tPhone').value.trim(),n=document.getElementById('tNotes').value.trim();if(!u||!p||!n)return alert('Fill all options');try{const res=await fetch('/submit-ticket',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({serviceType:s,targetUser:u,contactPhone:p,customerNotes:n})});const d=await res.json();if(d.success){alert('Request sent successfully!');cForm();}}catch{alert('Error sending ticket');}}function ac(t,c){const b=document.getElementById('cBox'),d=document.createElement('div');d.className='msg '+c;d.innerText=t;b.appendChild(d);b.scrollTop=b.scrollHeight;}async function sq(i){let u="",a="";if(i===1){u="Facing problem with our AI";a="👋 Shake your phone to fix website issues! If problems persist, clear your browser cache.";}else if(i===2){u="Which platform helps we provide?";a="We provide expert boosting and recovery services for YouTube, Instagram, TikTok, Snapchat, Facebook, and WhatsApp!";}else if(i===3){u="How do I order a boost right now?";a="To place an order, close this AI drawer and tap directly on 'ACC ENGAGEMENT INCREASER' or 'BUY OLD INSTAGRAM ACCOUNTS' on the dashboard!";}ac(u,'user');setTimeout(()=>ac(a,'ai'),400);}async function askAI(){const inp=document.getElementById('aiInp'),prompt=inp.value.trim();if(!prompt)return;ac(prompt,'user');inp.value='';ac('Thinking...','ai');const box=document.getElementById('cBox'),aDiv=box.lastChild;try{const res=await fetch('/api/ask-ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})});const d=await res.json();aDiv.innerText=d.reply;}catch{aDiv.innerText='System line fluctuation.';}}const canvas=document.getElementById('canvas'),ctx=canvas.getContext('2d');let w=canvas.width=canvas.offsetWidth,h=canvas.height=canvas.offsetHeight,count=0,rip=0;function draw(){ctx.clearRect(0,0,w,h);ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(0,h);count+=0.03;for(let x=0;x<=w;x+=2){let y=(h/2)+Math.sin(count+(x*0.008))*(6+rip)+Math.cos(count*0.6+(x*0.004))*3;ctx.lineTo(x,y);}ctx.lineTo(w,h);ctx.closePath();ctx.fill();if(rip>0)rip*=0.92;requestAnimationFrame(draw);}window.addEventListener('click',()=>{rip=25;});window.addEventListener('resize',()=> {w=canvas.width=canvas.offsetWidth;h=canvas.height=canvas.offsetHeight;});draw();</script></body></html>`;
 
-app.post('/api/ask-ai', (req, res) => {
-    const {prompt} = req.body;
-    if(!K || K === 'undefined' || K.length < 5) return res.json({reply: gl(prompt)});
-    const sys = "You are MEGA.AI by HADI. Expert assistant for system boosts, account recovery desk, and professional web development. If a user asks to make, build, design, or code a website, app, landing page, portfolio, shop, e-commerce platform, WordPress or custom site, enthusiastically confirm that we offer Web Development services and tell them how to submit a ticket.";
-    const data = JSON.stringify({contents:[{parts:[{text:prompt}]}],systemInstruction:{parts:[{text:sys}]}});
-    const opt = {hostname: '://googleapis.com', path: `/v1beta/models/gemini-1.5-flash:generateContent?key=${K}`, method: 'POST', headers: {'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data)}};
-    const aiReq = https.request(opt, (aiRes) => {
-        let body = ''; aiRes.on('data', (c) => body += c);
-        aiRes.on('end', () => {
-            try {
-                const r = JSON.parse(body);
-                if(r.candidates && r.candidates.content && r.candidates.content.parts) res.json({reply: r.candidates.content.parts.text.trim()});
-                else res.json({reply: gl(prompt)});
-            } catch { res.json({reply: gl(prompt)}); }
+app.get('/',(req,res)=>{res.setHeader('Content-Type','text/html;charset=utf-8');res.send(html);});
+
+app.post('/api/ask-ai',(req,res)=>{
+    const {prompt}=req.body;
+    if(!K||K==='undefined'||K.length<5) return res.json({reply:gl(prompt)});
+    const sys="You are MEGA.AI by HADI. Help with system boosts and recoverydesk questions.";
+    const data=JSON.stringify({contents:[{parts:[{text:prompt}]}],systemInstruction:{parts:[{text:sys}]}});
+    const opt={hostname:'://googleapis.com',path:`/v1beta/models/gemini-1.5-flash:generateContent?key=${K}`,method:'POST',headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(data)}};
+    const aiReq=https.request(opt,(aiRes)=>{
+        let body='';aiRes.on('data',(c)=>body+=c);
+        aiRes.on('end',()=>{
+            try{
+                const r=JSON.parse(body);
+                if(r.candidates&&r.candidates[0].content&&r.candidates[0].content.parts) res.json({reply:r.candidates[0].content.parts[0].text.trim()});
+                else res.json({reply:gl(prompt)});
+            }catch{res.json({reply:gl(prompt)});}
         });
     });
-    aiReq.on('error', () => res.json({reply: gl(prompt)}));
-    aiReq.write(data); aiReq.end();
+    aiReq.on('error',()=>res.json({reply:gl(prompt)}));
+    aiReq.write(data);aiReq.end();
 });
 
-function gl(p) {
-    const s = p.toLowerCase();
-    if(s.includes('help') || s.includes('hi') || s.includes('hello')) return "Hello! I am MEGA.AI by HADI. Tap a quick option above or ask me about boosts, recovery, or website creation.";
-    if(s.includes('recovery') || s.includes('ban') || s.includes('block') || s.includes('appeal')) return "To appeal a ban, close this drawer and click on the 'RECOVERY DESK' card to submit a ticket.";
-    if(s.includes('boost') || s.includes('follower') || s.includes('views') || s.includes('like')) return "For follower/view boosts, click on the 'ACC ENGAGEMENT INCREASER' card panel.";
-    if(s.includes('web') || s.includes('site') || s.includes('develop') || s.includes('code') || s.includes('build') || s.includes('portfolio') || s.includes('landing') || s.includes('page') || s.includes('app') || s.includes('wordpress') || s.includes('shopify') || s.includes('ecom') || s.includes('shop') || s.includes('create') || s.includes('make a website')) {
-        return "💻 Yes, we do Web Development! We specialize in custom business websites, high-converting landing pages, creative portfolios, and full hosting setups. Please let us know your design requirements, and we'll build it for you.";
-    }
+function gl(p){
+    const s=p.toLowerCase();
+    if(s.includes('help')||s.includes('hi')) return "Hello! I am MEGA.AI by HADI. Tap a quick option above or ask me about boosts or recovery.";
+    if(s.includes('recovery')||s.includes('ban')) return "To appeal a ban, close this drawer and click on the 'RECOVERY DESK' card to submit a ticket.";
+    if(s.includes('boost')||s.includes('follower')) return "For follower/view boosts, click on the 'ACC ENGAGEMENT INCREASER' card panel.";
     return "I am tracking your request. Let me know how I can help you with your dashboard ticket submissions.";
 }
 
-app.post('/submit-ticket', (req, res) => {
-    const {serviceType, targetUser, contactPhone, customerNotes} = req.body;
-    const msg = `🚨 MEGAHUB ALERT 🚨\n\n• SERVICE: ${serviceType}\n• USER: ${targetUser}\n• CONTACT: ${contactPhone}\n\n• NOTES:\n${customerNotes}`;
-    const buf = Buffer.from(msg, 'utf-8');
-    const opt = {hostname: 'ntfy.sh', path: '/' + T, method: 'POST', headers: {'Content-Type': 'text/plain;charset=utf-8', 'Content-Length': buf.length}};
-    const nreq = https.request(opt, () => { res.json({success: true}); });
-    nreq.on('error', (e) => res.status(500).json({error: e.message}));
-    nreq.write(buf); nreq.end();
+app.post('/submit-ticket',(req,res)=>{
+    const {serviceType,targetUser,contactPhone,customerNotes}=req.body;
+    const msg=`🚨 MEGAHUB ALERT 🚨\n\n• SERVICE: ${serviceType}\n• USER: ${targetUser}\n• CONTACT: ${contactPhone}\n\n• NOTES:\n${customerNotes}`;
+    const buf=Buffer.from(msg,'utf-8');
+    const opt={hostname:'ntfy.sh',path:'/'+T,method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8','Content-Length':buf.length}};
+    const nreq=https.request(opt,()=>{res.json({success:true});});
+    nreq.on('error',(e)=>res.status(500).json({error:e.message}));
+    nreq.write(buf);nreq.end();
 });
 
 module.exports = app;
-    
