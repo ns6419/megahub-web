@@ -28,7 +28,6 @@ app.post('/api/ask-ai', (req, res) => {
     aiReq.on('error', () => res.json({reply: gl(prompt)}));
     aiReq.write(data); aiReq.end();
 });
-
 function gl(p) {
     const s = p.toLowerCase();
     if(s.includes('help') || s.includes('hi') || s.includes('hello')) return "Hello! I am MEGA.AI by HADI. Tap a quick option above or ask me about boosts, recovery, or website creation.";
