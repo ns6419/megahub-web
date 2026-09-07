@@ -1,12 +1,10 @@
 const express = require('express'), https = require('https'), app = express();
 const T = 'megahub_alerts_9988', K = process.env.GEMINI_API_KEY;
-const html = require('./html');
-
 app.use(express.urlencoded({extended:true})).use(express.json());
 
 app.get('/', (req, res) => {
     res.setHeader('Content-Type', 'text/html;charset=utf-8');
-    res.send(html);
+    res.send(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>MEGAHUB</title><style>body{background:#000;color:#fff;font-family:sans-serif;padding:30px;}.card{background:#111;border:1px solid #222;padding:20px;margin-bottom:15px;border-radius:8px;cursor:pointer;}</style></head><body><h1>MEGAHUB BY HADI</h1><div class="card">RECOVERY DESK</div><div class="card">ACC ENGAGEMENT INCREASER</div><div class="card">BUY OLD INSTAGRAM ACCOUNTS</div><div class="card">WEB DEVELOPMENT</div></body></html>`);
 });
 
 app.post('/api/ask-ai', (req, res) => {
@@ -31,13 +29,13 @@ app.post('/api/ask-ai', (req, res) => {
 
 function gl(p) {
     const s = p.toLowerCase();
-    if(s.includes('help') || s.includes('hi') || s.includes('hello')) return "Hello! I am MEGA.AI by HADI. Tap a quick option above or ask me about boosts, recovery, or website creation.";
-    if(s.includes('recovery') || s.includes('ban') || s.includes('block') || s.includes('appeal')) return "To appeal a ban, close this drawer and click on the 'RECOVERY DESK' card to submit a ticket.";
-    if(s.includes('boost') || s.includes('follower') || s.includes('views') || s.includes('like')) return "For follower/view boosts, click on the 'ACC ENGAGEMENT INCREASER' card panel.";
+    if(s.includes('help') || s.includes('hi') || s.includes('hello')) return "Hello! I am MEGA.AI by HADI. Ask me about boosts, recovery, or website creation.";
+    if(s.includes('recovery') || s.includes('ban') || s.includes('block') || s.includes('appeal')) return "To appeal a ban, use the RECOVERY DESK option.";
+    if(s.includes('boost') || s.includes('follower') || s.includes('views') || s.includes('like')) return "For follower/view boosts, look at the ACC ENGAGEMENT INCREASER panel.";
     if(s.includes('web') || s.includes('site') || s.includes('develop') || s.includes('code') || s.includes('build') || s.includes('portfolio') || s.includes('landing') || s.includes('page') || s.includes('app') || s.includes('wordpress') || s.includes('shopify') || s.includes('ecom') || s.includes('shop') || s.includes('create') || s.includes('make a website')) {
-        return "💻 Yes, we do Web Development! We specialize in custom business websites, high-converting landing pages, creative portfolios, and full hosting setups. Please let us know your design requirements, and we'll build it for you.";
+        return "💻 Yes, we do Web Development! We build high-speed business sites, landing pages, and portfolios. Submit a web development request panel selection to begin.";
     }
-    return "I am tracking your request. Let me know how I can help you with your dashboard ticket submissions.";
+    return "Tracking request. Let me know how I can help you with your submissions.";
 }
 
 app.post('/submit-ticket', (req, res) => {
@@ -51,4 +49,4 @@ app.post('/submit-ticket', (req, res) => {
 });
 
 module.exports = app;
-        
+       
