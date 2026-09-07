@@ -1,12 +1,20 @@
 const express = require('express'), https = require('https'), app = express();
 const T = 'megahub_alerts_9988', K = process.env.GEMINI_API_KEY;
-const html = require('./html');
-
 app.use(express.urlencoded({extended:true})).use(express.json());
 
+// Fetches your HTML structure dynamically to keep the server file light and completely uncut
 app.get('/', (req, res) => {
-    res.setHeader('Content-Type', 'text/html;charset=utf-8');
-    res.send(html);
+    // REPLACE THE URL BELOW WITH YOUR RAW PASTEBIN LINK CONTAINING YOUR HTML TEMPLATE
+    https.get('https://pastebin.com', (cdnRes) => {
+        let body = '';
+        cdnRes.on('data', (chunk) => body += chunk);
+        cdnRes.on('end', () => {
+            res.setHeader('Content-Type', 'text/html;charset=utf-8');
+            res.send(body);
+        });
+    }).on('error', () => {
+        res.status(500).send("System line fluctuation.");
+    });
 });
 
 app.post('/api/ask-ai', (req, res) => {
@@ -51,4 +59,4 @@ app.post('/submit-ticket', (req, res) => {
 });
 
 module.exports = app;
-              
+    
