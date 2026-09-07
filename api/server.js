@@ -1,24 +1,12 @@
 const express = require('express'), https = require('https'), app = express();
 const T = 'megahub_alerts_9988', K = process.env.GEMINI_API_KEY;
+const html = require('./html');
+
 app.use(express.urlencoded({extended:true})).use(express.json());
 
 app.get('/', (req, res) => {
-    https.get('https://vercel.app', (vercelRes) => {
-        let body = '';
-        vercelRes.on('data', (chunk) => body += chunk);
-        vercelRes.on('end', () => {
-            let modified = body
-                .replace('overflow:hidden;', 'overflow-y:auto;')
-                .replace('.wrapper{position:absolute;top:0;left:0;width:100%;height:85vh;', '.wrapper{position:absolute;top:0;left:0;width:100%;min-height:85vh;padding:80px 20px 40px;')
-                .replace('<h3>BUY OLD INSTAGRAM ACCOUNTS</h3><p style="color:#555;font-size:0.85rem;">Old Instagram profiles available</p></div></div>', '<h3>BUY OLD INSTAGRAM ACCOUNTS</h3><p style="color:#555;font-size:0.85rem;">Old Instagram profiles available</p></div><div class="card" onclick="oForm(\'WEB DEVELOPMENT\')"><h3>WEB DEVELOPMENT</h3><p style="color:#555;font-size:0.85rem;">Custom site creation / design and hosting setup</p></div></div>')
-                .replace('<div class="quick-btn" onclick="sq(3)">🚀 How do I order a boost right now?</div></div>', '<div class="quick-btn" onclick="sq(3)">🚀 How do I order a boost right now?</div><div class="quick-btn" onclick="sq(4)">💻 Looking for Web Development?</div></div>')
-                .replace('else if(i===3){u="How do I order a boost right now?";a="To place an order, close this AI drawer and tap directly on \'ACC ENGAGEMENT INCREASER\' or \'BUY OLD INSTAGRAM ACCOUNTS\' on the dashboard!";}', 'else if(i===3){u="How do I order a boost right now?";a="To place an order, close this AI drawer and tap directly on \'ACC ENGAGEMENT INCREASER' or \'BUY OLD INSTAGRAM ACCOUNTS\' on the dashboard!";}else if(i===4){u="Looking for Web Development?";a="To start a new web development project, close this AI drawer and click directly on the \'WEB DEVELOPMENT\' card to submit your project requirements!";}');
-            res.setHeader('Content-Type', 'text/html;charset=utf-8');
-            res.send(modified);
-        });
-    }).on('error', () => {
-        res.status(500).send("System line fluctuation.");
-    });
+    res.setHeader('Content-Type', 'text/html;charset=utf-8');
+    res.send(html);
 });
 
 app.post('/api/ask-ai', (req, res) => {
@@ -63,4 +51,4 @@ app.post('/submit-ticket', (req, res) => {
 });
 
 module.exports = app;
-                     
+              
